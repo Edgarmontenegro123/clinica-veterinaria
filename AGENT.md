@@ -1,26 +1,46 @@
-# Restricciones
+Proyecto Clínica Veterinaria
 
-*Disponibilidad de horarios*: No se pueden asignar dos citas a la misma hora para el mismo veterinario.  
-*Capacidad máxima de atención*: Cada veterinario tiene un límite de consultas por día.  
-*Recursos de inventario*: No se pueden recetar o asignar tratamientos si no hay stock suficiente de medicamentos o insumos.  
-*Acceso por rol*: Los veterinarios solo pueden editar historias clínicas, los recepcionistas solo agendar y facturar, y el gerente tiene
-permisos globales.  
-*Cumplimiento sanitario*: no se puede omitir la carga de datos obligatorios en vacunas y tratamientos (ej. fecha de aplicación, lote de
-vacuna).
+Equipo 3
 
-# Validaciones
+Leonardo Daniel Lipiejko
 
-*Datos de la mascota completos*: Nombre, especie, raza, edad y dueño registrado.  
-*Datos del dueño válidos*: Nombre, teléfono y al menos un medio de contacto (email o WhatsApp).  
-*Validar duplicados*: No registrar la misma mascota dos veces con distinto nombre (ej. “Firulais” y “Firulais M.”).  
-*Validar stock al momento de facturar*: el sistema debe descontar insumos o medicamentos en tiempo real.  
-*Validar facturación*: los montos facturados deben coincidir con los servicios/medicamentos cargados.  
-*Validar permisos*: solo personal autorizado puede aprobar descuentos o modificar precios.  
-*Validar agenda*: no permitir superposición de citas en el mismo consultorio/veterinario.
+Edgar Montenegro
 
-# Inferencias (Inteligencia en la decisión)
-*Inferir recordatorios automáticos*: el sistema genera alertas para próximas vacunas, chequeos o turnos pendientes.  
-*Inferir prioridad de atención*: emergencias (ej. accidente o intoxicación) tienen prioridad sobre consultas programadas.  
-*Inferir disponibilidad de veterinarios*: si un veterinario falta, reasignar automáticamente sus citas a otros con disponibilidad.  
-*Inferir necesidades de stock*: si un medicamento baja de cierto umbral, generar alerta de reposición automática.  
-*Inferir facturación recurrente*: identificar clientes frecuentes para ofrecer planes de salud o descuentos.
+Alexis López
+
+
+**1. Descripción del Problema (El Dolor):**
+
+Actualmente, las clínicas veterinarias a menudo gestionan la información de sus
+pacientes (animales), dueños, y citas de manera manual o a través de sistemas no integrados. Esto provoca ineficiencias, errores
+y una atención al cliente deficiente. Los principales problemas son:
+*Gestión ineficiente de citas:* Dificultad para agendar, reagendar o cancelar citas, lo que puede llevar a dobles reservas o a la
+pérdida de información.
+*Fichas de pacientes fragmentadas:* La historia clínica de una mascota puede estar en diferentes lugares (papel, archivos
+de texto, hojas de cálculo), lo que dificulta el seguimiento de tratamientos, vacunas y diagnósticos.
+*Falta de comunicación:* No hay un sistema unificado para enviar recordatorios de citas o alertas de vacunas a los dueños.
+*Ineficiencia en la facturación:* El proceso de facturación y seguimiento de pagos es manual y propenso a errores.
+*Inventario desorganizado:* Controlar el stock de medicamentos y suministros es complicado, lo que puede llevar a escasez o
+exceso de productos.
+
+**2. Actores Involucrados (Stakeholders)**
+
+**Actores Primarios (Usuarios Directos del Software):**
+
+*Veterinarios y asistentes veterinarios:* Usan el sistema para gestionar historias clínicas, diagnósticos y tratamientos.
+*Personal de recepción / administrativo:* Usan el sistema para agendar citas, gestionar clientes y facturar.
+*Gerente / propietario de la clínica:* Usan el sistema para supervisar el negocio y acceder a reportes.
+
+**Actores Secundarios (Beneficiarios y Origen de los Datos):**
+
+*Dueños de mascotas:* Los clientes que se benefician de una gestión eficiente y que proveen la información inicial.
+*Mascotas (Los pacientes):* Son el centro del sistema. La información sobre su salud, vacunas y tratamientos es el corazón del software.
+
+**Actores Terciarios (Posible Integración):**
+
+*Proveedores de suministros:* Podrían integrarse para automatizar la gestión de inventario.
+
+**3. La Decisión Clave del Software Pregunta principal:**
+
+¿Cómo centralizar y automatizar de manera eficiente la gestión de pacientes, dueños, citas, facturación e inventario en una
+clínica veterinaria, asegurando accesibilidad desde cualquier dispositivo y mejorando la calidad del servicio?
