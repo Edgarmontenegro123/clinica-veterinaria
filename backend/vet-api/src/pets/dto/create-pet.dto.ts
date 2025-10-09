@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
 
 export class CreatePetDto {
@@ -12,6 +13,7 @@ export class CreatePetDto {
 
     @IsNumber()
     @IsPositive()
+    @Type(() => Number)
     age: number;
 
     @IsDate()

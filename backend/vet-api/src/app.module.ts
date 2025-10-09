@@ -19,10 +19,10 @@ import { AuthModule } from './auth/auth.module';
 
     PetsModule,
 
-    AuthModule
+    AuthModule,
 
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
