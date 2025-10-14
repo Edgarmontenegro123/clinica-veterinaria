@@ -23,6 +23,9 @@ export class Client {
   @Column("text")
   email: string;
 
+  @Column('simple-array', { default: 'user' })
+  roles: string[]
+
   @OneToMany(() => Pet, (pet) => pet.client)
   pets: Pet[];
 }

@@ -1,0 +1,47 @@
+import { useAuthStore } from "../../store/authStore.js";
+
+const Navbar = () => {
+  const { userEmail, logout, roles } = useAuthStore();
+
+  return (
+    <header className="">
+      <a href="/" className="logo">
+        <img src="/logo.png" alt="Logo Veterinaria" />
+        <h1>Huellitas</h1>
+      </a>
+
+      <nav>
+        <ul>
+          <li>
+            <a href="">¿Quienes Somos?</a>
+          </li>
+
+          <li>
+            <a href="/adoptions">Adopciones</a>
+          </li>
+
+          <li>
+            <a href="">Consultas</a>
+          </li>
+
+          <li>
+            <a href="/mypets">
+              {roles?.includes("admin") ? "Mascotas" : "Mis mascotas"}
+            </a>
+          </li>
+
+          <li>
+            <a href="">Turnos</a>
+          </li>
+          {userEmail ? (
+            <button onClick={() => logout()}>Cerrar Sesión</button>
+          ) : (
+            <a href="/login">Iniciar Sesión</a>
+          )}
+        </ul>
+      </nav>
+    </header>
+  );
+};
+
+export default Navbar;

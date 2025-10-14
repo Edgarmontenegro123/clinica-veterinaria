@@ -43,7 +43,7 @@ export class AuthService {
 
     const userDb = await this.clientRepository.findOne({
       where: { email },
-      select: { password: true, email: true, id: true }
+      select: { password: true, email: true, id: true, roles: true }
     })
 
     if (!userDb || !bcrypt.compareSync(password, userDb.password))
@@ -57,7 +57,6 @@ export class AuthService {
   }
 
   async checkAuthStatus(client: Client) {
-
     return {
       ...client,
       token: this.getJwtToken({ id: client.id })
@@ -66,12 +65,12 @@ export class AuthService {
 
 
   private getJwtToken(payload: JwtPayload) {
-    const token = this.jwtService.sign({ payload });
+    const token = this.jwtService.sign(payload);
     return token;
   }
 
   private handleExceptions(error: any): never {
-    if (error.code === '23505')
+    if (error.code === '1062')
       throw new BadRequestException(error.detail)
 
     this.logger.error(error)

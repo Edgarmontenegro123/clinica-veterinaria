@@ -20,4 +20,8 @@ export class CreateClientDto {
     @IsString()
     @IsNotEmpty()
     password: string;
+
+    @IsString({ each: true })
+    @IsOptional()
+    roles?: string[]
 }
