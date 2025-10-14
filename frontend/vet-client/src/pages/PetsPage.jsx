@@ -46,7 +46,12 @@ const PetsPage = () => {
       ) : (
         <div className="container absolute z-10  h-full flex flex-col  justify-center items-center left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           {pets.length === 0 ? (
-            <p>No tienes mascotas registradas.</p>
+        <div>
+           <p>No tienes mascotas registradas.</p>
+            <a href='/PetRegister'>
+              Registrá tu mascota
+            </a>
+         </div>
           ) : (
             <div className="flex-1 ">
               <PetsContainer pets={pets} setPets={setPets} />
