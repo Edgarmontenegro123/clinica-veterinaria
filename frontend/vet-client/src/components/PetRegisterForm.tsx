@@ -24,7 +24,7 @@ export default function PetRegisterForm() {
             }
 
             const response = await createPet(formData); 
-            console.log('Pet registered successfully');
+            console.log('Pet registered successfully: ', response);
         } catch (error) {
             console.error("Pet registration failed", error);
         }
