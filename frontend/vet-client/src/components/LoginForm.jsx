@@ -9,8 +9,8 @@ export default function LoginForm() {
 
     const onSubmit = async (data) => {
         try {
-            const { token, email, id } = await login(data);
-            setAuth(token, email, id);
+            const { token, email, id, roles } = await login(data);
+            setAuth(token, email, id, roles);
             console.log('user logged in');
         } catch (error) {
             console.error('Login failed', error);

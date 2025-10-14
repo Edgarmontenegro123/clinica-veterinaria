@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export const useAuthStore = create(
   persist(
@@ -7,9 +7,12 @@ export const useAuthStore = create(
       token: null,
       userEmail: null,
       userId: null,
-      setAuth: (token, userEmail, userId) => set({ token, userEmail, userId }),
-      logout: () => set({ token: null, userEmail: null, userId: null }),
+      roles: null,
+      setAuth: (token, userEmail, userId, roles) =>
+        set({ token, userEmail, userId, roles }),
+      logout: () =>
+        set({ token: null, userEmail: null, userId: null, roles: null }),
     }),
-    { name: 'auth-storage' }
+    { name: "auth-storage" }
   )
 );

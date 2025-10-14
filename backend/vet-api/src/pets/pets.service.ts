@@ -25,6 +25,20 @@ export class PetsService {
       const pet = this.petRepository.create({
         ...createPetDto,
         id_client: client.id,
+        has_owner: true,
+      });
+
+      return await this.petRepository.save(pet);
+    } catch (error) {
+      this.handleExceptions(error)
+    }
+  }
+
+  async createAdoptionsPet(createPetDto: CreatePetDto) {
+    try {
+
+      const pet = this.petRepository.create({
+        ...createPetDto,
       });
 
       return await this.petRepository.save(pet);
@@ -44,6 +58,17 @@ export class PetsService {
       return await this.petRepository.find({
         where: { id_client: client.id },
         relations: ['client'],
+      });
+    } catch (error) {
+      this.handleExceptions(error)
+    }
+  }
+
+  async findForAdoption() {
+    try {
+
+      return await this.petRepository.find({
+        where: { has_owner: false },
       });
     } catch (error) {
       this.handleExceptions(error)

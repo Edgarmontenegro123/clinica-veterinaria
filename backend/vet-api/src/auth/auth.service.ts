@@ -43,7 +43,7 @@ export class AuthService {
 
     const userDb = await this.clientRepository.findOne({
       where: { email },
-      select: { password: true, email: true, id: true }
+      select: { password: true, email: true, id: true, roles: true }
     })
 
     if (!userDb || !bcrypt.compareSync(password, userDb.password))

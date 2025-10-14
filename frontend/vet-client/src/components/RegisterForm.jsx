@@ -9,8 +9,8 @@ export default function RegisterForm() {
 
     const onSubmit = async (data) => {
         try {
-            const { token, email, id } = await registerUser(data);
-            setAuth(token, email, id);
+            const { token, email, id, roles } = await registerUser(data);
+            setAuth(token, email, id, roles);
             console.log('user created and logged in');
         } catch (error) {
             console.error('Login failed', error);

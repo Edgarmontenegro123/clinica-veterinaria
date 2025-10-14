@@ -44,12 +44,44 @@ export class PetsController {
     return this.petsService.create(createPetDto, client);
   }
 
+  @Post('adoptions')
+  @Auth(ValidRoles.admin)
+  @UseInterceptors(FileInterceptor('file', {
+    fileFilter: fileFilter,
+    storage: diskStorage({
+      destination: (req, file, cb) => {
+        const uploadPath = join(process.cwd(), 'uploads', 'pets');
+        if (!fs.existsSync(uploadPath)) {
+          fs.mkdirSync(uploadPath, { recursive: true });
+        }
+        cb(null, uploadPath);
+      },
+      filename: fileNamer
+    })
+  }))
+  createAdoptionsPet(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createPetDto: CreatePetDto) {
+
+    if (file) {
+      createPetDto.image = `/uploads/pets/${file.filename}`;
+    }
+
+    return this.petsService.createAdoptionsPet(createPetDto );
+  }
+
   @Get()
   @Auth()
   findAll(
     @GetUser() client: Client
   ) {
     return this.petsService.findAll(client);
+  }
+
+  @Get('adoptions')
+  findForAdoption(
+  ) {
+    return this.petsService.findForAdoption();
   }
 
 

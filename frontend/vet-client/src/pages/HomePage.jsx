@@ -1,49 +1,22 @@
-import { useEffect, useState } from 'react'
-import { getPetsByOwner } from '../services/pets.service.js'
-import { useAuthStore } from '../store/authStore.js'
-
 const HomePage = () => {
-    const { userId } = useAuthStore()
-    const [pets, setPets] = useState([])
 
-    useEffect(() => {
-        const fetchPets = async () => {
-            try {
-                const petsDB = await getPetsByOwner(userId || 0)
-                setPets(petsDB)
-            } catch (error) {
-                console.error('Failed to fetch pets', error);
-            }
-        }
-        fetchPets()
-    }, []);
 
-    if (!userId) {
-        return <div className='flex flex-col justify-center items-center'>
-            <h2>Pagina de inicio</h2>
-            <p>Por favor, <a href='/login'>inicia sesión</a> para ver tus mascotas.</p>
-            <div className='flex gap-5 justify-center'>
-                <a href='/login'>Iniciar sesión</a>
-                <a href='/Register'>Registrarse</a>
-            </div>
-        </div>
-    }
+  return (
+    <div className="imageBackground max-h-screen ">
+      <img src="/fondo.jpg" alt="Fondo" />
 
-    return (
-        <div>
-            <h2>Pagina de inicio</h2>
-            {
-                pets.length > 0 ? (
-                    <ul>
-                        {pets.map((pet) => <li key={pet.id}>{pet.name}</li>)}
-                    </ul>
-                ) : (
-                    <p>No existen mascotas</p>
-                )
-            }
-            <a href='/petregister'>Agregar Mascota</a>
-        </div>
-    )
-}
+      <div className="content w-1/3 left-0 bottom-0 m-10 p-10 py-24 gap-4 flex flex-col items-start">
+        <h2 className=" leading-24">Cuidamos a tus Mascotas</h2>
+        <h3>
+          Somos una clinica veterinaria integral, pioneros en la atencion
+          especializada para tus mascotas. Agendá ahora tu consulta
+        </h3>
+        <button className=" rounded-4xl px-4 py-2 border-2 border-white cursor-pointer hover:bg-white hover:text-black transition-all">
+          Agendar turno
+        </button>
+      </div>
+    </div>
+  );
+};
 
-export default HomePage
+export default HomePage;
