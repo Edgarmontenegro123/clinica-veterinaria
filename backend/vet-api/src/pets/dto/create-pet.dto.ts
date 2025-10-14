@@ -16,6 +16,20 @@ export class CreatePetDto {
     @Type(() => Number)
     age: number;
 
+    @IsString()
+    @IsNotEmpty()
+    sex: string;
+    
+    
+    @IsString()
+    @IsNotEmpty()
+    breed: string;
+    
+    @IsString()
+    @IsOptional()
+    image?: string;
+    
+  
     @IsDate()
     @IsOptional()
     birth_date?: Date;
@@ -27,23 +41,11 @@ export class CreatePetDto {
     @IsString()
     @IsOptional()
     history?: string;
-
-    @IsString()
-    @IsOptional()
-    image?: string;
-
-    @IsString()
-    @IsNotEmpty()
-    sex: string;
-
+    
     @IsOptional()
     has_owner?: boolean;
-
+    
     @IsOptional()
     id_client?: number
-    
-    @IsString()
-    @IsNotEmpty()
-    breed: string;
 }
 

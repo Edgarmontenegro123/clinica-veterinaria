@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseIntPipe } from '@nestjs/common';
 import { PetsService } from './pets.service';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
@@ -11,6 +11,7 @@ import { diskStorage } from 'multer';
 import { fileNamer } from './helpers/fileNamer.helpers';
 import { join } from 'path';
 import * as fs from 'fs';
+import { ValidRoles } from 'src/auth/interfaces/valid-roles';
 
 @Controller('pets')
 export class PetsController {
@@ -44,22 +45,39 @@ export class PetsController {
   }
 
   @Get()
-  findAll() {
-    return this.petsService.findAll();
+  @Auth()
+  findAll(
+    @GetUser() client: Client
+  ) {
+    return this.petsService.findAll(client);
   }
 
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.petsService.findOne(+id);
+  @Auth()
+  findOne(
+    @Param('id') id: string,
+    @GetUser() client: Client
+  ) {
+    return this.petsService.findOne(+id, client);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePetDto: UpdatePetDto) {
-    return this.petsService.update(+id, updatePetDto);
+  @Auth()
+  update(
+    @Param('id') id: string, 
+    @Body() updatePetDto: UpdatePetDto,
+    @GetUser() client: Client
+  ) {
+    return this.petsService.update(+id, updatePetDto, client);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.petsService.remove(+id);
+  @Auth()
+  remove(
+    @Param('id') id: string,
+    @GetUser() client: Client
+  ) {
+    return this.petsService.remove(+id, client);
   }
 }

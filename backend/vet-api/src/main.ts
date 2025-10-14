@@ -8,9 +8,8 @@ import * as express from 'express';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('main')
+
   app.setGlobalPrefix('api');
-
-
 
   app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
 
