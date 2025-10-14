@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '../store/authStore.js';
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
@@ -7,7 +7,6 @@ const instance = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
 
 instance.interceptors.request.use(
     (config) => {

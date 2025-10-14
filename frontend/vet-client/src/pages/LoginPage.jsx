@@ -1,13 +1,13 @@
-import LoginForm from "../components/LoginForm"
-import { useAuthStore } from "../store/authStore"
+import React from 'react';
+import LoginForm from '../components/LoginForm.jsx';
+import { useAuthStore } from '../store/authStore.js'
 
 const LoginPage = () => {
 
   const { userEmail, logout } = useAuthStore()
 
-
   return (
-    <div className="flex justify-center">
+    <div className='flex justify-center'>
       {
         userEmail ?
           <div>
