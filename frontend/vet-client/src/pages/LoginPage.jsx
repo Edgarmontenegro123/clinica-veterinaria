@@ -34,15 +34,15 @@ const LoginPage = () => {
         {/* Texto informativo para login */}
         <div className="info-text login">
           <h2 className="animation" style={{"--i": 0}}>BIENVENIDO</h2>
-          <p className="animation" style={{"--i": 1}}>
+          <p className="animation" style={{"--i": 1, transform: 'translateY(20px)'}}>
             Para acceder ingresa un nombre de usuario, tu correo electrónico y una contraseña.
           </p>
         </div>
 
         {/* Texto informativo para registro */}
-        <div className="info-text register">
+        <div className="info-text register" style={{transform: 'translateY(-80px)'}} >
           <h2 className="animation" style={{"--i": 0}}>¡ÚNETE A NOSOTROS!</h2>
-          <p className="animation" style={{"--i": 1}}>
+          <p className="animation" style={{"--i": 1, transform: 'translateY(20px)'}}>
             Crea tu cuenta para acceder a todos nuestros servicios veterinarios.
           </p>
         </div>

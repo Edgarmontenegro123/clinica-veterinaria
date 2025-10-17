@@ -112,7 +112,7 @@ export default function RegisterForm({ onToggleLogin, onClose }) {
   };
 
   return (
-    <div className="form-box register ">
+    <div className="form-box register" style={{"--i": 0, transform: 'translateY(50px)'}}>
       <h2 className="animation" style={{"--i": 0, transform: 'translateX(60px)'}}>Regístrate</h2>
       <form onSubmit={handleSubmit}>
         <div className="input-box animation" style={{"--i": 1}}>
