@@ -1,6 +1,6 @@
 Proyecto Clínica Veterinaria
 
-Equipo 3
+Equipo 1
 
 Leonardo Daniel Lipiejko
 

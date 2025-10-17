@@ -7,7 +7,7 @@ const Navbar = () => {
     <header className="">
       <a href="/" className="logo">
         <img src="/logo.png" alt="Logo Veterinaria" />
-        <h1>Huellitas</h1>
+        <h1>Clínica Ramvet</h1>
       </a>
 
       <nav>
