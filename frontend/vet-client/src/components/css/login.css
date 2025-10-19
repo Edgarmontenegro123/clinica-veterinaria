@@ -433,24 +433,58 @@
   }
 
   .wrapper .form-box.login,
-  .wrapper .form-box.register,
-  .wrapper .info-text.login,
-  .wrapper .info-text.register {
+  .wrapper .form-box.register {
     left: auto;
     right: auto;
     padding: 20px;
     width: 100%;
   }
 
+  /* ESTILOS ESPECÍFICOS PARA TEXTO INFORMATIVO DE LOGIN */
   .wrapper .info-text.login {
+    left: auto;
+    right: auto;
+    padding: 20px;
+    width: 100%;
     order: 1;
+    margin-top: -40px;
   }
+
+  /* ESTILOS ESPECÍFICOS PARA TEXTO INFORMATIVO DE REGISTER */
+  .wrapper .info-text.register {
+    left: auto;
+    right: auto;
+    padding: 20px;
+    width: 100%;
+    order: 3;
+    margin-top: 80px; /* texto: "¡Únete a nosotros!" */
+    margin-bottom: -120px; 
+  }
+
   .wrapper .form-box.login {
     order: 2;
   }
-  .wrapper .info-text.register {
-    order: 3;
+
+/* Título "Inicio de Sesión" de Login desplazado a la izquierda */
+.wrapper .form-box.login h2 {
+  margin-left:-100px;
+  margin-top: 30px;
+}
+
+/* Título de Registro */
+  .wrapper .form-box.register h2 {
+    /* Aquí puedes ajustar el título "Regístrate" si lo necesitas */
+    margin-left: -410px;
   }
+
+.wrapper .form-box.register .logreg-link {
+    margin-bottom: 40px !important; /* Ajusta: el párrafo: "¿Ya tienes una cuenta? Inicia Sesión*/
+  }
+
+  .wrapper .form-box.login .logreg-link {
+  margin-bottom: -20px; 
+}
+
   .wrapper .form-box.register {
     order: 4;
   }
@@ -496,6 +530,7 @@
   .wrapper.active .form-box.register .input-box {
     margin: 15px 0;
   }
+
 }
 
 @media (max-width: 480px) {
