@@ -1,42 +1,160 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
+/*./components/LoginForm.jsx*/
+import { useState } from 'react';
+import Swal from 'sweetalert2';
 import { useAuthStore } from '../store/authStore.js';
 import { login } from '../services/auth.service.js';
 
-export default function LoginForm() {
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    const setAuth = useAuthStore((state) => state.setAuth);
+export default function LoginForm({ onToggleRegister, onClose }) {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const setAuth = useAuthStore((state) => state.setAuth);
 
-    const onSubmit = async (data) => {
-        try {
-            const { token, email, id, roles } = await login(data);
-            setAuth(token, email, id, roles);
-            console.log('user logged in');
-        } catch (error) {
-            console.error('Login failed', error);
-        }
-    };
+  const validateEmail = (email) => {
+    const re = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    return re.test(email);
+  };
 
-    return (
-        <form className='flex flex-col gap-2 justify-center border-2 p-4 rounded-xl bg-gray-100 ' onSubmit={handleSubmit(onSubmit)}>
-            <div className='flex  flex-col'>
-                <label>Email</label>
-                <input
-                    className='bg-white px-1 rounded-md'
-                    placeholder='Email'
-                    {...register('email', { required: true })} />
-                {errors.email && <span>This field is required</span>}
-            </div>
-            <div className='flex  flex-col'>
-                <label>Password</label>
-                <input
-                    className='bg-white px-1 rounded-md'
-                    type='password'
-                    placeholder='Password'
-                    {...register('password', { required: true })} />
-                {errors.password && <span>This field is required</span>}
-            </div>
-            <input type='submit' />
-        </form>
-    );
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.email) {
+      newErrors.email = 'El correo electrónico es requerido';
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = 'Correo electrónico inválido';
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'La contraseña es requerida';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { token, email, id, roles } = await login(formData);
+      setAuth(token, email, id, roles);
+      
+      console.log('User logged in successfully');
+
+      if (onClose) {
+        onClose();
+      }
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Bienvenido!',
+        text: 'Has iniciado sesión correctamente',
+        timer: 2000,
+        showConfirmButton: false
+      });
+
+    } catch (error) {
+      console.error('Login failed:', error);
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de inicio de sesión',
+        text: error.response?.data?.message || 'Credenciales incorrectas. Por favor, intenta nuevamente.',
+      });
+      
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="form-box login">
+     <h2 className="animation" style={{"--i": 0, fontSize: '26px', transform: 'translateX(-40px)'}}>Inicio de Sesión</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="input-box animation" style={{"--i": 1}}>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <label>Correo electrónico</label>
+          <i className="bx bxs-envelope"></i>
+          {errors.email && (
+            <span style={{color: '#ff4444', fontSize: '12px', position: 'absolute', bottom: '-18px', left: '0'}}>
+              {errors.email}
+            </span>
+          )}
+        </div>
+
+        <div className="input-box animation" style={{"--i": 2}}>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          <label>Contraseña</label>
+          <i className="bx bxs-lock"></i>
+          {errors.password && (
+            <span style={{color: '#ff4444', fontSize: '12px', position: 'absolute', bottom: '-18px', left: '0'}}>
+              {errors.password}
+            </span>
+          )}
+        </div>
+
+        <button type="submit" className="btn animation" style={{"--i": 3}} disabled={isSubmitting}>
+          {isSubmitting ? 'Iniciando...' : 'Iniciar Sesión'}
+        </button>
+
+        {onToggleRegister && (
+          <div className="logreg-link animation" style={{"--i": 4, position: 'relative', zIndex: 10}}>
+            <p>
+              ¿No tienes una cuenta?{' '}
+              <a 
+                href="#" 
+                className="register-link" 
+                style={{cursor: 'pointer', position: 'relative', zIndex: 100}}
+                onClick={(e) => { 
+                  e.preventDefault(); 
+                  console.log('CLICK EN REGISTRATE!!!');
+                  onToggleRegister(); 
+                }}
+              >
+                Regístrate
+              </a>
+            </p>
+          </div>
+        )}
+      </form>
+    </div>
+  );
 }
