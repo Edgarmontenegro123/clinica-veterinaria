@@ -14,38 +14,39 @@ export default function PetRegisterForm() {
   } = useForm();
   const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
-  const { roles } = useAuthStore();
+  // const { roles } = useAuthStore();
 
-  const imageFile = watch("image");
+  // const imageFile = watch("image");
 
-  useEffect(() => {
-    if (imageFile && imageFile.length > 0) {
-      const file = imageFile[0];
-      setPreview(URL.createObjectURL(file));
-    } else {
-      setPreview(null);
-    }
-  }, [imageFile]);
+  // useEffect(() => {
+  //   if (imageFile && imageFile.length > 0) {
+  //     const file = imageFile[0];
+  //     setPreview(URL.createObjectURL(file));
+  //   } else {
+  //     setPreview(null);
+  //   }
+  // }, [imageFile]);
 
   const onSubmit = async (data) => {
     console.log(data)
     try {
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("species", data.species);
-      formData.append("age", data.age.toString());
-      formData.append("sex", data.sex);
-      formData.append("breed", data.breed);
+      // const formData = new FormData();
+      // formData.append("name", data.name);
+      // formData.append("species", data.species);
+      // formData.append("age", data.age.toString());
+      // formData.append("sex", data.sex);
+      // formData.append("breed", data.breed);
 
-      if (data.image && data.image.length > 0) {
-        formData.append("file", data.image[0]);
-      }
+      // if (data.image && data.image.length > 0) {
+      //   formData.append("file", data.image[0]);
+      // }
 
-      if (data.has_owner === true) {
-        const response = await createPetForAdoption(formData);
-      } else {
-        const response = await createPet(formData);
-      }
+      // if (data.has_owner === true) {
+      //   const response = await createPetForAdoption(formData);
+      // } else {
+      const response = await createPet(data);
+      console.log(response)
+      // }
 
       await Swal.fire({
         icon: "success",
@@ -127,7 +128,7 @@ export default function PetRegisterForm() {
         />
         {errors.breed && <span>El campo es requerido</span>}
       </div>
-      {roles?.includes("admin") && (
+      {/* {roles?.includes("admin") && (
         <div className="flex gap-2 items-end">
           <label>¿Es Adoptable?</label>
           <input
@@ -136,9 +137,9 @@ export default function PetRegisterForm() {
             {...register("has_owner", { valueAsBoolean: true })}
           />
         </div>
-      )}
+      )} */}
 
-      <div className="flex flex-col">
+      {/* <div className="flex flex-col">
         <label>Imagen</label>
         <input
           type="file"
@@ -154,7 +155,7 @@ export default function PetRegisterForm() {
             className="mt-2 w-40 h-40 object-cover m-auto rounded-md border"
           />
         )}
-      </div>
+      </div> */}
 
       <button
         type="submit"

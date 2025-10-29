@@ -1,4 +1,4 @@
-/*./components/LoginForm.jsx*/
+/* ./components/LoginForm.jsx */
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useAuthStore } from '../store/authStore.js';
@@ -11,7 +11,7 @@ export default function LoginForm({ onToggleRegister, onClose }) {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const setAuth = useAuthStore((state) => state.setAuth);
 
   const validateEmail = (email) => {
@@ -40,12 +40,12 @@ export default function LoginForm({ onToggleRegister, onClose }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value
     }));
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
         [name]: ''
       }));
@@ -55,39 +55,38 @@ export default function LoginForm({ onToggleRegister, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
 
     try {
-      const { token, email, id, roles } = await login(formData);
-      setAuth(token, email, id, roles);
-      
-      console.log('User logged in successfully');
+      // login() ahora devuelve { user, session }
+      const { user, session } = await login(formData);
+      if (!user) throw new Error('No se encontró el usuario');
 
-      if (onClose) {
-        onClose();
-      }
+      // Guardamos la sesión en Zustand
+      setAuth({ user, session });
+
+      console.log('Usuario autenticado:', user.email);
 
       Swal.fire({
         icon: 'success',
         title: '¡Bienvenido!',
-        text: 'Has iniciado sesión correctamente',
+        text: `Has iniciado sesión como ${user.email}`,
         timer: 2000,
         showConfirmButton: false
       });
 
+      if (onClose) onClose();
+
     } catch (error) {
       console.error('Login failed:', error);
-      
+
       Swal.fire({
         icon: 'error',
         title: 'Error de inicio de sesión',
-        text: error.response?.data?.message || 'Credenciales incorrectas. Por favor, intenta nuevamente.',
+        text: error.message || 'Credenciales incorrectas. Por favor, intenta nuevamente.'
       });
-      
     } finally {
       setIsSubmitting(false);
     }
@@ -95,9 +94,19 @@ export default function LoginForm({ onToggleRegister, onClose }) {
 
   return (
     <div className="form-box login">
-     <h2 className="animation" style={{"--i": 0, fontSize: '26px', transform: 'translateX(-40px)'}}>Inicio de Sesión</h2>
+      <h2
+        className="animation"
+        style={{
+          "--i": 0,
+          fontSize: "26px",
+          transform: "translateX(-40px)"
+        }}
+      >
+        Inicio de Sesión
+      </h2>
+
       <form onSubmit={handleSubmit}>
-        <div className="input-box animation" style={{"--i": 1}}>
+        <div className="input-box animation" style={{ "--i": 1 }}>
           <input
             type="email"
             name="email"
@@ -108,13 +117,21 @@ export default function LoginForm({ onToggleRegister, onClose }) {
           <label>Correo electrónico</label>
           <i className="bx bxs-envelope"></i>
           {errors.email && (
-            <span style={{color: '#ff4444', fontSize: '12px', position: 'absolute', bottom: '-18px', left: '0'}}>
+            <span
+              style={{
+                color: "#ff4444",
+                fontSize: "12px",
+                position: "absolute",
+                bottom: "-18px",
+                left: "0"
+              }}
+            >
               {errors.email}
             </span>
           )}
         </div>
 
-        <div className="input-box animation" style={{"--i": 2}}>
+        <div className="input-box animation" style={{ "--i": 2 }}>
           <input
             type="password"
             name="password"
@@ -125,28 +142,47 @@ export default function LoginForm({ onToggleRegister, onClose }) {
           <label>Contraseña</label>
           <i className="bx bxs-lock"></i>
           {errors.password && (
-            <span style={{color: '#ff4444', fontSize: '12px', position: 'absolute', bottom: '-18px', left: '0'}}>
+            <span
+              style={{
+                color: "#ff4444",
+                fontSize: "12px",
+                position: "absolute",
+                bottom: "-18px",
+                left: "0"
+              }}
+            >
               {errors.password}
             </span>
           )}
         </div>
 
-        <button type="submit" className="btn animation" style={{"--i": 3}} disabled={isSubmitting}>
+        <button
+          type="submit"
+          className="btn animation"
+          style={{ "--i": 3 }}
+          disabled={isSubmitting}
+        >
           {isSubmitting ? 'Iniciando...' : 'Iniciar Sesión'}
         </button>
 
         {onToggleRegister && (
-          <div className="logreg-link animation" style={{"--i": 4, position: 'relative', zIndex: 10}}>
+          <div
+            className="logreg-link animation"
+            style={{ "--i": 4, position: "relative", zIndex: 10 }}
+          >
             <p>
-              ¿No tienes una cuenta?{' '}
-              <a 
-                href="#" 
-                className="register-link" 
-                style={{cursor: 'pointer', position: 'relative', zIndex: 100}}
-                onClick={(e) => { 
-                  e.preventDefault(); 
-                  console.log('CLICK EN REGISTRATE!!!');
-                  onToggleRegister(); 
+              ¿No tienes una cuenta?{" "}
+              <a
+                href="#"
+                className="register-link"
+                style={{
+                  cursor: "pointer",
+                  position: "relative",
+                  zIndex: 100
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  onToggleRegister();
                 }}
               >
                 Regístrate
