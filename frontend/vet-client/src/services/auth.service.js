@@ -16,12 +16,17 @@ export const login = async ({ email, password }) => {
   }
 };
 
-export const registerUser = async ({ email, password }) => {
+export const registerUser = async ({ email, password, name, address, phone }) => {
   try {
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
+    console.log(data);
+    // data.user.id 
+    // console.log(name, address, phone, data.user.id);
+    await supabase.from('users').update([{ name: name, address: address, phone: phone }]).eq('auth_id', data.user.id);
 
     if (error) throw error;
 

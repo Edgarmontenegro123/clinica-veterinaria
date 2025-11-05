@@ -80,10 +80,10 @@ export default function RegisterForm({ onToggleLogin, onClose }) {
     setIsSubmitting(true);
 
     try {
-      const { token, email, id, roles } = await registerUser(formData);
-      setAuth(token, email, id, roles);
+      const { user, session } = await registerUser(formData);
+      setAuth(user, session);
       
-      console.log('User created and logged in');
+      console.log(user, session);
 
       if (onClose) {
         onClose();
