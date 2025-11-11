@@ -25,7 +25,7 @@ const Navbar = () => {
           </li>
 
           <li>
-            <a href="">Turnos</a>
+            <a href="/turnos">Turnos</a>
           </li>
           {user ? (
             <button onClick={logout}>Cerrar Sesión</button>
