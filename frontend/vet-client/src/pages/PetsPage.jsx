@@ -4,7 +4,7 @@ import { useAuthStore } from "../store/authStore.js";
 import PetsContainer from "../components/PetsContainer.jsx";
 
 const PetsPage = () => {
-  const { userId } = useAuthStore();
+  const { user } = useAuthStore();
   const [pets, setPets] = useState([]);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const PetsPage = () => {
   return (
     <div className="flex-1 flex  petsBackgroundImage">
       <img src="/mascotas2.avif" alt="Fondo imagen" className="petBackground" />
-      {!userId ? (
+      {!user ? (
         <div
           className="absolute z-10 border-4 border-red-800 w-1/3 h-48 p-10 rounded-3xl bg-white/70 text-center flex flex-col justify-center items-center 
   left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -46,7 +46,12 @@ const PetsPage = () => {
       ) : (
         <div className="container absolute z-10  h-full flex flex-col  justify-center items-center left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           {pets.length === 0 ? (
-            <p>No tienes mascotas registradas.</p>
+        <div>
+           <p>No tienes mascotas registradas.</p>
+            <a href='/PetRegister'>
+              Registrá tu mascota
+            </a>
+         </div>
           ) : (
             <div className="flex-1 ">
               <PetsContainer pets={pets} setPets={setPets} />

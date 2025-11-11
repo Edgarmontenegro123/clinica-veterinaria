@@ -4,14 +4,14 @@ import { useAuthStore } from "../store/authStore.js";
 import PetRegisterForm from "../components/PetRegisterForm.jsx";
 
 const PetRegisterPage = () => {
-  const { userId } = useAuthStore();
+  const { user } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!userId) {
+    if (!user) {
       navigate("/", { replace: true });
     }
-  }, [userId, navigate]);
+  }, [user, navigate]);
 
   return (
     <div className="flex-1 flex petsBackgroundImage">

@@ -1,13 +1,13 @@
 import { useAuthStore } from "../../store/authStore.js";
 
 const Navbar = () => {
-  const { userEmail, logout, roles } = useAuthStore();
+  const { user, logout  } = useAuthStore();
 
   return (
     <header className="">
       <a href="/" className="logo">
         <img src="/logo.png" alt="Logo Veterinaria" />
-        <h1>Huellitas</h1>
+        <h1>Clínica Ramvet</h1>
       </a>
 
       <nav>
@@ -25,16 +25,10 @@ const Navbar = () => {
           </li>
 
           <li>
-            <a href="/mypets">
-              {roles?.includes("admin") ? "Mascotas" : "Mis mascotas"}
-            </a>
-          </li>
-
-          <li>
             <a href="">Turnos</a>
           </li>
-          {userEmail ? (
-            <button onClick={() => logout()}>Cerrar Sesión</button>
+          {user ? (
+            <button onClick={logout}>Cerrar Sesión</button>
           ) : (
             <a href="/login">Iniciar Sesión</a>
           )}

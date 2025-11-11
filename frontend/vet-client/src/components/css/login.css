@@ -1,0 +1,572 @@
+/* ../compontents/src/css/login.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ESTILOS PARA LA PÁGINA DE LOGIN COMPLETA */
+.login-page-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #081b29;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  z-index: 1000;
+}
+
+/* Contenedor del wrapper para aislar estilos */
+.login-page-container * {
+  box-sizing: border-box;
+}
+
+/* ESTILOS PARA MODAL/OVERLAY */
+.login-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(8, 27, 41, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.cerrar-login {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 24px;
+  color: white;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 10000;
+}
+
+/* WRAPPER DEL LOGIN - ALTURA UNIFORME */
+.wrapper {
+  position: relative;
+  width: 750px;
+  height: 600px;
+  background: transparent;
+  border: 2px solid #0ef;
+  box-shadow: 0 0 25px #0ef;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: height 0.5s ease;
+}
+
+/* === FORMULARIOS === */
+.wrapper .form-box {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  z-index: 10;
+}
+
+.wrapper .form-box.login {
+  left: 0;
+  padding: 40px 60px 40px 40px;
+}
+
+.wrapper .form-box.register {
+  right: 0;
+  padding: 30px 40px 30px 60px;
+}
+
+.wrapper .form-box.login .animation,
+.wrapper .form-box.register .animation {
+  transform: translateX(0);
+  opacity: 1;
+  filter: blur(0);
+  transition: 0.7s ease;
+  transition-delay: calc(0.1s * var(--i));
+}
+
+.wrapper.active .form-box.login .animation {
+  transform: translateX(-120%);
+  opacity: 0;
+  filter: blur(10px);
+  transition-delay: calc(0.1s * var(--i));
+}
+
+.wrapper .form-box.register .animation {
+  transform: translateX(120%);
+  opacity: 0;
+  filter: blur(10px);
+  transition-delay: calc(0.7s + 0.1s * var(--i));
+}
+
+.wrapper.active .form-box.register .animation {
+  transform: translateX(0);
+  opacity: 1;
+  filter: blur(0);
+  transition-delay: calc(0.7s + 0.1s * var(--i));
+}
+
+.form-box h2 {
+  font-size: 32px;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Ajustes para el título del registro */
+.wrapper.active .form-box.register h2 {
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.form-box .input-box {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 30px 0;
+}
+
+/* Reducir márgenes en registro para que quepa */
+.wrapper.active .form-box.register .input-box {
+  margin: 18px 0;
+  height: 45px;
+}
+
+.input-box input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid #fff;
+  padding-right: 23px;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 500;
+  transition: 0.5s;
+  position: relative;
+  z-index: 10;
+}
+
+.input-box input:focus,
+.input-box input:valid {
+  border-bottom-color: #0ef;
+}
+
+.input-box label {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #fff;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+.input-box input:focus~label,
+.input-box input:valid~label {
+  top: -5px;
+  color: #0ef;
+}
+
+.input-box i {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #fff;
+  transition: 0.5s;
+}
+
+.input-box input:focus~i,
+.input-box input:valid~i {
+  color: #0ef;
+}
+
+/* Asegurar que todos los íconos de boxicons se vean correctamente */
+.input-box .bx {
+  font-size: 18px;
+}
+
+.btn {
+  position: relative;
+  width: 100%;
+  height: 45px;
+  background: transparent;
+  border: 2px solid #0ef;
+  outline: none;
+  border-radius: 40px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #d1d0d0 !important;
+  font-weight: 600;
+  z-index: 10;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 300%;
+  background: linear-gradient(#081b29, #0ef, #081b29, #0ef);
+  z-index: -1;
+  transition: 0.5s;
+}
+
+.btn:hover::before {
+  top: 0;
+}
+
+.form-box .logreg-link {
+  font-size: 14.5px;
+  color: #fff;
+  text-align: center;
+  margin: 20px 0 10px;
+  position: relative;
+  z-index: 100;
+}
+
+.logreg-link p a {
+  color: #0ef;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  z-index: 101;
+}
+
+.logreg-link p a:hover {
+  text-decoration: underline;
+}
+
+/* Asegurar que los enlaces de login-link también sean clickeables */
+.login-link {
+  cursor: pointer !important;
+  z-index: 101 !important;
+  position: relative;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+/* === TEXTOS INFORMATIVOS === */
+.wrapper .info-text {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 5;
+}
+
+.wrapper .info-text.login {
+  right: 0;
+  text-align: right;
+  padding: 0 40px 60px 120px;
+}
+
+.wrapper .info-text.register {
+  left: 0;
+  text-align: left;
+  padding: 0 120px 60px 40px;
+}
+
+/* Animaciones para el texto de LOGIN */
+.wrapper .info-text.login .animation {
+  transform: translateX(0);
+  opacity: 1;
+  filter: blur(0);
+  transition: 0.7s ease;
+  transition-delay: calc(0.1s * var(--i));
+}
+
+.wrapper.active .info-text.login .animation {
+  transform: translateX(120%);
+  opacity: 0;
+  filter: blur(10px);
+  transition: 0.7s ease;
+  transition-delay: calc(0.1s * var(--i));
+}
+
+/* Animaciones para el texto de REGISTRO */
+.wrapper .info-text.register .animation {
+  transform: translateX(-120%);
+  opacity: 0;
+  filter: blur(10px);
+  transition: 0.7s ease;
+  transition-delay: calc(0.1s * var(--i));
+}
+
+.wrapper.active .info-text.register .animation {
+  transform: translateX(0);
+  opacity: 1;
+  filter: blur(0);
+  transition: 0.7s ease;
+  transition-delay: calc(0.5s + 0.1s * var(--i));
+}
+
+.info-text h2 {
+  font-size: 36px;
+  color: #fff;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.info-text p {
+  font-size: 16px;
+  color: #fff;
+}
+
+/* === FONDOS ANIMADOS === */
+.wrapper .bg-animate {
+  position: absolute;
+  top: -4px;
+  right: 0;
+  width: 850px;
+  height: 700px;
+  background: linear-gradient(45deg, #081b29, #0ef);
+  border-bottom: 3px solid #0ef;
+  transform: rotate(10deg) skewY(40deg);
+  transform-origin: bottom right;
+  transition: 1.5s ease;
+  transition-delay: 1.6s;
+  z-index: 1;
+}
+
+.wrapper.active .bg-animate {
+  transform: rotate(0) skewY(0);
+  transition-delay: 0.5s;
+}
+
+.wrapper .bg-animate2 {
+  position: absolute;
+  top: 100%;
+  left: 250px;
+  width: 850px;
+  height: 800px;
+  background: #081b29;
+  border-bottom: 3px solid #0ef;
+  transform: rotate(0) skewY(0);
+  transform-origin: bottom left;
+  transition: 1.5s ease;
+  transition-delay: 0.5s;
+  z-index: 1;
+}
+
+.wrapper.active .bg-animate2 {
+  transform: rotate(-11deg) skewY(-41deg);
+  transition-delay: 1.2s;
+}
+
+/* RESPONSIVE - TABLETS */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .wrapper {
+    width: 650px;
+    height: 550px;
+  }
+
+  .form-box h2 {
+    font-size: 28px;
+  }
+
+  .wrapper.active .form-box.register h2 {
+    font-size: 24px;
+  }
+
+  .form-box .input-box {
+    margin: 25px 0;
+  }
+
+  .wrapper.active .form-box.register .input-box {
+    margin: 15px 0;
+  }
+
+  .info-text h2 {
+    font-size: 30px;
+  }
+}
+
+/* RESPONSIVE - MÓVILES */
+@media (max-width: 768px) {
+  .login-page-container {
+    padding: 10px;
+  }
+
+  .wrapper {
+    flex-direction: column;
+    width: 95vw;
+    max-width: 450px;
+    height: auto;
+    min-height: 600px;
+    padding: 20px;
+  }
+
+  .wrapper .form-box,
+  .wrapper .info-text {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 20px 0;
+    text-align: center;
+  }
+
+  .wrapper .form-box.login,
+  .wrapper .form-box.register {
+    left: auto;
+    right: auto;
+    padding: 20px;
+    width: 100%;
+  }
+
+  /* ESTILOS ESPECÍFICOS PARA TEXTO INFORMATIVO DE LOGIN */
+  .wrapper .info-text.login {
+    left: auto;
+    right: auto;
+    padding: 20px;
+    width: 100%;
+    order: 1;
+    margin-top: -40px;
+  }
+
+  /* ESTILOS ESPECÍFICOS PARA TEXTO INFORMATIVO DE REGISTER */
+  .wrapper .info-text.register {
+    left: auto;
+    right: auto;
+    padding: 20px;
+    width: 100%;
+    order: 3;
+    margin-top: 80px; /* texto: "¡Únete a nosotros!" */
+    margin-bottom: -120px; 
+  }
+
+  .wrapper .form-box.login {
+    order: 2;
+  }
+
+/* Título "Inicio de Sesión" de Login desplazado a la izquierda */
+.wrapper .form-box.login h2 {
+  margin-left:-100px;
+  margin-top: 30px;
+}
+
+/* Título de Registro */
+  .wrapper .form-box.register h2 {
+    /* Aquí puedes ajustar el título "Regístrate" si lo necesitas */
+    margin-left: -410px;
+  }
+
+.wrapper .form-box.register .logreg-link {
+    margin-bottom: 40px !important; /* Ajusta: el párrafo: "¿Ya tienes una cuenta? Inicia Sesión*/
+  }
+
+  .wrapper .form-box.login .logreg-link {
+  margin-bottom: -20px; 
+}
+
+  .wrapper .form-box.register {
+    order: 4;
+  }
+
+  .wrapper .form-box,
+  .wrapper .info-text {
+    display: none;
+  }
+
+  .wrapper.active .form-box.register,
+  .wrapper.active .info-text.register,
+  .wrapper:not(.active) .form-box.login,
+  .wrapper:not(.active) .info-text.login {
+    display: flex;
+  }
+
+  .wrapper .form-box.login .animation,
+  .wrapper .form-box.register .animation,
+  .wrapper .info-text.login .animation,
+  .wrapper .info-text.register .animation {
+    transform: none;
+    opacity: 1;
+    filter: blur(0);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .wrapper.active .form-box.login,
+  .wrapper.active .info-text.login,
+  .wrapper:not(.active) .form-box.register,
+  .wrapper:not(.active) .info-text.register {
+    display: none;
+  }
+
+  .wrapper .bg-animate,
+  .wrapper .bg-animate2 {
+    display: none;
+  }
+
+  .form-box .input-box {
+    margin: 20px 0;
+  }
+
+  .wrapper.active .form-box.register .input-box {
+    margin: 15px 0;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    min-height: 550px;
+    padding: 10px;
+  }
+
+  .form-box h2 {
+    font-size: 22px;
+  }
+
+  .wrapper.active .form-box.register h2 {
+    font-size: 20px;
+  }
+
+  .input-box input,
+  .input-box label,
+  .input-box i,
+  .btn,
+  .form-box .logreg-link,
+  .info-text p {
+    font-size: 13px;
+  }
+
+  .info-text h2 {
+    font-size: 24px;
+  }
+
+  .form-box .input-box {
+    margin: 18px 0;
+    height: 45px;
+  }
+
+  .wrapper.active .form-box.register .input-box {
+    margin: 12px 0;
+    height: 42px;
+  }
+}
