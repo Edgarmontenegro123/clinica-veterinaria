@@ -1,7 +1,7 @@
 import { useAuthStore } from "../../store/authStore.js";
 
 const Navbar = () => {
-  const { user, session  } = useAuthStore();
+  const { user, logout  } = useAuthStore();
 
   return (
     <header className="">
@@ -28,7 +28,7 @@ const Navbar = () => {
             <a href="">Turnos</a>
           </li>
           {user ? (
-            <button onClick={() => logout()}>Cerrar Sesión</button>
+            <button onClick={logout}>Cerrar Sesión</button>
           ) : (
             <a href="/login">Iniciar Sesión</a>
           )}

@@ -7,15 +7,15 @@ import { useNavigate } from "react-router-dom";
 import '../components/css/login.css';
 
 const LoginPage = () => {
-  const { userEmail } = useAuthStore();
+  const { user } = useAuthStore();
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
   
   useEffect(() => {
-    if (userEmail) {
+    if (user) {
       navigate('/', { replace: true })
     }
-  }, [userEmail, navigate]);
+  }, [user, navigate]);
 
   const handleToggleRegister = () => {
     setIsActive(true);
