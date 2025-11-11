@@ -3,7 +3,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import PetRegisterPage from "./pages/PetRegisterPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
-import Navbar from "./components/layout/navbar.jsx";
+import Navbar from "./components/layout/Navbar.jsx";
 import PetsPage from "./pages/PetsPage.jsx";
 import AdoptionsPage from "./pages/AdoptionsPage.jsx";
 
