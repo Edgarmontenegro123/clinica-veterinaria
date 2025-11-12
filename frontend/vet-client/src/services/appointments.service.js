@@ -145,11 +145,11 @@ export const cancelAppointment = async (appointmentId) => {
  */
 export const getUserPets = async (userId) => {
     try {
+        console.log(userId)
         const { data, error } = await supabase
             .from('pet')
             .select('*')
-            .eq('user_id', userId)
-            .eq('has_owner', true);
+            .eq('user_id', userId);
 
         if (error) {
             console.error('Error fetching user pets:', error);
