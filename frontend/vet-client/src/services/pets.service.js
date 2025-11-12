@@ -64,19 +64,31 @@ export const getPetsForAdoptions = async () => {
 // };
 
 export const createPet = async (petData) => {
-    try {
-        const { data, error } = await supabase
-            .from('pet')
-            .insert([{...petData, "is_active": true}])
-            .select()
-        if (error) {
-            console.log(error)
-        }
-        console.log(data);
-    } catch (error) {
-        console.error(error);
+  try {
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
+
+    const { data, error } = await supabase
+      .from('pet')
+      .insert([{ 
+        ...petData,
+        user_id: user.id,     // <-- aquí
+        is_active: true
+      }])
+      .select();
+
+    if (error) {
+      console.log(error);
+      return;
     }
-}
+
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
 export const deletePet = async (id) => {
     try {

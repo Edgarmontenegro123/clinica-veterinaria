@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage.jsx";
 import Navbar from "./components/layout/Navbar.jsx";
 import PetsPage from "./pages/PetsPage.jsx";
 import AdoptionsPage from "./pages/AdoptionsPage.jsx";
+import AppointmentsPage from "./pages/AppointmentsPage.jsx";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/petregister" element={<PetRegisterPage />} />
           <Route path="/mypets" element={<PetsPage />} />
           <Route path="/adoptions" element={<AdoptionsPage />} />
+          <Route path="/turnos" element={<AppointmentsPage />} />
           <Route
             path="/*"
             element={
