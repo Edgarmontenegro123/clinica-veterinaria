@@ -570,3 +570,51 @@
     height: 42px;
   }
 }
+
+/* === ESTILOS PARA AUTOCOMPLETADO DEL NAVEGADOR === */
+/* Chrome, Safari, Edge, Opera */
+.input-box input:-webkit-autofill,
+.input-box input:-webkit-autofill:hover,
+.input-box input:-webkit-autofill:focus,
+.input-box input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: #fff !important;
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: inset 0 0 20px 20px transparent !important;
+  background-color: transparent !important;
+  caret-color: #fff;
+}
+
+/* Firefox */
+.input-box input:-moz-autofill,
+.input-box input:-moz-autofill-preview {
+  filter: none !important;
+  background-color: transparent !important;
+  color: #fff !important;
+}
+
+/* Asegurar que el label se mueva cuando hay autocompletado */
+.input-box input:-webkit-autofill ~ label {
+  top: -5px;
+  color: #0ef;
+}
+
+.input-box input:-webkit-autofill ~ i {
+  color: #0ef;
+}
+
+/* === ESTILOS PARA ENLACE DE RECUPERAR CONTRASEÑA === */
+.forgot-password-link {
+  position: relative;
+  z-index: 100;
+}
+
+.forgot-password-link a {
+  position: relative;
+  z-index: 101;
+  display: inline-block;
+}
+
+.forgot-password-link a:hover {
+  color: #00d9ff !important;
+}

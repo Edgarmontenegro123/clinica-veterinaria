@@ -24,7 +24,7 @@ export const registerUser = async ({ email, password, name, address, phone }) =>
       password,
     });
     console.log(data);
-    // data.user.id 
+    // data.user.id
     // console.log(name, address, phone, data.user.id);
     await supabase.from('users').update([{ name: name, address: address, phone: phone }]).eq('auth_id', data.user.id);
 
@@ -33,6 +33,21 @@ export const registerUser = async ({ email, password, name, address, phone }) =>
     return { user: data.user, session: data.session };
   } catch (error) {
     console.error('Registration error:', error.message);
+    throw error;
+  }
+};
+
+export const resetPassword = async (email) => {
+  try {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.error('Password reset error:', error.message);
     throw error;
   }
 };

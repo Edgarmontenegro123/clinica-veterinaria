@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useAuthStore } from '../store/authStore.js';
-import { login } from '../services/auth.service.js';
+import { login, resetPassword } from '../services/auth.service.js';
 
 export default function LoginForm({ onToggleRegister, onClose }) {
   const [formData, setFormData] = useState({
@@ -92,6 +92,52 @@ export default function LoginForm({ onToggleRegister, onClose }) {
     }
   };
 
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+
+    // Validar que el email esté ingresado
+    if (!formData.email) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Correo requerido',
+        text: 'Por favor, ingresa tu correo electrónico para restablecer tu contraseña.',
+        confirmButtonText: 'Entendido'
+      });
+      return;
+    }
+
+    // Validar formato de email
+    if (!validateEmail(formData.email)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Correo inválido',
+        text: 'Por favor, ingresa un correo electrónico válido.',
+        confirmButtonText: 'Entendido'
+      });
+      return;
+    }
+
+    try {
+      await resetPassword(formData.email);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Correo enviado',
+        text: `Se ha enviado un enlace de recuperación a ${formData.email}. Por favor, revisa tu bandeja de entrada.`,
+        confirmButtonText: 'Entendido'
+      });
+    } catch (error) {
+      console.error('Password reset failed:', error);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.message || 'No se pudo enviar el correo de recuperación. Por favor, intenta nuevamente.',
+        confirmButtonText: 'Entendido'
+      });
+    }
+  };
+
   return (
     <div className="form-box login">
       <h2
@@ -154,6 +200,32 @@ export default function LoginForm({ onToggleRegister, onClose }) {
               {errors.password}
             </span>
           )}
+        </div>
+
+        <div
+          className="forgot-password-link animation"
+          style={{
+            "--i": 2.5,
+            textAlign: "right",
+            marginTop: "-15px",
+            marginBottom: "10px"
+          }}
+        >
+          <a
+            href="#"
+            onClick={handleForgotPassword}
+            style={{
+              color: "#0ef",
+              fontSize: "12px",
+              textDecoration: "none",
+              cursor: "pointer",
+              transition: "all 0.3s ease"
+            }}
+            onMouseOver={(e) => (e.target.style.textDecoration = "underline")}
+            onMouseOut={(e) => (e.target.style.textDecoration = "none")}
+          >
+            ¿Olvidaste tu contraseña?
+          </a>
         </div>
 
         <button

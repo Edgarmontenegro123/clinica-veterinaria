@@ -47,19 +47,50 @@ nav a.active-link {
   text-decoration: underline;
 }
 
-nav button {
-  background-color: white;
-  color: green;
-  border: 2px solid green;
-  padding: 0.5rem 1rem;
-  border-radius: 3rem;
+/* Estilos para botones de autenticación en navbar */
+.nav-auth-button {
+  padding: 0.6rem 1.5rem;
+  border-radius: 2rem;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
 }
 
-nav button:hover {
-  background-color: green;
+.nav-login-button {
+  background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
   color: white;
-  transition: 0.2s;
+}
+
+.nav-login-button:hover {
+  background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(22, 163, 74, 0.4);
+}
+
+.nav-login-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(22, 163, 74, 0.3);
+}
+
+.nav-logout-button {
+  background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+  color: white;
+}
+
+.nav-logout-button:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(220, 38, 38, 0.4);
+}
+
+.nav-logout-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
 }
 
 /* ESTILOS HOME PAGE */

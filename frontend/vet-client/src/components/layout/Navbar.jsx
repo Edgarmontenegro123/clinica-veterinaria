@@ -1,12 +1,17 @@
 import { useAuthStore } from "../../store/authStore.js";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { user, logout  } = useAuthStore();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActive = (path) => {
     return location.pathname === path ? "active-link" : "";
+  };
+
+  const handleLoginClick = () => {
+    navigate('/login');
   };
 
   return (
@@ -42,9 +47,13 @@ const Navbar = () => {
             <a href="/mypets" className={isActive("/mypets")}>Mis Mascotas</a>
           </li>
           {user ? (
-            <button onClick={logout}>Cerrar Sesión</button>
+            <button className="nav-auth-button nav-logout-button" onClick={logout}>
+              Cerrar Sesión
+            </button>
           ) : (
-            <a href="/login">Iniciar Sesión</a>
+            <button className="nav-auth-button nav-login-button" onClick={handleLoginClick}>
+              Iniciar Sesión
+            </button>
           )}
         </ul>
       </nav>
