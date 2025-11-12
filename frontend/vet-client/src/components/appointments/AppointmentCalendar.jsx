@@ -75,12 +75,27 @@ const AppointmentCalendar = () => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
+        // Calcular la fecha máxima (2 meses desde hoy)
+        const maxDate = new Date();
+        maxDate.setMonth(maxDate.getMonth() + 2);
+        maxDate.setHours(0, 0, 0, 0);
+
         // No permitir seleccionar fechas pasadas
         if (date < today) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Fecha no válida',
                 text: 'No puedes seleccionar fechas pasadas',
+            });
+            return;
+        }
+
+        // No permitir seleccionar fechas mayores a 2 meses
+        if (date > maxDate) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Fecha no válida',
+                text: 'Solo puedes reservar turnos con hasta 2 meses de anticipación',
             });
             return;
         }
@@ -229,7 +244,15 @@ const AppointmentCalendar = () => {
                             const date = new Date(year, month, day);
                             const today = new Date();
                             today.setHours(0, 0, 0, 0);
+
+                            // Calcular la fecha máxima (2 meses desde hoy)
+                            const maxDate = new Date();
+                            maxDate.setMonth(maxDate.getMonth() + 2);
+                            maxDate.setHours(0, 0, 0, 0);
+
                             const isPast = date < today;
+                            const isTooFar = date > maxDate;
+                            const isDisabled = isPast || isTooFar;
                             const isSelected = selectedDate &&
                                 selectedDate.getDate() === day &&
                                 selectedDate.getMonth() === month &&
@@ -239,10 +262,10 @@ const AppointmentCalendar = () => {
                                 <button
                                     key={day}
                                     onClick={() => handleDateClick(day)}
-                                    disabled={isPast}
+                                    disabled={isDisabled}
                                     className={`
                                         aspect-square rounded-lg font-semibold transition-all
-                                        ${isPast
+                                        ${isDisabled
                                             ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                                             : isSelected
                                                 ? 'bg-blue-600 text-white shadow-lg scale-105'

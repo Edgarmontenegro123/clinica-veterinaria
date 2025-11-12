@@ -65,19 +65,39 @@ const MyAppointments = () => {
 
         if (result.isConfirmed) {
             try {
+                // Mostrar loading
+                Swal.fire({
+                    title: 'Cancelando turno...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Cancelar el turno
                 await cancelAppointment(appointmentId);
+
+                // Actualizar el estado local inmediatamente (optimistic update)
+                setAppointments(prevAppointments =>
+                    prevAppointments.filter(apt => apt.id !== appointmentId)
+                );
+
+                // Mostrar mensaje de éxito
                 Swal.fire({
                     icon: 'success',
                     title: 'Turno cancelado',
                     text: 'El turno ha sido cancelado exitosamente',
+                    timer: 2000,
                 });
-                loadAppointments(); // Recargar la lista
+
             } catch (error) {
                 console.error('Error canceling appointment:', error);
+                // Si hay error, recargar para asegurar consistencia
+                await loadAppointments();
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'No se pudo cancelar el turno',
+                    text: error.message || 'No se pudo cancelar el turno',
                 });
             }
         }

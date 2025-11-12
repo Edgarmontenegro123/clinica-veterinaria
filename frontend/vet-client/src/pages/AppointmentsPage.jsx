@@ -9,6 +9,7 @@ const AppointmentsPage = () => {
     const { user } = useAuthStore();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('new'); // 'new' o 'my-appointments'
+    const [refreshKey, setRefreshKey] = useState(0);
 
     useEffect(() => {
         if (!user) {
@@ -22,6 +23,14 @@ const AppointmentsPage = () => {
             });
         }
     }, [user, navigate]);
+
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+        if (tab === 'my-appointments') {
+            // Incrementar el key para forzar recarga del componente
+            setRefreshKey(prev => prev + 1);
+        }
+    };
 
     if (!user) {
         return null;
@@ -37,7 +46,7 @@ const AppointmentsPage = () => {
             {/* Tabs */}
             <div className="flex gap-4 mb-6 border-b border-gray-200">
                 <button
-                    onClick={() => setActiveTab('new')}
+                    onClick={() => handleTabChange('new')}
                     className={`px-6 py-3 font-semibold transition-all ${
                         activeTab === 'new'
                             ? 'text-blue-600 border-b-2 border-blue-600'
@@ -47,7 +56,7 @@ const AppointmentsPage = () => {
                     Nuevo Turno
                 </button>
                 <button
-                    onClick={() => setActiveTab('my-appointments')}
+                    onClick={() => handleTabChange('my-appointments')}
                     className={`px-6 py-3 font-semibold transition-all ${
                         activeTab === 'my-appointments'
                             ? 'text-blue-600 border-b-2 border-blue-600'
@@ -61,9 +70,9 @@ const AppointmentsPage = () => {
             {/* Contenido según tab activo */}
             <div className="bg-white rounded-lg shadow-lg p-6">
                 {activeTab === 'new' ? (
-                    <AppointmentCalendar />
+                    <AppointmentCalendar key="new" />
                 ) : (
-                    <MyAppointments />
+                    <MyAppointments key={`my-appointments-${refreshKey}`} />
                 )}
             </div>
         </div>

@@ -2,13 +2,13 @@ import { supabase } from './supabase.js';
 
 /**
  * Genera los slots de horarios disponibles para un día específico
- * Horario: 10:00 a 20:00, cada 45 minutos
+ * Horario: 10:00 a 20:00, cada 30 minutos
  */
 export const generateTimeSlots = () => {
     const slots = [];
     const startHour = 10;
     const endHour = 20;
-    const intervalMinutes = 45;
+    const intervalMinutes = 30;
 
     for (let hour = startHour; hour < endHour; hour++) {
         for (let minute = 0; minute < 60; minute += intervalMinutes) {
@@ -56,6 +56,13 @@ export const getAvailableTimeSlots = async (date) => {
     try {
         const allSlots = generateTimeSlots();
         const appointments = await getAppointmentsByDate(date);
+        const now = new Date();
+        const selectedDate = new Date(date);
+
+        // Verificar si la fecha seleccionada es hoy
+        const isToday = selectedDate.getDate() === now.getDate() &&
+                        selectedDate.getMonth() === now.getMonth() &&
+                        selectedDate.getFullYear() === now.getFullYear();
 
         // Extraer las horas ocupadas
         const bookedSlots = appointments.map(apt => {
@@ -64,7 +71,25 @@ export const getAvailableTimeSlots = async (date) => {
         });
 
         // Filtrar los slots disponibles
-        const availableSlots = allSlots.filter(slot => !bookedSlots.includes(slot));
+        let availableSlots = allSlots.filter(slot => !bookedSlots.includes(slot));
+
+        // Si es hoy, filtrar también los horarios que ya pasaron
+        if (isToday) {
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+
+            availableSlots = availableSlots.filter(slot => {
+                const [slotHour, slotMinute] = slot.split(':').map(Number);
+
+                // Comparar hora y minutos
+                if (slotHour > currentHour) {
+                    return true;
+                } else if (slotHour === currentHour && slotMinute > currentMinute) {
+                    return true;
+                }
+                return false;
+            });
+        }
 
         return availableSlots;
     } catch (error) {
@@ -78,9 +103,22 @@ export const getAvailableTimeSlots = async (date) => {
  */
 export const createAppointment = async (appointmentData) => {
     try {
+        // Obtener el usuario autenticado
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+            throw new Error('Usuario no autenticado');
+        }
+
+        // Agregar el user_id explícitamente
+        const dataToInsert = {
+            ...appointmentData,
+            user_id: user.id // Usar el auth_id del usuario autenticado
+        };
+
         const { data, error } = await supabase
             .from('appoinment')
-            .insert([appointmentData])
+            .insert([dataToInsert])
             .select('*, pet(*)');
 
         if (error) {
@@ -123,6 +161,23 @@ export const getUserAppointments = async (userId) => {
  */
 export const cancelAppointment = async (appointmentId) => {
     try {
+        // Primero verificar si el turno existe
+        const { data: existingAppointment, error: fetchError } = await supabase
+            .from('appoinment')
+            .select('*')
+            .eq('id', appointmentId)
+            .single();
+
+        if (fetchError) {
+            console.error('Error al buscar el turno:', fetchError);
+            throw new Error('No se pudo encontrar el turno');
+        }
+
+        if (!existingAppointment) {
+            throw new Error('El turno no existe');
+        }
+
+        // Eliminar el turno
         const { error } = await supabase
             .from('appoinment')
             .delete()
