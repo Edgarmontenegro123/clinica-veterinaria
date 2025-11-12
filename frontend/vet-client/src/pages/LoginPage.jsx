@@ -3,19 +3,31 @@ import { useEffect, useState } from "react";
 import LoginForm from "../components/LoginForm.jsx";
 import RegisterForm from "../components/RegisterForm.jsx";
 import { useAuthStore } from "../store/authStore.js";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import '../components/css/login.css';
 
 const LoginPage = () => {
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isActive, setIsActive] = useState(false);
-  
+
   useEffect(() => {
     if (user) {
       navigate('/', { replace: true })
     }
   }, [user, navigate]);
+
+  // Detectar si se debe abrir en modo registro
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    if (searchParams.get('mode') === 'register') {
+      // Pequeño delay para que se vea la animación de transición
+      setTimeout(() => {
+        setIsActive(true);
+      }, 300);
+    }
+  }, [location]);
 
   const handleToggleRegister = () => {
     setIsActive(true);

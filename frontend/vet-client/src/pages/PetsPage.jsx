@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { getPets } from "../services/pets.service.js";
 import { useAuthStore } from "../store/authStore.js";
 import PetsContainer from "../components/PetsContainer.jsx";
 import { getUserPets } from "../services/appointments.service.js";
@@ -25,21 +24,42 @@ const PetsPage = () => {
       <img src="/mascotas2.avif" alt="Fondo imagen" className="petBackground" />
       {!user ? (
         <div
-          className="absolute z-10 border-4 border-red-800 w-1/3 h-48 p-10 rounded-3xl bg-white/70 text-center flex flex-col justify-center items-center 
+          className="auth-message-container absolute z-10 w-[500px] p-8 rounded-2xl bg-white shadow-2xl text-center flex flex-col justify-center items-center
   left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         >
-          <p>
-            Por favor,{" "}
-            <a href="/login" className="text-blue-800 font-bold">
-              inicia sesión
-            </a>{" "}
-            para ver tus mascotas.
-          </p>
-          <div className="flex gap-5 justify-center mt-4">
-            <a className="px-4 py-2 border rounded-xl" href="/login">
+          <div className="mb-6">
+            <svg
+              className="w-20 h-20 mx-auto mb-4 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
+            </svg>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              Acceso Restringido
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Por favor, inicia sesión para ver tus mascotas
+            </p>
+          </div>
+          <div className="flex gap-4 justify-center w-full">
+            <a
+              className="auth-button auth-button-login flex-1 px-6 py-3 bg-green-600 text-white rounded-lg font-semibold"
+              href="/login"
+            >
               Iniciar sesión
             </a>
-            <a className="px-4 py-2 border rounded-xl" href="/Register">
+            <a
+              className="auth-button auth-button-register flex-1 px-6 py-3 bg-gray-700 text-white rounded-lg font-semibold"
+              href="/login?mode=register"
+            >
               Registrarse
             </a>
           </div>

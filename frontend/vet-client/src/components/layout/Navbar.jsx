@@ -1,23 +1,33 @@
 import { useAuthStore } from "../../store/authStore.js";
+import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const { user, logout  } = useAuthStore();
+  const location = useLocation();
+
+  const isActive = (path) => {
+    return location.pathname === path ? "active-link" : "";
+  };
 
   return (
     <header className="">
-      <a href="/" className="logo">
+      <div className="logo">
         <img src="/logo.png" alt="Logo Veterinaria" />
         <h1>Clínica Ramvet</h1>
-      </a>
+      </div>
 
       <nav>
         <ul>
+          <li>
+            <a href="/" className={isActive("/")}>Home</a>
+          </li>
+
           <li>
             <a href="">¿Quienes Somos?</a>
           </li>
 
           <li>
-            <a href="/adoptions">Adopciones</a>
+            <a href="/adoptions" className={isActive("/adoptions")}>Adopciones</a>
           </li>
 
           <li>
@@ -25,7 +35,11 @@ const Navbar = () => {
           </li>
 
           <li>
-            <a href="/turnos">Turnos</a>
+            <a href="/turnos" className={isActive("/turnos")}>Turnos</a>
+          </li>
+
+          <li>
+            <a href="/mypets" className={isActive("/mypets")}>Mis Mascotas</a>
           </li>
           {user ? (
             <button onClick={logout}>Cerrar Sesión</button>

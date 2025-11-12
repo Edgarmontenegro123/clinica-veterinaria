@@ -1,25 +1,22 @@
 /*./src/pages/RegisterPage.jsx*/
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import RegisterForm from '../components/RegisterForm.jsx'
 import { useAuthStore } from '../store/authStore.js'
 
 const RegisterPage = () => {
-    const { token, userEmail } = useAuthStore()
+    const { user } = useAuthStore()
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (token || userEmail) {
-            navigate('/', { replace: true }) 
+        if (user) {
+            navigate('/', { replace: true })
+        } else {
+            // Redirigir a login con modo registro para mantener la animación
+            navigate('/login?mode=register', { replace: true })
         }
-    }, [token, userEmail, navigate])
+    }, [user, navigate])
 
-    return (
-        <div className='flex justify-center'>
-            Registrate con nosotros!
-            <RegisterForm />
-        </div>
-    )
+    return null
 }
 
 export default RegisterPage

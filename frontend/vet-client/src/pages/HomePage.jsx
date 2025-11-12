@@ -1,5 +1,11 @@
-const HomePage = () => {
+import { useNavigate } from "react-router-dom";
 
+const HomePage = () => {
+  const navigate = useNavigate();
+
+  const handleAgendarTurno = () => {
+    navigate("/turnos");
+  };
 
   return (
     <div className="imageBackground max-h-screen ">
@@ -11,7 +17,10 @@ const HomePage = () => {
           Somos una clínica veterinaria integral, pioneros en la atención
           especializada para tus mascotas. Agendá ahora tu consulta
         </h3>
-        <button className=" rounded-4xl px-4 py-2 border-2 border-white cursor-pointer hover:bg-white hover:text-black transition-all">
+        <button
+          onClick={handleAgendarTurno}
+          className=" rounded-4xl px-4 py-2 border-2 border-white cursor-pointer hover:bg-white hover:text-black hover:scale-105 active:opacity-70 transition-all"
+        >
           Agendar turno
         </button>
       </div>
