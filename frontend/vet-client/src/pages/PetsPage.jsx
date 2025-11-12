@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getPets } from "../services/pets.service.js";
 import { useAuthStore } from "../store/authStore.js";
 import PetsContainer from "../components/PetsContainer.jsx";
+import { getUserPets } from "../services/appointments.service.js";
 
 const PetsPage = () => {
   const { user } = useAuthStore();
@@ -10,7 +11,7 @@ const PetsPage = () => {
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const petsDB = await getPets();
+        const petsDB = await getUserPets(user.id);
         setPets(petsDB);
       } catch (error) {
         console.error("Failed to fetch pets", error);
