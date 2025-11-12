@@ -20,11 +20,10 @@ const PetRegisterPage = () => {
         alt="Fondo imagen"
         className="petBackground"
       />
-      <div
-        className="absolute z-10 flex flex-col justify-center items-center 
-  left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-      >
-        <PetRegisterForm />
+      <div className="absolute z-10 w-full h-full flex items-center justify-center px-4 py-8">
+        <div style={{ width: '100%', maxWidth: '850px', marginLeft: '160px' }}>
+          <PetRegisterForm />
+        </div>
       </div>
     </div>
   );

@@ -69,39 +69,107 @@ export const createPet = async (petData) => {
       data: { user }
     } = await supabase.auth.getUser();
 
+    // Obtener id_client de la tabla users basado en auth_id
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('auth_id', user.id)
+      .single();
+
+    if (userError) throw userError;
+
     const { data, error } = await supabase
       .from('pet')
-      .insert([{ 
-        ...petData,
-        user_id: user.id,     // <-- aquí
-        is_active: true
+      .insert([{
+        name: petData.name,
+        species: petData.species,
+        age: petData.age,
+        birth_date: petData.birth_date || new Date().toISOString().split('T')[0],
+        vaccines: petData.vaccines || [],
+        history: petData.history || '',
+        image: petData.image || '',
+        sex: petData.sex,
+        breed: petData.breed,
+        is_active: true,
+        has_owner: petData.has_owner !== undefined ? petData.has_owner : true,
+        id_client: userData.id
       }])
       .select();
 
     if (error) {
       console.log(error);
-      return;
+      throw error;
     }
 
     console.log(data);
+    return data;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 
 
+export const updatePet = async (id, petData) => {
+    try {
+        const { data, error } = await supabase
+            .from('pet')
+            .update({
+                name: petData.name,
+                species: petData.species,
+                age: petData.age,
+                birth_date: petData.birth_date,
+                vaccines: petData.vaccines || [],
+                history: petData.history || '',
+                image: petData.image || '',
+                sex: petData.sex,
+                breed: petData.breed,
+                has_owner: petData.has_owner
+            })
+            .eq('id', id)
+            .select();
+
+        if (error) throw error;
+        return data;
+    } catch (error) {
+        console.error('Error updating pet:', error);
+        throw error;
+    }
+};
+
 export const deletePet = async (id) => {
     try {
-        const response = await supabase
+        const { data, error } = await supabase
             .from('pet')
             .update({ is_active: false })
             .eq('id', id)
-            .select()
-        console.log(response);
+            .select();
+
+        if (error) throw error;
+        console.log(data);
+        return data;
     } catch (error) {
-        console.log(error)
+        console.error('Error deleting pet:', error);
+        throw error;
     }
-}
+};
+
+export const getPetById = async (id) => {
+    try {
+        const { data, error } = await supabase
+            .from('pet')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) throw error;
+        return data;
+    } catch (error) {
+        console.error('Error fetching pet:', error);
+        throw error;
+    }
+};
 
 // export const deletePet = async (petId) => {
 //     try {

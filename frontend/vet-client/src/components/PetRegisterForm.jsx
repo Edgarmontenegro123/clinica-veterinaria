@@ -2,167 +2,346 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { createPet, createPetForAdoption } from "../services/pets.service.js";
+import { createPet, updatePet, deletePet } from "../services/pets.service.js";
 import { useAuthStore } from "../store/authStore.js";
+import { supabase } from "../services/supabase.js";
 
-export default function PetRegisterForm() {
+export default function PetRegisterForm({ petData = null, mode = "create", onSuccess }) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
-  } = useForm();
-  const [preview, setPreview] = useState(null);
+    reset
+  } = useForm({
+    defaultValues: petData || {
+      name: "",
+      species: "",
+      age: "",
+      birth_date: "",
+      sex: "",
+      breed: "",
+      vaccines: "",
+      history: "",
+      has_owner: true
+    }
+  });
   const navigate = useNavigate();
-  // const { roles } = useAuthStore();
+  const { isAdmin } = useAuthStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(petData?.image || null);
 
-  // const imageFile = watch("image");
+  // Cargar datos si estamos en modo edición
+  useEffect(() => {
+    if (petData && mode === "edit") {
+      reset({
+        ...petData,
+        vaccines: Array.isArray(petData.vaccines) ? petData.vaccines.join(", ") : petData.vaccines || "",
+        birth_date: petData.birth_date ? petData.birth_date.split('T')[0] : ""
+      });
+      setImagePreview(petData.image || null);
+    }
+  }, [petData, mode, reset]);
 
-  // useEffect(() => {
-  //   if (imageFile && imageFile.length > 0) {
-  //     const file = imageFile[0];
-  //     setPreview(URL.createObjectURL(file));
-  //   } else {
-  //     setPreview(null);
-  //   }
-  // }, [imageFile]);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const onSubmit = async (data) => {
-    console.log(data)
+    console.log(data);
+    setIsSubmitting(true);
+
     try {
-      // const formData = new FormData();
-      // formData.append("name", data.name);
-      // formData.append("species", data.species);
-      // formData.append("age", data.age.toString());
-      // formData.append("sex", data.sex);
-      // formData.append("breed", data.breed);
+      let imageUrl = petData?.image || "";
 
-      // if (data.image && data.image.length > 0) {
-      //   formData.append("file", data.image[0]);
-      // }
+      // Subir imagen a Supabase Storage si hay una nueva imagen
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+        const filePath = `pets/${fileName}`;
 
-      // if (data.has_owner === true) {
-      //   const response = await createPetForAdoption(formData);
-      // } else {
-      const response = await createPet(data);
-      console.log(response)
-      // }
+        const { error: uploadError } = await supabase.storage
+          .from('pet-images')
+          .upload(filePath, imageFile);
 
-      await Swal.fire({
-        icon: "success",
-        title: "¡Mascota registrada!",
-        text: `La mascota ${data.name} se registró correctamente.`,
-        confirmButtonColor: "#3085d6",
-      });
+        if (uploadError) {
+          console.error("Error uploading image:", uploadError);
+          throw new Error("No se pudo subir la imagen");
+        }
 
-      navigate("/mypets");
+        // Obtener la URL pública de la imagen
+        const { data: publicUrlData } = supabase.storage
+          .from('pet-images')
+          .getPublicUrl(filePath);
+
+        imageUrl = publicUrlData.publicUrl;
+      }
+
+      // Procesar vacunas como array
+      const processedData = {
+        ...data,
+        vaccines: data.vaccines ? data.vaccines.split(",").map(v => v.trim()).filter(v => v) : [],
+        has_owner: data.has_owner === true || data.has_owner === "true",
+        image: imageUrl
+      };
+
+      let response;
+      if (mode === "edit" && petData) {
+        response = await updatePet(petData.id, processedData);
+        await Swal.fire({
+          icon: "success",
+          title: "¡Mascota actualizada!",
+          text: `La mascota ${data.name} se actualizó correctamente.`,
+          confirmButtonColor: "#3085d6",
+        });
+      } else {
+        response = await createPet(processedData);
+        await Swal.fire({
+          icon: "success",
+          title: "¡Mascota registrada!",
+          text: `La mascota ${data.name} se registró correctamente.`,
+          confirmButtonColor: "#3085d6",
+        });
+      }
+
+      console.log(response);
+
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        navigate("/mypets");
+      }
     } catch (error) {
-      console.error("Pet registration failed", error);
+      console.error("Pet operation failed", error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "No se pudo registrar la mascota. Intente nuevamente.",
+        text: mode === "edit"
+          ? "No se pudo actualizar la mascota. Intente nuevamente."
+          : "No se pudo registrar la mascota. Intente nuevamente.",
         confirmButtonColor: "#d33",
       });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!petData || mode !== "edit") return;
+
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: `¿Deseas eliminar a ${petData.name}? Esta acción no se puede deshacer.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar"
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deletePet(petData.id);
+        await Swal.fire({
+          icon: "success",
+          title: "Eliminada",
+          text: "La mascota ha sido eliminada correctamente.",
+          confirmButtonColor: "#3085d6",
+        });
+
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          navigate("/mypets");
+        }
+      } catch (error) {
+        console.error("Delete failed", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudo eliminar la mascota. Intente nuevamente.",
+          confirmButtonColor: "#d33",
+        });
+      }
     }
   };
 
   return (
     <form
-      className="flex flex-col gap-2 justify-center border-2 p-4 rounded-xl bg-gray-100"
+      className="flex flex-col gap-3 justify-center border-2 border-white/30 p-6 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+      style={{
+        background: "rgba(0, 0, 0, 0.45)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)"
+      }}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div className="flex flex-col">
-        <label>Nombre</label>
-        <input
-          className="bg-white px-1 rounded-md"
-          placeholder="Nombre"
-          {...register("name", { required: true })}
-        />
-        {errors.name && <span>El campo es requerido</span>}
-      </div>
+      <h2 className="text-2xl font-bold text-white mb-4 text-center" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
+        {mode === "edit" ? "Editar Mascota" : "Registrar Nueva Mascota"}
+      </h2>
 
-      <div className="flex flex-col">
-        <label>Especie</label>
-        <select
-          className="bg-white px-1 rounded-md"
-          {...register("species", { required: true })}
-        >
-          <option value="">Selecciona especie</option>
-          <option value="Perro">Perro</option>
-          <option value="Gato">Gato</option>
-        </select>
-        {errors.species && <span>El campo es requerido</span>}
-      </div>
-
-      <div className="flex flex-col">
-        <label>Años</label>
-        <input
-          className="bg-white px-1 rounded-md"
-          placeholder="3"
-          type="number"
-          {...register("age", { required: true, valueAsNumber: true })}
-        />
-        {errors.age && <span>El campo es requerido</span>}
-      </div>
-
-      <div className="flex flex-col">
-        <label>Sexo</label>
-        <select
-          className="bg-white px-1 rounded-md"
-          {...register("sex", { required: true })}
-        >
-          <option value="">Selecciona sexo</option>
-          <option value="male">Macho</option>
-          <option value="female">Hembra</option>
-        </select>
-        {errors.sex && <span>El campo es requerido</span>}
-      </div>
-
-      <div className="flex flex-col">
-        <label>Raza</label>
-        <input
-          className="bg-white px-1 rounded-md"
-          placeholder="Callejero"
-          {...register("breed", { required: true })}
-        />
-        {errors.breed && <span>El campo es requerido</span>}
-      </div>
-      {/* {roles?.includes("admin") && (
-        <div className="flex gap-2 items-end">
-          <label>¿Es Adoptable?</label>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Nombre */}
+        <div className="flex flex-col">
+          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Nombre *</label>
           <input
-            type="checkbox"
-            className="bg-white px-1 rounded-md"
-            {...register("has_owner", { valueAsBoolean: true })}
+            className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-sm"
+            placeholder="Ej: Max"
+            {...register("name", { required: "El nombre es requerido" })}
+          />
+          {errors.name && <span className="text-red-300 text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.name.message}</span>}
+        </div>
+
+        {/* Especie */}
+        <div className="flex flex-col">
+          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Especie *</label>
+          <select
+            className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none backdrop-blur-sm"
+            {...register("species", { required: "La especie es requerida" })}
+          >
+            <option value="" className="bg-gray-800">Selecciona especie</option>
+            <option value="Perro" className="bg-gray-800">Perro</option>
+            <option value="Gato" className="bg-gray-800">Gato</option>
+            <option value="Ave" className="bg-gray-800">Ave</option>
+            <option value="Otro" className="bg-gray-800">Otro</option>
+          </select>
+          {errors.species && <span className="text-red-300 text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.species.message}</span>}
+        </div>
+
+        {/* Raza */}
+        <div className="flex flex-col">
+          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Raza *</label>
+          <input
+            className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-sm"
+            placeholder="Ej: Mestizo, Labrador, Siamés"
+            {...register("breed", { required: "La raza es requerida" })}
+          />
+          {errors.breed && <span className="text-red-300 text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.breed.message}</span>}
+        </div>
+
+        {/* Sexo */}
+        <div className="flex flex-col">
+          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Sexo *</label>
+          <select
+            className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none backdrop-blur-sm"
+            {...register("sex", { required: "El sexo es requerido" })}
+          >
+            <option value="" className="bg-gray-800">Selecciona sexo</option>
+            <option value="Macho" className="bg-gray-800">Macho</option>
+            <option value="Hembra" className="bg-gray-800">Hembra</option>
+          </select>
+          {errors.sex && <span className="text-red-300 text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.sex.message}</span>}
+        </div>
+
+        {/* Edad */}
+        <div className="flex flex-col">
+          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Edad (años) *</label>
+          <input
+            className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-sm"
+            placeholder="Ej: 3"
+            type="number"
+            min="0"
+            step="1"
+            {...register("age", {
+              required: "La edad es requerida",
+              min: { value: 0, message: "La edad debe ser positiva" },
+              valueAsNumber: true
+            })}
+          />
+          {errors.age && <span className="text-red-300 text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.age.message}</span>}
+        </div>
+
+        {/* Fecha de nacimiento */}
+        <div className="flex flex-col">
+          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Fecha de Nacimiento</label>
+          <input
+            type="date"
+            className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none backdrop-blur-sm"
+            {...register("birth_date")}
           />
         </div>
-      )} */}
+      </div>
 
-      {/* <div className="flex flex-col">
-        <label>Imagen</label>
+      {/* Vacunas */}
+      <div className="flex flex-col">
+        <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+          Vacunas
+          <span className="text-sm font-normal text-white/70 ml-2">(separadas por comas)</span>
+        </label>
         <input
-          type="file"
-          className="bg-white px-1 rounded-md"
-          {...register("image", { required: true })}
+          className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-sm"
+          placeholder="Ej: Rabia, Parvovirus, Moquillo"
+          {...register("vaccines")}
         />
-        {errors.image && <span>El campo es requerido</span>}
+      </div>
 
-        {preview && (
-          <img
-            src={preview}
-            alt="Preview"
-            className="mt-2 w-40 h-40 object-cover m-auto rounded-md border"
+      {/* Historial médico */}
+      <div className="flex flex-col">
+        <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Historial Médico</label>
+        <textarea
+          className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none resize-vertical placeholder-white/60 backdrop-blur-sm"
+          placeholder="Información relevante sobre la salud de la mascota..."
+          rows="4"
+          {...register("history")}
+        />
+      </div>
+
+      {/* Solo administradores pueden ver/editar has_owner */}
+      {isAdmin && (
+        <div className="flex items-center gap-3 p-3 bg-yellow-500/20 rounded-md border border-yellow-400/40 backdrop-blur-sm">
+          <input
+            type="checkbox"
+            id="has_owner"
+            className="w-4 h-4 cursor-pointer"
+            {...register("has_owner")}
           />
-        )}
-      </div> */}
+          <label htmlFor="has_owner" className="font-semibold text-white cursor-pointer" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+            ¿Tiene dueño? (desmarcar si es para adopción)
+          </label>
+        </div>
+      )}
 
-      <button
-        type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
-      >
-        Crear mascota
-      </button>
+      {/* Botones */}
+      <div className="flex gap-3 mt-4">
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="pet-form-button-primary flex-1 text-white px-4 py-2 rounded-md font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? "Procesando..." : mode === "edit" ? "Actualizar Mascota" : "Registrar Mascota"}
+        </button>
+
+        {mode === "edit" && isAdmin && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="pet-form-button-delete px-4 py-2 text-white rounded-md font-semibold"
+          >
+            Eliminar
+          </button>
+        )}
+
+        <button
+          type="button"
+          onClick={() => navigate("/mypets")}
+          className="pet-form-button-cancel px-4 py-2 text-white rounded-md font-semibold"
+        >
+          Cancelar
+        </button>
+      </div>
+
+      <p className="text-sm text-white/80 text-center mt-2" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+        * Campos requeridos
+      </p>
     </form>
   );
 }
