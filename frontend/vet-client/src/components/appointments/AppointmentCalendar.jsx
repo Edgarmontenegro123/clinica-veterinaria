@@ -100,6 +100,16 @@ const AppointmentCalendar = () => {
             return;
         }
 
+        // No permitir seleccionar domingos (0 = domingo)
+        if (date.getDay() === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Día no disponible',
+                text: 'No se atiende los domingos',
+            });
+            return;
+        }
+
         setSelectedDate(date);
         setSelectedTime(null);
     };
@@ -203,11 +213,23 @@ const AppointmentCalendar = () => {
                 <div className="mb-4">
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">Selecciona una fecha</h2>
 
+                    {/* Información de horarios */}
+                    <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <p className="text-sm text-blue-800">
+                            <span className="font-semibold">📅 Horarios de atención:</span>
+                        </p>
+                        <ul className="text-xs text-blue-700 mt-2 ml-4 space-y-1">
+                            <li>• Lunes a Viernes: 10:00 - 20:00</li>
+                            <li>• Sábados: 10:00 - 12:30</li>
+                            <li>• Domingos: <span className="text-red-600 font-semibold">Cerrado</span></li>
+                        </ul>
+                    </div>
+
                     {/* Navegación del mes */}
                     <div className="flex items-center justify-between mb-4">
                         <button
                             onClick={prevMonth}
-                            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                            className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 hover:shadow-xl hover:scale-105 hover:-translate-y-0.5 active:scale-95 active:translate-y-0 transition-all duration-200 font-semibold transform hover:ring-2 hover:ring-blue-300"
                         >
                             ← Anterior
                         </button>
@@ -216,7 +238,7 @@ const AppointmentCalendar = () => {
                         </h3>
                         <button
                             onClick={nextMonth}
-                            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                            className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 hover:shadow-xl hover:scale-105 hover:-translate-y-0.5 active:scale-95 active:translate-y-0 transition-all duration-200 font-semibold transform hover:ring-2 hover:ring-blue-300"
                         >
                             Siguiente →
                         </button>
@@ -232,7 +254,7 @@ const AppointmentCalendar = () => {
                     </div>
 
                     {/* Días del mes */}
-                    <div className="grid grid-cols-7 gap-2">
+                    <div className="grid grid-cols-7 gap-1.5">
                         {/* Espacios vacíos antes del primer día */}
                         {Array.from({ length: startingDayOfWeek }).map((_, index) => (
                             <div key={`empty-${index}`} />
@@ -252,7 +274,8 @@ const AppointmentCalendar = () => {
 
                             const isPast = date < today;
                             const isTooFar = date > maxDate;
-                            const isDisabled = isPast || isTooFar;
+                            const isSunday = date.getDay() === 0; // Domingo
+                            const isDisabled = isPast || isTooFar || isSunday;
                             const isSelected = selectedDate &&
                                 selectedDate.getDate() === day &&
                                 selectedDate.getMonth() === month &&
@@ -264,12 +287,14 @@ const AppointmentCalendar = () => {
                                     onClick={() => handleDateClick(day)}
                                     disabled={isDisabled}
                                     className={`
-                                        aspect-square rounded-lg font-semibold transition-all
+                                        aspect-square rounded-md font-semibold transition-all duration-200 text-sm
                                         ${isDisabled
-                                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                            ? isSunday
+                                                ? 'bg-red-50 text-red-300 cursor-not-allowed line-through text-xs'
+                                                : 'bg-gray-100 text-gray-400 cursor-not-allowed text-xs'
                                             : isSelected
-                                                ? 'bg-blue-600 text-white shadow-lg scale-105'
-                                                : 'bg-gray-50 text-gray-700 hover:bg-blue-100 hover:scale-105'
+                                                ? 'bg-blue-600 text-white shadow-lg scale-105 ring-2 ring-blue-300'
+                                                : 'bg-gray-50 text-gray-700 hover:bg-blue-100 hover:scale-110 hover:shadow-md active:scale-95'
                                         }
                                     `}
                                 >
@@ -282,27 +307,27 @@ const AppointmentCalendar = () => {
 
                 {/* Horarios disponibles */}
                 {selectedDate && (
-                    <div className="mt-6">
-                        <h3 className="text-xl font-bold text-gray-800 mb-3">
+                    <div className="mt-4">
+                        <h3 className="text-lg font-bold text-gray-800 mb-2">
                             Horarios disponibles para {selectedDate.toLocaleDateString('es-AR')}
                         </h3>
 
                         {loading ? (
-                            <div className="text-center py-8">
-                                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                                <p className="mt-2 text-gray-600">Cargando horarios...</p>
+                            <div className="text-center py-6">
+                                <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                                <p className="mt-2 text-gray-600 text-sm">Cargando horarios...</p>
                             </div>
                         ) : availableSlots.length > 0 ? (
-                            <div className="grid grid-cols-3 gap-3">
+                            <div className="grid grid-cols-4 gap-2">
                                 {availableSlots.map(slot => (
                                     <button
                                         key={slot}
                                         onClick={() => handleTimeClick(slot)}
                                         className={`
-                                            py-3 px-4 rounded-lg font-semibold transition-all
+                                            py-2 px-3 rounded-md font-semibold transition-all duration-200 text-sm
                                             ${selectedTime === slot
-                                                ? 'bg-green-600 text-white shadow-lg scale-105'
-                                                : 'bg-gray-100 text-gray-700 hover:bg-green-100 hover:scale-105'
+                                                ? 'bg-green-600 text-white shadow-lg scale-105 ring-2 ring-green-300'
+                                                : 'bg-gray-100 text-gray-700 hover:bg-green-100 hover:scale-110 hover:shadow-md active:scale-95 hover:ring-2 hover:ring-green-200'
                                             }
                                         `}
                                     >
@@ -311,8 +336,8 @@ const AppointmentCalendar = () => {
                                 ))}
                             </div>
                         ) : (
-                            <div className="text-center py-8 bg-yellow-50 rounded-lg">
-                                <p className="text-yellow-600 font-semibold">No hay horarios disponibles para esta fecha</p>
+                            <div className="text-center py-6 bg-yellow-50 rounded-lg">
+                                <p className="text-yellow-600 font-semibold text-sm">No hay horarios disponibles para esta fecha</p>
                             </div>
                         )}
                     </div>
@@ -395,10 +420,10 @@ const AppointmentCalendar = () => {
                         type="submit"
                         disabled={loading || !selectedDate || !selectedTime || !selectedPet}
                         className={`
-                            w-full py-4 rounded-lg font-bold text-white transition-all
+                            w-full py-4 rounded-lg font-bold text-white transition-all duration-300 transform
                             ${loading || !selectedDate || !selectedTime || !selectedPet
-                                ? 'bg-gray-400 cursor-not-allowed'
-                                : 'bg-blue-600 hover:bg-blue-700 hover:shadow-lg'
+                                ? 'bg-gray-400 cursor-not-allowed shadow-md'
+                                : 'bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-2xl hover:scale-105 hover:-translate-y-1 active:scale-95 active:translate-y-0 hover:ring-4 hover:ring-blue-300'
                             }
                         `}
                     >

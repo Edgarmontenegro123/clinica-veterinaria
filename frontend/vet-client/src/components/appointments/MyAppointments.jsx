@@ -193,7 +193,7 @@ const MyAppointments = () => {
 
                                         <button
                                             onClick={() => handleCancel(appointment.id)}
-                                            className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-semibold"
+                                            className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 hover:shadow-lg hover:scale-105 active:scale-95 hover:ring-4 hover:ring-red-300 transition-all duration-200 font-semibold"
                                         >
                                             Cancelar
                                         </button>

@@ -2,19 +2,37 @@ import { supabase } from './supabase.js';
 
 /**
  * Genera los slots de horarios disponibles para un día específico
- * Horario: 10:00 a 20:00, cada 30 minutos
+ * Horario: 10:00 a 20:00, cada 30 minutos (Lunes a Viernes)
+ * Sábados: 10:00 a 12:30
+ * Domingos: No se atiende
  */
-export const generateTimeSlots = () => {
+export const generateTimeSlots = (date) => {
     const slots = [];
     const startHour = 10;
-    const endHour = 20;
     const intervalMinutes = 30;
+
+    // Obtener el día de la semana (0 = domingo, 6 = sábado)
+    const dayOfWeek = new Date(date).getDay();
+
+    // No generar slots para domingos
+    if (dayOfWeek === 0) {
+        return slots;
+    }
+
+    // Si es sábado (6), solo hasta las 12:30
+    const endHour = dayOfWeek === 6 ? 12 : 20;
+    const lastMinute = dayOfWeek === 6 ? 30 : 0; // Para sábados, incluir 12:30
 
     for (let hour = startHour; hour < endHour; hour++) {
         for (let minute = 0; minute < 60; minute += intervalMinutes) {
             const time = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
             slots.push(time);
         }
+    }
+
+    // Agregar el último slot si es sábado (12:30)
+    if (dayOfWeek === 6 && lastMinute === 30) {
+        slots.push('12:30');
     }
 
     return slots;
@@ -54,7 +72,7 @@ export const getAppointmentsByDate = async (date) => {
  */
 export const getAvailableTimeSlots = async (date) => {
     try {
-        const allSlots = generateTimeSlots();
+        const allSlots = generateTimeSlots(date); // Pasar la fecha para generar slots correctos
         const appointments = await getAppointmentsByDate(date);
         const now = new Date();
         const selectedDate = new Date(date);
@@ -198,22 +216,27 @@ export const cancelAppointment = async (appointmentId) => {
 /**
  * Obtiene las mascotas de un usuario
  */
-export const getUserPets = async (userId) => {
+export const getUserPets = async (authId) => {
     try {
-        console.log(userId)
+        console.log('getUserPets - authId:', authId);
+
+        // user_id en la tabla pet referencia a users(auth_id), no users(id)
+        // Por lo tanto, usamos directamente el authId
         const { data, error } = await supabase
             .from('pet')
             .select('*')
-            .eq('user_id', userId);
+            .eq('user_id', authId)  // authId es el auth_id del usuario
+            .eq('is_active', true);
 
         if (error) {
             console.error('Error fetching user pets:', error);
             throw error;
         }
 
+        console.log('getUserPets - pets found:', data);
         return data || [];
     } catch (error) {
         console.error('Error in getUserPets:', error);
-        throw error;
+        return [];
     }
 };

@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import PetRegisterPage from "./pages/PetRegisterPage.jsx";
@@ -7,8 +8,16 @@ import Navbar from "./components/layout/Navbar.jsx";
 import PetsPage from "./pages/PetsPage.jsx";
 import AdoptionsPage from "./pages/AdoptionsPage.jsx";
 import AppointmentsPage from "./pages/AppointmentsPage.jsx";
+import { useAuthStore } from "./store/authStore.js";
 
 export default function App() {
+  const { checkSession } = useAuthStore();
+
+  useEffect(() => {
+    // Verificar sesión al cargar la aplicación
+    checkSession();
+  }, [checkSession]);
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* NAVBAR */}

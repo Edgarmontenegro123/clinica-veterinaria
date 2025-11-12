@@ -47,21 +47,27 @@ const AppointmentsPage = () => {
             <div className="flex gap-4 mb-6 border-b border-gray-200">
                 <button
                     onClick={() => handleTabChange('new')}
-                    className={`px-6 py-3 font-semibold transition-all ${
+                    className={`px-6 py-3 font-semibold transition-all duration-300 relative ${
                         activeTab === 'new'
                             ? 'text-blue-600 border-b-2 border-blue-600'
-                            : 'text-gray-500 hover:text-gray-700'
+                            : 'text-gray-500 hover:text-gray-700 hover:scale-105'
                     }`}
+                    style={{
+                        transform: activeTab === 'new' ? 'translateY(-2px)' : 'none'
+                    }}
                 >
                     Nuevo Turno
                 </button>
                 <button
                     onClick={() => handleTabChange('my-appointments')}
-                    className={`px-6 py-3 font-semibold transition-all ${
+                    className={`px-6 py-3 font-semibold transition-all duration-300 relative ${
                         activeTab === 'my-appointments'
                             ? 'text-blue-600 border-b-2 border-blue-600'
-                            : 'text-gray-500 hover:text-gray-700'
+                            : 'text-gray-500 hover:text-gray-700 hover:scale-105'
                     }`}
+                    style={{
+                        transform: activeTab === 'my-appointments' ? 'translateY(-2px)' : 'none'
+                    }}
                 >
                     Mis Turnos
                 </button>

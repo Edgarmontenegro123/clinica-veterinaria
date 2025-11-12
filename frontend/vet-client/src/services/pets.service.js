@@ -69,15 +69,15 @@ export const createPet = async (petData) => {
       data: { user }
     } = await supabase.auth.getUser();
 
-    // Obtener id_client de la tabla users basado en auth_id
-    const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('id')
-      .eq('auth_id', user.id)
-      .single();
+    if (!user) {
+      throw new Error('Usuario no autenticado');
+    }
 
-    if (userError) throw userError;
+    console.log('Auth user:', user);
+    console.log('Inserting pet with user_id (auth_id):', user.id);
 
+    // user_id en la tabla pet referencia a users(auth_id), no users(id)
+    // Por lo tanto, usamos directamente user.id del usuario autenticado
     const { data, error } = await supabase
       .from('pet')
       .insert([{
@@ -92,19 +92,19 @@ export const createPet = async (petData) => {
         breed: petData.breed,
         is_active: true,
         has_owner: petData.has_owner !== undefined ? petData.has_owner : true,
-        id_client: userData.id
+        user_id: user.id  // Este es el auth_id
       }])
       .select();
 
     if (error) {
-      console.log(error);
+      console.log('Insert error:', error);
       throw error;
     }
 
-    console.log(data);
+    console.log('Pet created successfully:', data);
     return data;
   } catch (error) {
-    console.error(error);
+    console.error('createPet error:', error);
     throw error;
   }
 };

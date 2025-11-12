@@ -295,6 +295,32 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
         />
       </div>
 
+      {/* Imagen de la mascota */}
+      <div className="flex flex-col">
+        <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+          Imagen de la mascota
+        </label>
+        <div className="flex gap-4 items-start">
+          <div className="flex-1">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none backdrop-blur-sm w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 file:cursor-pointer"
+            />
+          </div>
+          {imagePreview && (
+            <div className="w-32 h-32 rounded-lg overflow-hidden border-2 border-white/30 flex-shrink-0">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Solo administradores pueden ver/editar has_owner */}
       {isAdmin && (
         <div className="flex items-center gap-3 p-3 bg-yellow-500/20 rounded-md border border-yellow-400/40 backdrop-blur-sm">
