@@ -11,7 +11,7 @@ const HomePage = () => {
     <div className="imageBackground max-h-screen ">
       <img src="/fondo.jpg" alt="Fondo" />
 
-      <div className="content w-1/3 left-0 bottom-0 m- p-10 py-24 gap-4 flex flex-col items-start">
+      <div className="content w-1/3 left-0 bottom-0 gap-4 flex flex-col items-start">
         <h2 className=" leading-24">Cuidamos a tus Mascotas</h2>
         <h3>
           Somos una clínica veterinaria integral, pioneros en la atención
