@@ -465,16 +465,24 @@
     order: 2;
   }
 
-/* Título "Inicio de Sesión" de Login desplazado a la izquierda */
+/* Título "Inicio de Sesión" de Login - Centrado en móviles */
 .wrapper .form-box.login h2 {
-  margin-left:-100px;
-  margin-top: 30px;
+  margin-left: 0;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #fff;
+  font-size: 26px;
 }
 
-/* Título de Registro */
+/* Título de Registro - Visible y centrado */
   .wrapper .form-box.register h2 {
-    /* Aquí puedes ajustar el título "Regístrate" si lo necesitas */
-    margin-left: -410px;
+    margin-left: 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #fff;
+    font-size: 26px;
   }
 
 .wrapper .form-box.register .logreg-link {
@@ -569,6 +577,14 @@
     margin: 12px 0;
     height: 42px;
   }
+.animation {
+  transform: translateX(0px) !important;
+}
+
+.animation2 {
+  transform: translateX(110px) !important;
+}
+
 }
 
 /* === ESTILOS PARA AUTOCOMPLETADO DEL NAVEGADOR === */
