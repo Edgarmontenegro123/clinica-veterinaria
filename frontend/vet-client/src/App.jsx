@@ -8,6 +8,7 @@ import Navbar from "./components/layout/Navbar.jsx";
 import PetsPage from "./pages/PetsPage.jsx";
 import AdoptionsPage from "./pages/AdoptionsPage.jsx";
 import AppointmentsPage from "./pages/AppointmentsPage.jsx";
+import AdminPetManagement from "./pages/AdminPetManagement.jsx";
 import { useAuthStore } from "./store/authStore.js";
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/mypets" element={<PetsPage />} />
           <Route path="/adoptions" element={<AdoptionsPage />} />
           <Route path="/turnos" element={<AppointmentsPage />} />
+          <Route path="/admin/pets/:id" element={<AdminPetManagement />} />
           <Route
             path="/*"
             element={
