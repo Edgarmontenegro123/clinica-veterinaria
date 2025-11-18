@@ -52,7 +52,7 @@ const PetsContainer = ({ pets, setPets }) => {
             {/* Tarjeta de mascota */}
             <div className="relative rounded-2xl h-[200px] w-full border-2 border-gray-300 overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-shadow">
               <img
-                src={'./no-image.png'}
+                src={pet.image || './no-image.png'}
                 alt={pet.name}
                 className="w-full h-full object-cover"
                 onClick={() => navigate(`/pets/${pet.id}`)}
