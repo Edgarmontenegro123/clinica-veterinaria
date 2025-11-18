@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { deletePet } from "../services/pets.service";
+import { useAuthStore } from "../store/authStore";
 import Swal from "sweetalert2";
 
 const PetsContainer = ({ pets, setPets }) => {
   const navigate = useNavigate();
+  const { isAdmin } = useAuthStore();
 
   const handleDeletePet = async (petId) => {
     try {
@@ -62,6 +64,16 @@ const PetsContainer = ({ pets, setPets }) => {
           <div className="flex flex-col items-center">
             <h5 className="font-bold text-xl text-yellow-200">{pet.name}</h5>
             <p className="text-lg text-yellow-100">{pet.age} años</p>
+            {isAdmin && pet.users && (
+              <div className="mt-2 text-center bg-blue-900/50 px-3 py-2 rounded-lg">
+                <p className="text-sm text-blue-200 font-semibold">Dueño</p>
+                <p className="text-sm text-white">{pet.users.name}</p>
+                <p className="text-xs text-blue-300">{pet.users.email}</p>
+                {pet.users.phone && (
+                  <p className="text-xs text-blue-300">📞 {pet.users.phone}</p>
+                )}
+              </div>
+            )}
           </div>
         </div>
       ))}

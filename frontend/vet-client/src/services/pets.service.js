@@ -28,18 +28,34 @@ export const getPets = async () => {
 
         const isAdmin = userData?.role === 'admin';
 
-        // Si es admin, ver todas las mascotas. Si no, solo las suyas
-        let query = supabase
-            .from('pet')
-            .select('*')
-            .eq('is_active', true);
+        // Si es admin, ver todas las mascotas con información del dueño
+        // Si no es admin, solo ver las suyas sin JOIN
+        let query;
 
-        if (!isAdmin) {
-            query = query.eq('user_id', user.id);
+        if (isAdmin) {
+            query = supabase
+                .from('pet')
+                .select(`
+                    *,
+                    users!user_id(name, email, phone)
+                `)
+                .eq('is_active', true);
+        } else {
+            query = supabase
+                .from('pet')
+                .select('*')
+                .eq('is_active', true)
+                .eq('user_id', user.id);
         }
 
-        const response = await query;
-        return response.data;
+        const { data, error } = await query;
+
+        if (error) {
+            console.error('Error fetching pets:', error);
+            throw error;
+        }
+
+        return data || [];
     } catch (error) {
         console.error('Error fetching pets by owner:', error);
         throw error;

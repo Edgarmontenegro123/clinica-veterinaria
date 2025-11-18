@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/authStore.js";
 import PetsContainer from "../components/PetsContainer.jsx";
-import { getUserPets } from "../services/appointments.service.js";
+import { getPets } from "../services/pets.service.js";
 
 const PetsPage = () => {
   const { user } = useAuthStore();
@@ -20,8 +20,8 @@ const PetsPage = () => {
 
       try {
         setLoading(true);
-        console.log("PetsPage - Fetching pets for user:", user.id);
-        const petsDB = await getUserPets(user.id);
+        console.log("PetsPage - Fetching pets...");
+        const petsDB = await getPets();
         console.log("PetsPage - Pets fetched:", petsDB);
         setPets(petsDB || []);
       } catch (error) {
