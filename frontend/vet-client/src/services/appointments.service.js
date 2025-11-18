@@ -152,15 +152,40 @@ export const createAppointment = async (appointmentData) => {
 };
 
 /**
- * Obtiene los turnos de un usuario específico
+ * Obtiene los turnos de un usuario específico o todos si es admin
  */
 export const getUserAppointments = async (userId) => {
     try {
-        const { data, error } = await supabase
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            throw new Error('Usuario no autenticado');
+        }
+
+        // Verificar si es admin
+        const { data: userData } = await supabase
+            .from('users')
+            .select('role')
+            .eq('auth_id', user.id)
+            .single();
+
+        const isAdmin = userData?.role === 'admin';
+
+        // Si es admin, obtener todos los turnos. Si no, solo los del usuario
+        let query = supabase
             .from('appoinment')
-            .select('*, pet(*)')
-            .eq('pet.user_id', userId)
+            .select(`
+                *,
+                pet(*),
+                users!appoinment_user_id_fkey(name, email, phone)
+            `)
             .order('datetime', { ascending: true });
+
+        if (!isAdmin) {
+            query = query.eq('user_id', userId);
+        }
+
+        const { data, error } = await query;
 
         if (error) {
             console.error('Error fetching user appointments:', error);
@@ -170,6 +195,49 @@ export const getUserAppointments = async (userId) => {
         return data || [];
     } catch (error) {
         console.error('Error in getUserAppointments:', error);
+        throw error;
+    }
+};
+
+/**
+ * Obtiene TODOS los turnos (solo para admin)
+ */
+export const getAllAppointments = async () => {
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            throw new Error('Usuario no autenticado');
+        }
+
+        // Verificar si es admin
+        const { data: userData } = await supabase
+            .from('users')
+            .select('role')
+            .eq('auth_id', user.id)
+            .single();
+
+        if (userData?.role !== 'admin') {
+            throw new Error('No tienes permisos de administrador');
+        }
+
+        const { data, error } = await supabase
+            .from('appoinment')
+            .select(`
+                *,
+                pet(*),
+                users!user_id(name, email, phone)
+            `)
+            .order('datetime', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching all appointments:', error);
+            throw error;
+        }
+
+        return data || [];
+    } catch (error) {
+        console.error('Error in getAllAppointments:', error);
         throw error;
     }
 };
@@ -218,8 +286,6 @@ export const cancelAppointment = async (appointmentId) => {
  */
 export const getUserPets = async (authId) => {
     try {
-        console.log('getUserPets - authId:', authId);
-
         // user_id en la tabla pet referencia a users(auth_id), no users(id)
         // Por lo tanto, usamos directamente el authId
         const { data, error } = await supabase
@@ -233,7 +299,6 @@ export const getUserPets = async (authId) => {
             throw error;
         }
 
-        console.log('getUserPets - pets found:', data);
         return data || [];
     } catch (error) {
         console.error('Error in getUserPets:', error);

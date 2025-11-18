@@ -13,10 +13,32 @@ import { supabase } from './supabase.js'
 
 export const getPets = async () => {
     try {
-        const response = await supabase
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            throw new Error('Usuario no autenticado');
+        }
+
+        // Verificar si es admin
+        const { data: userData } = await supabase
+            .from('users')
+            .select('role')
+            .eq('auth_id', user.id)
+            .single();
+
+        const isAdmin = userData?.role === 'admin';
+
+        // Si es admin, ver todas las mascotas. Si no, solo las suyas
+        let query = supabase
             .from('pet')
             .select('*')
             .eq('is_active', true);
+
+        if (!isAdmin) {
+            query = query.eq('user_id', user.id);
+        }
+
+        const response = await query;
         return response.data;
     } catch (error) {
         console.error('Error fetching pets by owner:', error);

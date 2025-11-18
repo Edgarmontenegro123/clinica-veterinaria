@@ -3,12 +3,13 @@ import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
 import AppointmentCalendar from '../components/appointments/AppointmentCalendar';
 import MyAppointments from '../components/appointments/MyAppointments';
+import AllAppointments from '../components/appointments/AllAppointments';
 import Swal from 'sweetalert2';
 
 const AppointmentsPage = () => {
-    const { user } = useAuthStore();
+    const { user, isAdmin } = useAuthStore();
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState('new'); // 'new' o 'my-appointments'
+    const [activeTab, setActiveTab] = useState('new'); // 'new', 'my-appointments' o 'all-appointments'
     const [refreshKey, setRefreshKey] = useState(0);
 
     useEffect(() => {
@@ -71,14 +72,31 @@ const AppointmentsPage = () => {
                 >
                     Mis Turnos
                 </button>
+                {isAdmin && (
+                    <button
+                        onClick={() => handleTabChange('all-appointments')}
+                        className={`px-6 py-3 font-semibold transition-all duration-300 relative ${
+                            activeTab === 'all-appointments'
+                                ? 'text-red-600 border-b-2 border-red-600'
+                                : 'text-gray-500 hover:text-gray-700 hover:scale-105'
+                        }`}
+                        style={{
+                            transform: activeTab === 'all-appointments' ? 'translateY(-2px)' : 'none'
+                        }}
+                    >
+                        📋 Todos los Turnos (Admin)
+                    </button>
+                )}
             </div>
 
             {/* Contenido según tab activo */}
             <div className="bg-white rounded-lg shadow-lg p-6">
                 {activeTab === 'new' ? (
                     <AppointmentCalendar key="new" />
-                ) : (
+                ) : activeTab === 'my-appointments' ? (
                     <MyAppointments key={`my-appointments-${refreshKey}`} />
+                ) : (
+                    <AllAppointments key={`all-appointments-${refreshKey}`} />
                 )}
             </div>
         </div>
