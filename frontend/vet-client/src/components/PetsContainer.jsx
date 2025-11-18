@@ -49,7 +49,7 @@ const PetsContainer = ({ pets, setPets }) => {
         <div key={pet.id} className="flex flex-col items-center gap-2">
           <div className="relative rounded-4xl h-[200px] w-[200px] border-2 border-gray-300 overflow-hidden cursor-pointer">
             <img
-              src={'./no-image.png'}
+              src={pet.image || './no-image.png'}
               alt={pet.name}
               className="w-full h-full object-cover rounded-4xl"
               onClick={() => navigate(`/pets/${pet.id}`)}
