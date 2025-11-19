@@ -11,6 +11,8 @@ const AdminPetManagement = () => {
     const [loading, setLoading] = useState(true);
     const [pet, setPet] = useState(null);
     const [editing, setEditing] = useState(false);
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
     const [formData, setFormData] = useState({
         name: '',
         species: '',
@@ -19,7 +21,8 @@ const AdminPetManagement = () => {
         sex: '',
         birth_date: '',
         history: '',
-        vaccines: []
+        vaccines: [],
+        image: ''
     });
 
     useEffect(() => {
@@ -47,8 +50,10 @@ const AdminPetManagement = () => {
                 sex: data.sex || '',
                 birth_date: data.birth_date || '',
                 history: data.history || '',
-                vaccines: data.vaccines || []
+                vaccines: data.vaccines || [],
+                image: data.image || ''
             });
+            setImagePreview(data.image || null);
         } catch (error) {
             console.error('Error loading pet:', error);
             Swal.fire({
@@ -67,6 +72,22 @@ const AdminPetManagement = () => {
             ...prev,
             [name]: value
         }));
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImageFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+                setFormData(prev => ({
+                    ...prev,
+                    image: reader.result
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -231,8 +252,11 @@ const AdminPetManagement = () => {
                                     sex: pet.sex || '',
                                     birth_date: pet.birth_date || '',
                                     history: pet.history || '',
-                                    vaccines: pet.vaccines || []
+                                    vaccines: pet.vaccines || [],
+                                    image: pet.image || ''
                                 });
+                                setImagePreview(pet.image || null);
+                                setImageFile(null);
                             }}
                             className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
                         >
@@ -243,6 +267,56 @@ const AdminPetManagement = () => {
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Imagen de la mascota */}
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50">
+                        <label className="block text-sm font-medium text-gray-700 mb-3">
+                            📷 Imagen de la Mascota
+                        </label>
+                        <div className="flex flex-col md:flex-row gap-4 items-center">
+                            {/* Preview de la imagen */}
+                            <div className="w-48 h-48 rounded-lg border-2 border-gray-300 overflow-hidden bg-white flex items-center justify-center">
+                                {imagePreview ? (
+                                    <img
+                                        src={imagePreview}
+                                        alt="Preview"
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="text-center text-gray-400">
+                                        <svg
+                                            className="w-16 h-16 mx-auto mb-2"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                            />
+                                        </svg>
+                                        <p className="text-sm">Sin imagen</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Input de archivo */}
+                            <div className="flex-1">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    disabled={!editing}
+                                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
+                                />
+                                <p className="text-xs text-gray-500 mt-2">
+                                    Formatos aceptados: JPG, PNG, GIF. Tamaño máximo: 5MB
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Información Básica */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>

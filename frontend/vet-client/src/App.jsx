@@ -23,7 +23,7 @@ export default function App() {
     <div className="flex flex-col min-h-screen">
       {/* NAVBAR */}
       <Navbar />
-      <main className="flex flex-1 px-2 ">
+      <main className="flex flex-1 px-2 pt-[6rem]">
         <Routes>
           <Route path="/" element={<HomePage />} />
           {/* <Route path="/profile" element={<HomePage />} /> */}
