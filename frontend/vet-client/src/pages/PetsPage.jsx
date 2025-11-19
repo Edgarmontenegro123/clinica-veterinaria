@@ -4,9 +4,10 @@ import PetsContainer from "../components/PetsContainer.jsx";
 import { getPets } from "../services/pets.service.js";
 
 const PetsPage = () => {
-  const { user } = useAuthStore();
+  const { user, isAdmin } = useAuthStore();
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -34,13 +35,17 @@ const PetsPage = () => {
     fetchPets();
   }, [user]);
 
+  // Filtrar mascotas por nombre
+  const filteredPets = pets.filter(pet =>
+    pet.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="flex-1 flex  petsBackgroundImage">
+    <div className="flex-1 petsBackgroundImage overflow-y-auto">
       <img src="/mascotas2.avif" alt="Fondo imagen" className="petBackground" />
-      {!user ? (
-        <div
-          className="auth-message-container absolute z-10 w-[500px] p-8 rounded-2xl bg-white shadow-2xl text-center flex flex-col justify-center items-center
-  left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+      <div className={`relative z-10 w-full py-6 flex justify-center ${pets.length === 0 || !user ? 'min-h-full items-center' : 'items-start'}`}>
+        {!user ? (
+          <div className="w-[500px] p-8 rounded-2xl bg-white shadow-2xl text-center flex flex-col justify-center items-center"
         >
           <div className="mb-6">
             <svg
@@ -79,10 +84,8 @@ const PetsPage = () => {
             </a>
           </div>
         </div>
-      ) : (
-        <div className="container absolute z-10 h-full flex flex-col justify-center items-center left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          {pets.length === 0 ? (
-            <div className="auth-message-container w-[500px] p-8 rounded-2xl bg-white shadow-2xl text-center flex flex-col justify-center items-center">
+        ) : pets.length === 0 ? (
+          <div className="w-[500px] p-8 rounded-2xl bg-white shadow-2xl text-center flex flex-col justify-center items-center">
               <div className="mb-6">
                 <svg
                   className="w-20 h-20 mx-auto mb-4 text-blue-400"
@@ -114,13 +117,74 @@ const PetsPage = () => {
                 </a>
               </div>
             </div>
-          ) : (
-            <div className="flex-1">
-              <PetsContainer pets={pets} setPets={setPets} />
-            </div>
-          )}
-        </div>
-      )}
+        ) : (
+          <div className="w-full max-w-7xl">
+            {/* Barra de búsqueda - Solo para admin */}
+            {isAdmin && (
+              <div className="px-4 mb-6">
+                <div className="relative max-w-md mx-auto">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <svg
+                    className="h-5 w-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Buscar mascota por nombre..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-300 bg-white/90 backdrop-blur-sm
+                    focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200
+                    text-gray-800 placeholder-gray-500 shadow-lg transition-all"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600"
+                  >
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                )}
+              </div>
+              {searchTerm && (
+                <p className="text-center mt-3 text-yellow-100 text-sm">
+                  {filteredPets.length === 0
+                    ? "No se encontraron mascotas con ese nombre"
+                    : `Se ${filteredPets.length === 1 ? 'encontró' : 'encontraron'} ${filteredPets.length} ${filteredPets.length === 1 ? 'mascota' : 'mascotas'}`
+                  }
+                </p>
+              )}
+              </div>
+            )}
+
+            <PetsContainer pets={isAdmin ? filteredPets : pets} setPets={setPets} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

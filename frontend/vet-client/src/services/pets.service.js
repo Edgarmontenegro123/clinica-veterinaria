@@ -33,14 +33,16 @@ export const getPets = async () => {
         let query;
 
         if (isAdmin) {
+            // Admin ve todas las mascotas (activas e inactivas) con información del dueño
             query = supabase
                 .from('pet')
                 .select(`
                     *,
                     users!user_id(name, email, phone)
                 `)
-                .eq('is_active', true);
+                .order('is_active', { ascending: false }); // Mostrar activas primero
         } else {
+            // Usuarios normales solo ven sus mascotas activas
             query = supabase
                 .from('pet')
                 .select('*')
@@ -175,6 +177,7 @@ export const updatePet = async (id, petData) => {
     }
 };
 
+// Marcar mascota como fallecida (is_active = false)
 export const deletePet = async (id) => {
     try {
         const { data, error } = await supabase
@@ -192,14 +195,63 @@ export const deletePet = async (id) => {
     }
 };
 
-export const getPetById = async (id) => {
+// Eliminar mascota permanentemente de la base de datos
+export const deletePetPermanently = async (id) => {
     try {
         const { data, error } = await supabase
             .from('pet')
-            .select('*')
-            .eq('id', id)
-            .eq('is_active', true)
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+        console.log('Pet permanently deleted:', data);
+        return data;
+    } catch (error) {
+        console.error('Error permanently deleting pet:', error);
+        throw error;
+    }
+};
+
+export const getPetById = async (id) => {
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            throw new Error('Usuario no autenticado');
+        }
+
+        // Verificar si es admin
+        const { data: userData } = await supabase
+            .from('users')
+            .select('role')
+            .eq('auth_id', user.id)
             .single();
+
+        const isAdmin = userData?.role === 'admin';
+
+        // Si es admin, puede ver mascotas activas e inactivas con info del dueño
+        // Si no es admin, solo puede ver mascotas activas
+        let query;
+
+        if (isAdmin) {
+            query = supabase
+                .from('pet')
+                .select(`
+                    *,
+                    users!user_id(name, email, phone)
+                `)
+                .eq('id', id)
+                .single();
+        } else {
+            query = supabase
+                .from('pet')
+                .select('*')
+                .eq('id', id)
+                .eq('is_active', true)
+                .single();
+        }
+
+        const { data, error } = await query;
 
         if (error) throw error;
         return data;
