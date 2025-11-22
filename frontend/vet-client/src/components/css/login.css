@@ -263,10 +263,23 @@
   cursor: pointer !important;
   z-index: 101 !important;
   position: relative;
+  pointer-events: auto !important;
+  display: inline-block;
+  touch-action: manipulation;
 }
 
 .login-link:hover {
   text-decoration: underline;
+}
+
+/* Asegurar que el enlace de registro también sea clickeable */
+.register-link {
+  cursor: pointer !important;
+  z-index: 101 !important;
+  position: relative;
+  pointer-events: auto !important;
+  display: inline-block;
+  touch-action: manipulation;
 }
 
 /* === TEXTOS INFORMATIVOS === */
@@ -537,6 +550,27 @@
 
   .wrapper.active .form-box.register .input-box {
     margin: 15px 0;
+  }
+
+  /* Asegurar que los enlaces sean clickeables en móviles */
+  .form-box .logreg-link {
+    z-index: 1000 !important;
+    pointer-events: auto !important;
+    position: relative;
+  }
+
+  .form-box .logreg-link p {
+    z-index: 1001 !important;
+    position: relative;
+    pointer-events: auto !important;
+  }
+
+  .form-box .logreg-link p a {
+    z-index: 1002 !important;
+    position: relative;
+    pointer-events: auto !important;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 239, 255, 0.3);
   }
 
 }
