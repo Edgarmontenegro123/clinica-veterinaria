@@ -262,7 +262,9 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
 
         {/* Fecha de nacimiento */}
         <div className="flex flex-col">
-          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Fecha de Nacimiento</label>
+          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+            Fecha de Nacimiento <span className="text-white/60 text-sm font-normal">(opcional)</span>
+          </label>
           <input
             type="date"
             className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none backdrop-blur-sm"
@@ -274,7 +276,7 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
       {/* Vacunas */}
       <div className="flex flex-col">
         <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
-          Vacunas
+          Vacunas <span className="text-white/60 text-sm font-normal">(opcional)</span>
           <span className="text-sm font-normal text-white/70 ml-2">(separadas por comas)</span>
         </label>
         <input
@@ -300,7 +302,7 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
       {/* Imagen de la mascota */}
       <div className="flex flex-col">
         <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
-          Imagen de la mascota
+          Imagen de la mascota <span className="text-white/60 text-sm font-normal">(opcional)</span>
         </label>
         <div className="flex gap-4 items-start">
           <div className="flex-1">

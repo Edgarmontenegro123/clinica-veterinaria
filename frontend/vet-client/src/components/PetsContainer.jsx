@@ -102,7 +102,7 @@ const PetsContainer = ({ pets, setPets }) => {
             {/* Información de la mascota */}
             <div className="w-full flex flex-col items-center">
               <h5 className="font-bold text-xl text-yellow-200 truncate w-full text-center">{pet.name}</h5>
-              <p className="text-lg text-yellow-100">{pet.age} años</p>
+              <p className="text-lg text-yellow-100">{pet.calculatedAge ?? pet.age} años</p>
 
               {/* Información del dueño (solo admin) */}
               {isAdmin && pet.users && (
@@ -198,7 +198,7 @@ const PetsContainer = ({ pets, setPets }) => {
 
                 <div className="bg-white p-3 rounded-lg shadow-sm">
                   <p className="text-sm font-semibold text-blue-600">Edad</p>
-                  <p className="text-lg text-gray-800">{selectedPet.age} años</p>
+                  <p className="text-lg text-gray-800">{selectedPet.calculatedAge ?? selectedPet.age} años</p>
                 </div>
 
                 <div className="bg-white p-3 rounded-lg shadow-sm">
