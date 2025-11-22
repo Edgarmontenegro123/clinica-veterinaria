@@ -177,7 +177,7 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
 
   return (
     <form
-      className="flex flex-col gap-3 justify-center border-2 border-white/30 p-6 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+      className="flex flex-col gap-3 justify-center border-2 border-white/30 p-4 md:p-6 rounded-xl shadow-2xl max-w-2xl w-full overflow-y-auto"
       style={{
         background: "rgba(0, 0, 0, 0.45)",
         backdropFilter: "blur(10px)",
@@ -185,7 +185,7 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
       }}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h2 className="text-2xl font-bold text-white mb-4 text-center" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
+      <h2 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4 text-center" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
         {mode === "edit" ? "Editar Mascota" : "Registrar Nueva Mascota"}
       </h2>
 
@@ -284,16 +284,18 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
         />
       </div>
 
-      {/* Historial médico */}
-      <div className="flex flex-col">
-        <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Historial Médico</label>
-        <textarea
-          className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none resize-vertical placeholder-white/60 backdrop-blur-sm"
-          placeholder="Información relevante sobre la salud de la mascota..."
-          rows="4"
-          {...register("history")}
-        />
-      </div>
+      {/* Historial médico - Solo visible para admin */}
+      {isAdmin && (
+        <div className="flex flex-col">
+          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Historial Médico</label>
+          <textarea
+            className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none resize-vertical placeholder-white/60 backdrop-blur-sm"
+            placeholder="Información relevante sobre la salud de la mascota..."
+            rows="4"
+            {...register("history")}
+          />
+        </div>
+      )}
 
       {/* Imagen de la mascota */}
       <div className="flex flex-col">

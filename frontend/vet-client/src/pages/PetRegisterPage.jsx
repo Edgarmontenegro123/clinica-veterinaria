@@ -14,14 +14,14 @@ const PetRegisterPage = () => {
   }, [user, navigate]);
 
   return (
-    <div className="flex-1 flex petsBackgroundImage">
+    <div className="flex-1 flex petsBackgroundImage overflow-y-auto">
       <img
         src="/mascotasjpg.webp"
         alt="Fondo imagen"
         className="petBackground"
       />
-      <div className="absolute z-10 w-full h-full flex items-center justify-center px-4 py-8">
-        <div style={{ width: '100%', maxWidth: '850px', marginLeft: '160px' }}>
+      <div className="absolute z-10 w-full min-h-full flex items-start md:items-center justify-center px-4 pb-8 pt-4 md:py-8">
+        <div className="w-full max-w-[850px] mx-auto my-4">
           <PetRegisterForm />
         </div>
       </div>
