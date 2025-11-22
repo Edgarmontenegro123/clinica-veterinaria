@@ -65,7 +65,7 @@ const Navbar = () => {
           </li>
 
           <li>
-            <a href="" onClick={handleLinkClick}>Consultas</a>
+            <a href="/contact" className={isActive("/contact")} onClick={handleLinkClick}>Consultas</a>
           </li>
 
           <li>
