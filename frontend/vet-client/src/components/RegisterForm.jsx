@@ -27,6 +27,7 @@ export default function RegisterForm({ onToggleLogin, onClose }) {
     if (!formData.name) newErrors.name = 'El nombre completo es requerido';
     if (!formData.email) newErrors.email = 'El correo electrónico es requerido';
     else if (!validateEmail(formData.email)) newErrors.email = 'Correo electrónico inválido';
+    else if (formData.email.length > 50) newErrors.email = 'El correo es demasiado largo (máximo 50 caracteres)';
     if (!formData.password) newErrors.password = 'La contraseña es requerida';
     else if (formData.password.length < 6)
       newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
@@ -50,29 +51,64 @@ export default function RegisterForm({ onToggleLogin, onClose }) {
 
     try {
       const { user, session } = await registerUser(formData);
-      setAuth(user, session);
 
-      if (onClose) onClose();
+      // Si el usuario necesita confirmar el email
+      if (user && !session) {
+        if (onClose) onClose();
 
-      Swal.fire({
-        icon: 'success',
-        title: '¡Cuenta creada!',
-        text: 'Tu registro fue exitoso',
-        timer: 2000,
-        showConfirmButton: false
-      }).then(() => {
-        // ✅ Redirigir al Home ("/") cuando se cierra el Swal
-        navigate('/');
-      });
+        Swal.fire({
+          icon: 'info',
+          title: '📧 Confirma tu correo',
+          html: `
+            <div style="text-align: center; padding: 5px; max-width: 100%;">
+              <p style="margin: 12px 0; font-size: 15px; color: #374151;">
+                Te enviamos un enlace de confirmación a:
+              </p>
+              <p style="font-weight: 600; color: #2563eb; margin: 12px 0; font-size: 14px; word-break: break-all;">
+                ${formData.email}
+              </p>
+              <p style="margin: 12px 0; font-size: 14px; color: #6b7280;">
+                Haz clic en el enlace para activar tu cuenta.
+              </p>
+              <p style="font-size: 13px; color: #9ca3af; margin-top: 15px; padding: 10px; background: #f9fafb; border-radius: 6px;">
+                💡 Revisa tu carpeta de spam si no lo encuentras
+              </p>
+            </div>
+          `,
+          confirmButtonText: 'Entendido',
+          confirmButtonColor: '#2563eb',
+          allowOutsideClick: false,
+          customClass: {
+            popup: 'swal-compact',
+            title: 'swal-title-small'
+          },
+          width: '90%',
+          padding: '20px'
+        }).then(() => {
+          navigate('/login');
+        });
+      } else {
+        // Si el email ya está confirmado o no se requiere confirmación
+        setAuth(user, session);
+        if (onClose) onClose();
+
+        Swal.fire({
+          icon: 'success',
+          title: '¡Cuenta creada!',
+          text: 'Tu registro fue exitoso',
+          timer: 2000,
+          showConfirmButton: false
+        }).then(() => {
+          navigate('/');
+        });
+      }
 
     } catch (error) {
       console.error('Registration failed:', error);
       Swal.fire({
         icon: 'error',
         title: 'Error de registro',
-        text:
-          error.response?.data?.message ||
-          'No se pudo crear la cuenta. Por favor, intenta nuevamente.'
+        text: error.message || 'No se pudo crear la cuenta. Por favor, intenta nuevamente.'
       });
     } finally {
       setIsSubmitting(false);

@@ -85,7 +85,7 @@
 }
 
 .wrapper .form-box.register {
-  right: 0;
+  right: -20px;
   padding: 30px 40px 30px 60px;
 }
 
@@ -141,7 +141,7 @@
 
 /* Reducir márgenes en registro para que quepa */
 .wrapper.active .form-box.register .input-box {
-  margin: 18px 0;
+  margin: 12px 0;
   height: 45px;
 }
 
@@ -171,7 +171,7 @@
   top: 50%;
   left: 0;
   transform: translateY(-50%);
-  font-size: 16px;
+  font-size: 14px;
   color: #fff;
   pointer-events: none;
   transition: 0.5s;
@@ -180,6 +180,7 @@
 .input-box input:focus~label,
 .input-box input:valid~label {
   top: -5px;
+  font-size: 12px;
   color: #0ef;
 }
 
@@ -646,6 +647,7 @@
 /* Asegurar que el label se mueva cuando hay autocompletado */
 .input-box input:-webkit-autofill ~ label {
   top: -5px;
+  font-size: 12px;
   color: #0ef;
 }
 

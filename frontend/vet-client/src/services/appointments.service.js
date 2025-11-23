@@ -39,7 +39,7 @@ export const generateTimeSlots = (date) => {
 };
 
 /**
- * Obtiene los turnos ocupados para una fecha específica
+ * Obtiene los turnos ocupados para una fecha específica (excluye cancelados)
  */
 export const getAppointmentsByDate = async (date) => {
     try {
@@ -53,7 +53,8 @@ export const getAppointmentsByDate = async (date) => {
             .from('appoinment')
             .select('*, pet(*)')
             .gte('datetime', startOfDay.toISOString())
-            .lte('datetime', endOfDay.toISOString());
+            .lte('datetime', endOfDay.toISOString())
+            .or('status.is.null,status.neq.cancelled'); // Excluir turnos cancelados
 
         if (error) {
             console.error('Error fetching appointments:', error);
@@ -154,7 +155,7 @@ export const createAppointment = async (appointmentData) => {
 /**
  * Obtiene los turnos de un usuario específico o todos si es admin
  */
-export const getUserAppointments = async (userId) => {
+export const getUserAppointments = async (userId, includeCancelled = true) => {
     try {
         const { data: { user } } = await supabase.auth.getUser();
 
@@ -185,6 +186,11 @@ export const getUserAppointments = async (userId) => {
             query = query.eq('user_id', userId);
         }
 
+        // Excluir cancelados si se especifica
+        if (!includeCancelled) {
+            query = query.or('status.is.null,status.neq.cancelled');
+        }
+
         const { data, error } = await query;
 
         if (error) {
@@ -202,7 +208,7 @@ export const getUserAppointments = async (userId) => {
 /**
  * Obtiene TODOS los turnos (solo para admin)
  */
-export const getAllAppointments = async () => {
+export const getAllAppointments = async (includeCancelled = true) => {
     try {
         const { data: { user } } = await supabase.auth.getUser();
 
@@ -221,7 +227,7 @@ export const getAllAppointments = async () => {
             throw new Error('No tienes permisos de administrador');
         }
 
-        const { data, error } = await supabase
+        let query = supabase
             .from('appoinment')
             .select(`
                 *,
@@ -229,6 +235,13 @@ export const getAllAppointments = async () => {
                 users!user_id(name, email, phone)
             `)
             .order('datetime', { ascending: true });
+
+        // Excluir cancelados si se especifica
+        if (!includeCancelled) {
+            query = query.or('status.is.null,status.neq.cancelled');
+        }
+
+        const { data, error } = await query;
 
         if (error) {
             console.error('Error fetching all appointments:', error);
@@ -243,14 +256,24 @@ export const getAllAppointments = async () => {
 };
 
 /**
- * Cancela un turno (elimina)
+ * Cancela un turno (marca como cancelado y notifica al usuario)
  */
-export const cancelAppointment = async (appointmentId) => {
+export const cancelAppointment = async (appointmentId, isAdminCancellation = false) => {
     try {
-        // Primero verificar si el turno existe
+        // Obtener información completa del turno antes de cancelarlo
         const { data: existingAppointment, error: fetchError } = await supabase
             .from('appoinment')
-            .select('*')
+            .select(`
+                *,
+                pet:pet_id (
+                    id,
+                    name,
+                    species,
+                    breed,
+                    user_id
+                ),
+                users!user_id(name, email, phone)
+            `)
             .eq('id', appointmentId)
             .single();
 
@@ -263,21 +286,177 @@ export const cancelAppointment = async (appointmentId) => {
             throw new Error('El turno no existe');
         }
 
-        // Eliminar el turno
-        const { error } = await supabase
+        // Marcar como cancelado en lugar de eliminar
+        const { error: updateError } = await supabase
             .from('appoinment')
-            .delete()
+            .update({
+                status: 'cancelled',
+                cancelled_at: new Date().toISOString(),
+                cancelled_by: isAdminCancellation ? 'admin' : 'user'
+            })
             .eq('id', appointmentId);
 
-        if (error) {
-            console.error('Error canceling appointment:', error);
-            throw error;
+        if (updateError) {
+            console.error('Error canceling appointment:', updateError);
+            throw updateError;
+        }
+
+        // Si es una cancelación del admin, enviar email al usuario
+        if (isAdminCancellation && existingAppointment.users?.email) {
+            await sendCancellationEmail(existingAppointment);
         }
 
         return true;
     } catch (error) {
         console.error('Error in cancelAppointment:', error);
         throw error;
+    }
+};
+
+/**
+ * Elimina un turno permanentemente de la base de datos (solo admin)
+ */
+export const deleteAppointment = async (appointmentId) => {
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            throw new Error('Usuario no autenticado');
+        }
+
+        // Verificar si es admin
+        const { data: userData } = await supabase
+            .from('users')
+            .select('role')
+            .eq('auth_id', user.id)
+            .single();
+
+        if (userData?.role !== 'admin') {
+            throw new Error('No tienes permisos de administrador');
+        }
+
+        const { error } = await supabase
+            .from('appoinment')
+            .delete()
+            .eq('id', appointmentId);
+
+        if (error) {
+            console.error('Error deleting appointment:', error);
+            throw error;
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Error in deleteAppointment:', error);
+        throw error;
+    }
+};
+
+/**
+ * Elimina todos los turnos cancelados o pasados (solo admin)
+ */
+export const deleteOldAppointments = async (deleteType = 'cancelled') => {
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            throw new Error('Usuario no autenticado');
+        }
+
+        // Verificar si es admin
+        const { data: userData } = await supabase
+            .from('users')
+            .select('role')
+            .eq('auth_id', user.id)
+            .single();
+
+        if (userData?.role !== 'admin') {
+            throw new Error('No tienes permisos de administrador');
+        }
+
+        let query = supabase.from('appoinment').delete();
+
+        if (deleteType === 'cancelled') {
+            // Eliminar solo turnos cancelados
+            query = query.eq('status', 'cancelled');
+        } else if (deleteType === 'past') {
+            // Eliminar solo turnos pasados (no cancelados)
+            const now = new Date().toISOString();
+            query = query
+                .lt('datetime', now)
+                .or('status.is.null,status.neq.cancelled');
+        } else if (deleteType === 'all_old') {
+            // Eliminar todos los turnos viejos (cancelados + pasados)
+            const now = new Date().toISOString();
+            query = query.or(`status.eq.cancelled,datetime.lt.${now}`);
+        }
+
+        const { error, count } = await query;
+
+        if (error) {
+            console.error('Error deleting old appointments:', error);
+            throw error;
+        }
+
+        return count;
+    } catch (error) {
+        console.error('Error in deleteOldAppointments:', error);
+        throw error;
+    }
+};
+
+/**
+ * Envía un email de notificación de cancelación al usuario
+ */
+const sendCancellationEmail = async (appointment) => {
+    try {
+        const userEmail = appointment.users?.email;
+        const userName = appointment.users?.name || 'Estimado cliente';
+        const petName = appointment.pet?.name || 'su mascota';
+        const appointmentDate = new Date(appointment.datetime).toLocaleDateString('es-AR', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        const appointmentTime = new Date(appointment.datetime).toLocaleTimeString('es-AR', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        const formData = new FormData();
+        formData.append('name', userName);
+        formData.append('email', userEmail);
+        formData.append('message', `
+Lamentamos informarle que su turno ha sido cancelado por razones administrativas.
+
+Detalles del turno cancelado:
+- Mascota: ${petName}
+- Fecha: ${appointmentDate}
+- Hora: ${appointmentTime}
+
+Le pedimos disculpas por las molestias ocasionadas. Lo invitamos a reservar un nuevo turno en nuestro sistema cuando lo desee.
+
+Para reservar un nuevo turno, ingrese a su cuenta en nuestra plataforma.
+
+Saludos cordiales,
+Clínica Ramvet
+        `.trim());
+
+        const response = await fetch('https://formspree.io/f/YOUR_FORMSPREE_ID', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            console.error('Error al enviar email de cancelación');
+        }
+    } catch (error) {
+        console.error('Error sending cancellation email:', error);
+        // No lanzamos el error para que la cancelación se complete aunque falle el email
     }
 };
 

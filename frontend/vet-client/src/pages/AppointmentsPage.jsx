@@ -94,7 +94,7 @@ const AppointmentsPage = () => {
                 {activeTab === 'new' ? (
                     <AppointmentCalendar key="new" />
                 ) : activeTab === 'my-appointments' ? (
-                    <MyAppointments key={`my-appointments-${refreshKey}`} />
+                    <MyAppointments key={`my-appointments-${refreshKey}`} onNavigateToNew={() => setActiveTab('new')} />
                 ) : (
                     <AllAppointments key={`all-appointments-${refreshKey}`} />
                 )}
