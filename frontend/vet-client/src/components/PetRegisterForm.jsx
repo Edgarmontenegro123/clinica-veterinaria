@@ -57,6 +57,38 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
 
   const onSubmit = async (data) => {
     console.log(data);
+
+    // Validación adicional para birth_date
+    if (data.birth_date) {
+      const selectedDate = new Date(data.birth_date + 'T00:00:00');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (selectedDate > today) {
+        Swal.fire({
+          icon: "error",
+          title: "Fecha inválida",
+          text: "La fecha de nacimiento no puede ser posterior a la fecha actual.",
+          confirmButtonColor: "#d33",
+        });
+        return;
+      }
+
+      const minDate = new Date();
+      minDate.setFullYear(minDate.getFullYear() - 200);
+      minDate.setHours(0, 0, 0, 0);
+
+      if (selectedDate < minDate) {
+        Swal.fire({
+          icon: "error",
+          title: "Fecha inválida",
+          text: "La fecha de nacimiento no puede ser mayor a 200 años en el pasado.",
+          confirmButtonColor: "#d33",
+        });
+        return;
+      }
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -177,7 +209,7 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
 
   return (
     <form
-      className="flex flex-col gap-3 justify-center border-2 border-white/30 p-4 md:p-6 rounded-xl shadow-2xl max-w-2xl w-full overflow-y-auto"
+      className="flex flex-col gap-3 justify-center border-2 border-white/30 p-4 sm:p-5 md:p-6 lg:p-8 rounded-xl shadow-2xl w-full max-w-[95vw] sm:max-w-[90vw] md:max-w-2xl lg:max-w-3xl overflow-y-auto"
       style={{
         background: "rgba(0, 0, 0, 0.45)",
         backdropFilter: "blur(10px)",
@@ -185,27 +217,27 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
       }}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h2 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4 text-center" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
+      <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white mb-3 md:mb-4 text-center" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
         {mode === "edit" ? "Editar Mascota" : "Registrar Nueva Mascota"}
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         {/* Nombre */}
         <div className="flex flex-col">
-          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Nombre *</label>
+          <label className="font-semibold text-white mb-1 text-sm sm:text-base" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Nombre *</label>
           <input
-            className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-sm"
+            className="bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md border border-white/30 focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-sm"
             placeholder="Ej: Max"
             {...register("name", { required: "El nombre es requerido" })}
           />
-          {errors.name && <span className="text-red-300 text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.name.message}</span>}
+          {errors.name && <span className="text-red-300 text-xs sm:text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.name.message}</span>}
         </div>
 
         {/* Especie */}
         <div className="flex flex-col">
-          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Especie *</label>
+          <label className="font-semibold text-white mb-1 text-sm sm:text-base" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Especie *</label>
           <select
-            className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none backdrop-blur-sm"
+            className="bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md border border-white/30 focus:border-blue-400 focus:outline-none backdrop-blur-sm"
             {...register("species", { required: "La especie es requerida" })}
           >
             <option value="" className="bg-gray-800">Selecciona especie</option>
@@ -214,39 +246,39 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
             <option value="Ave" className="bg-gray-800">Ave</option>
             <option value="Otro" className="bg-gray-800">Otro</option>
           </select>
-          {errors.species && <span className="text-red-300 text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.species.message}</span>}
+          {errors.species && <span className="text-red-300 text-xs sm:text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.species.message}</span>}
         </div>
 
         {/* Raza */}
         <div className="flex flex-col">
-          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Raza *</label>
+          <label className="font-semibold text-white mb-1 text-sm sm:text-base" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Raza *</label>
           <input
-            className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-sm"
+            className="bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md border border-white/30 focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-sm"
             placeholder="Ej: Mestizo, Labrador, Siamés"
             {...register("breed", { required: "La raza es requerida" })}
           />
-          {errors.breed && <span className="text-red-300 text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.breed.message}</span>}
+          {errors.breed && <span className="text-red-300 text-xs sm:text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.breed.message}</span>}
         </div>
 
         {/* Sexo */}
         <div className="flex flex-col">
-          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Sexo *</label>
+          <label className="font-semibold text-white mb-1 text-sm sm:text-base" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Sexo *</label>
           <select
-            className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none backdrop-blur-sm"
+            className="bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md border border-white/30 focus:border-blue-400 focus:outline-none backdrop-blur-sm"
             {...register("sex", { required: "El sexo es requerido" })}
           >
             <option value="" className="bg-gray-800">Selecciona sexo</option>
             <option value="Macho" className="bg-gray-800">Macho</option>
             <option value="Hembra" className="bg-gray-800">Hembra</option>
           </select>
-          {errors.sex && <span className="text-red-300 text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.sex.message}</span>}
+          {errors.sex && <span className="text-red-300 text-xs sm:text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.sex.message}</span>}
         </div>
 
         {/* Edad */}
         <div className="flex flex-col">
-          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Edad (años) *</label>
+          <label className="font-semibold text-white mb-1 text-sm sm:text-base" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Edad (años) *</label>
           <input
-            className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-sm"
+            className="bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md border border-white/30 focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-sm"
             placeholder="Ej: 3"
             type="number"
             min="0"
@@ -257,30 +289,58 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
               valueAsNumber: true
             })}
           />
-          {errors.age && <span className="text-red-300 text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.age.message}</span>}
+          {errors.age && <span className="text-red-300 text-xs sm:text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.age.message}</span>}
         </div>
 
         {/* Fecha de nacimiento */}
         <div className="flex flex-col">
-          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
-            Fecha de Nacimiento <span className="text-white/60 text-sm font-normal">(opcional)</span>
+          <label className="font-semibold text-white mb-1 text-sm sm:text-base" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+            Fecha de Nacimiento <span className="text-white/60 text-xs sm:text-sm font-normal">(opcional)</span>
           </label>
           <input
             type="date"
-            className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none backdrop-blur-sm"
-            {...register("birth_date")}
+            max={(() => {
+              const today = new Date();
+              return today.toISOString().split('T')[0];
+            })()}
+            min={(() => {
+              const minDate = new Date();
+              minDate.setFullYear(minDate.getFullYear() - 200);
+              return minDate.toISOString().split('T')[0];
+            })()}
+            className="bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md border border-white/30 focus:border-blue-400 focus:outline-none backdrop-blur-sm"
+            {...register("birth_date", {
+              validate: {
+                notFuture: value => {
+                  if (!value) return true; // Permitir vacío (opcional)
+                  const selectedDate = new Date(value + 'T00:00:00');
+                  const today = new Date();
+                  today.setHours(0, 0, 0, 0);
+                  return selectedDate <= today || "La fecha de nacimiento no puede ser futura";
+                },
+                notTooOld: value => {
+                  if (!value) return true; // Permitir vacío (opcional)
+                  const selectedDate = new Date(value + 'T00:00:00');
+                  const minDate = new Date();
+                  minDate.setFullYear(minDate.getFullYear() - 200);
+                  minDate.setHours(0, 0, 0, 0);
+                  return selectedDate >= minDate || "La fecha de nacimiento no puede ser mayor a 200 años";
+                }
+              }
+            })}
           />
+          {errors.birth_date && <span className="text-red-300 text-xs sm:text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.birth_date.message}</span>}
         </div>
       </div>
 
       {/* Vacunas */}
       <div className="flex flex-col">
-        <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
-          Vacunas <span className="text-white/60 text-sm font-normal">(opcional)</span>
-          <span className="text-sm font-normal text-white/70 ml-2">(separadas por comas)</span>
+        <label className="font-semibold text-white mb-1 text-sm sm:text-base" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+          Vacunas <span className="text-white/60 text-xs sm:text-sm font-normal">(opcional)</span>
+          <span className="text-xs sm:text-sm font-normal text-white/70 ml-2">(separadas por comas)</span>
         </label>
         <input
-          className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-sm"
+          className="bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md border border-white/30 focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-sm"
           placeholder="Ej: Rabia, Parvovirus, Moquillo"
           {...register("vaccines")}
         />
@@ -289,9 +349,9 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
       {/* Historial médico - Solo visible para admin */}
       {isAdmin && (
         <div className="flex flex-col">
-          <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Historial Médico</label>
+          <label className="font-semibold text-white mb-1 text-sm sm:text-base" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Historial Médico</label>
           <textarea
-            className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none resize-vertical placeholder-white/60 backdrop-blur-sm"
+            className="bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md border border-white/30 focus:border-blue-400 focus:outline-none resize-vertical placeholder-white/60 backdrop-blur-sm"
             placeholder="Información relevante sobre la salud de la mascota..."
             rows="4"
             {...register("history")}
@@ -301,20 +361,20 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
 
       {/* Imagen de la mascota */}
       <div className="flex flex-col">
-        <label className="font-semibold text-white mb-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
-          Imagen de la mascota <span className="text-white/60 text-sm font-normal">(opcional)</span>
+        <label className="font-semibold text-white mb-1 text-sm sm:text-base" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+          Imagen de la mascota <span className="text-white/60 text-xs sm:text-sm font-normal">(opcional)</span>
         </label>
-        <div className="flex gap-4 items-start">
-          <div className="flex-1">
+        <div className="flex flex-col sm:flex-row gap-4 items-start">
+          <div className="flex-1 w-full">
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="bg-white/20 text-white px-3 py-2 rounded-md border border-white/30 focus:border-blue-400 focus:outline-none backdrop-blur-sm w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 file:cursor-pointer"
+              className="bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md border border-white/30 focus:border-blue-400 focus:outline-none backdrop-blur-sm w-full file:mr-2 sm:file:mr-4 file:py-1.5 sm:file:py-2 file:px-3 sm:file:px-4 file:rounded-md file:border-0 file:text-xs sm:file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 file:cursor-pointer"
             />
           </div>
           {imagePreview && (
-            <div className="w-32 h-32 rounded-lg overflow-hidden border-2 border-white/30 flex-shrink-0">
+            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-lg overflow-hidden border-2 border-white/30 flex-shrink-0 mx-auto sm:mx-0">
               <img
                 src={imagePreview}
                 alt="Preview"
@@ -334,18 +394,18 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
             className="w-4 h-4 cursor-pointer"
             {...register("has_owner")}
           />
-          <label htmlFor="has_owner" className="font-semibold text-white cursor-pointer" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+          <label htmlFor="has_owner" className="font-semibold text-white cursor-pointer text-sm sm:text-base" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
             ¿Tiene dueño? (desmarcar si es para adopción)
           </label>
         </div>
       )}
 
       {/* Botones */}
-      <div className="flex gap-3 mt-4">
+      <div className="flex flex-col sm:flex-row gap-3 mt-4">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="pet-form-button-primary flex-1 text-white px-4 py-2 rounded-md font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className="pet-form-button-primary flex-1 text-white px-4 py-2.5 sm:py-2 text-sm sm:text-base rounded-md font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           {isSubmitting ? "Procesando..." : mode === "edit" ? "Actualizar Mascota" : "Registrar Mascota"}
         </button>
@@ -354,7 +414,7 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
           <button
             type="button"
             onClick={handleDelete}
-            className="pet-form-button-delete px-4 py-2 text-white rounded-md font-semibold"
+            className="pet-form-button-delete px-4 py-2.5 sm:py-2 text-sm sm:text-base text-white rounded-md font-semibold"
           >
             Eliminar
           </button>
@@ -363,13 +423,13 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
         <button
           type="button"
           onClick={() => navigate("/mypets")}
-          className="pet-form-button-cancel px-4 py-2 text-white rounded-md font-semibold"
+          className="pet-form-button-cancel px-4 py-2.5 sm:py-2 text-sm sm:text-base text-white rounded-md font-semibold"
         >
           Cancelar
         </button>
       </div>
 
-      <p className="text-sm text-white/80 text-center mt-2" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+      <p className="text-xs sm:text-sm text-white/80 text-center mt-2" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
         * Campos requeridos
       </p>
     </form>

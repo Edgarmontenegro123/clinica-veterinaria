@@ -131,14 +131,24 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-2xl">
+    <div className="relative w-full min-h-screen flex items-center justify-center px-4 py-8 overflow-hidden">
+      {/* Imagen de fondo */}
+      <img
+        src="/fondo3.jpg"
+        alt="Fondo mascotas"
+        className="fixed top-0 left-0 w-full h-full object-cover grayscale z-[-1]"
+      />
+
+      {/* Overlay oscuro */}
+      <div className="fixed top-0 left-0 w-full h-full bg-black/40 z-[-1]"></div>
+
+      <div className="w-full max-w-2xl relative z-10">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-3">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-3" style={{ textShadow: "3px 3px 6px rgba(0,0,0,0.8)" }}>
             Contacto
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-white text-lg font-semibold" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}>
             ¿Tienes alguna consulta? Escríbenos y te responderemos a la brevedad
           </p>
         </div>
@@ -146,12 +156,17 @@ const ContactPage = () => {
         {/* Formulario */}
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 border border-gray-100"
+          className="border-2 border-white/30 rounded-2xl shadow-2xl p-6 md:p-8"
+          style={{
+            background: "rgba(0, 0, 0, 0.45)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)"
+          }}
         >
           <div className="space-y-5">
             {/* Nombre completo */}
             <div>
-              <label className="block text-gray-700 font-semibold mb-2">
+              <label className="block text-white font-semibold mb-2">
                 Nombre completo *
               </label>
               <input
@@ -160,7 +175,7 @@ const ContactPage = () => {
                 value={formData.fullName}
                 onChange={handleChange}
                 placeholder="Ej: Juan Pérez"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-gray-400 text-white bg-gray-800/50"
                 required
               />
             </div>
@@ -168,7 +183,7 @@ const ContactPage = () => {
             {/* Teléfono y Email */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-700 font-semibold mb-2">
+                <label className="block text-white font-semibold mb-2">
                   Teléfono *
                 </label>
                 <input
@@ -177,13 +192,13 @@ const ContactPage = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="Ej: 1123456789"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-gray-400 text-white bg-gray-800/50"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-gray-700 font-semibold mb-2">
+                <label className="block text-white font-semibold mb-2">
                   Email *
                 </label>
                 <input
@@ -192,7 +207,7 @@ const ContactPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Ej: ejemplo@email.com"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-gray-400 text-white bg-gray-800/50"
                   required
                 />
               </div>
@@ -200,8 +215,8 @@ const ContactPage = () => {
 
             {/* Dirección */}
             <div>
-              <label className="block text-gray-700 font-semibold mb-2">
-                Dirección <span className="text-gray-500 font-normal text-sm">(opcional)</span>
+              <label className="block text-white font-semibold mb-2">
+                Dirección <span className="text-gray-300 font-normal text-sm">(opcional)</span>
               </label>
               <input
                 type="text"
@@ -209,13 +224,13 @@ const ContactPage = () => {
                 value={formData.address}
                 onChange={handleChange}
                 placeholder="Ej: Av. Principal 123, CABA"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-gray-400 text-white bg-gray-800/50"
               />
             </div>
 
             {/* Consulta */}
             <div>
-              <label className="block text-gray-700 font-semibold mb-2">
+              <label className="block text-white font-semibold mb-2">
                 Consulta *
               </label>
               <textarea
@@ -224,7 +239,7 @@ const ContactPage = () => {
                 onChange={handleChange}
                 rows="6"
                 placeholder="Escribe tu consulta aquí..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all placeholder:text-gray-400 text-white bg-gray-800/50"
                 required
               />
             </div>
@@ -251,7 +266,7 @@ const ContactPage = () => {
               </button>
             </div>
 
-            <p className="text-sm text-gray-500 text-center mt-4">
+            <p className="text-sm text-gray-300 text-center mt-4">
               * Campos requeridos
             </p>
           </div>

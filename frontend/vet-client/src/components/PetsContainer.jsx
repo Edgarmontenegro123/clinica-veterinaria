@@ -69,13 +69,13 @@ const PetsContainer = ({ pets, setPets }) => {
       {/* Grid responsive: 1 columna en móvil, 2 en tablet, 3-4 en desktop */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 place-items-center">
         {pets.map((pet) => (
-          <div key={pet.id} className="w-full max-w-[280px] flex flex-col items-center gap-2">
+          <div key={pet.id} className="w-full max-w-[200px] flex flex-col items-center gap-2">
             {/* Tarjeta de mascota */}
             <div className="relative rounded-2xl h-[200px] w-full border-2 border-gray-300 overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-shadow">
               <img
                 src={pet.image || './no-image.png'}
                 alt={pet.name}
-                className={`w-full h-full object-cover transition-opacity ${!pet.is_active ? 'opacity-40 grayscale' : ''}`}
+                className={`w-full h-full object-contain transition-opacity ${!pet.is_active ? 'opacity-40 grayscale' : ''}`}
                 onClick={() => handleImageClick(pet)}
               />
 
