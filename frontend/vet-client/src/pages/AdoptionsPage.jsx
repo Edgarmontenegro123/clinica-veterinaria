@@ -25,14 +25,17 @@ const AdoptionsPage = () => {
     );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-6 flex flex-col w-full">
+    <div
+      className="min-h-screen py-12 px-6 flex flex-col w-full bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: 'url(/fondo1.jpg)' }}
+    >
       <h1 className="text-4xl font-bold text-center mb-10 text-gray-800 flex items-center justify-center gap-3">
         <FaPaw className="text-pink-600" />
         Mascotas en Adopción
       </h1>
 
       {pets.length === 0 ? (
-        <p className="text-center text-gray-600">
+        <p className="text-center text-#fffdfd-600 text-lg">
           No hay mascotas disponibles por ahora 🐾
         </p>
       ) : (

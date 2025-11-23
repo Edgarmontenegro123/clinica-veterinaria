@@ -281,7 +281,7 @@ const ContactPage = () => {
             <div className="space-y-2 text-gray-600">
               <p>📞 <span className="font-semibold">Teléfono:</span> (011) 1234-5678</p>
               <p>📧 <span className="font-semibold">Email:</span> info@ramvet.com</p>
-              <p>📍 <span className="font-semibold">Dirección:</span> Av. Veterinaria 123, CABA</p>
+              <p>📍 <span className="font-semibold">Dirección:</span> Av. Cabildo 4082, CABA</p>
               <p>⏰ <span className="font-semibold">Horarios:</span> Lun-Vie 10:00-20:00, Sáb 10:00-12:30</p>
             </div>
           </div>

@@ -13,7 +13,7 @@ const Footer = () => {
             <div className="space-y-2 text-gray-300">
               <p className="flex items-start gap-2">
                 <span className="text-blue-400">📍</span>
-                <span>Av. Veterinaria 123, CABA, Argentina</span>
+                <span>Av. Cabildo 4082, CABA, Argentina</span>
               </p>
               <p className="flex items-center gap-2">
                 <span className="text-blue-400">📞</span>
@@ -107,15 +107,6 @@ const Footer = () => {
                 aria-label="YouTube"
               >
                 <FaYoutube size={24} />
-              </a>
-              <a
-                href="https://tiktok.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-black hover:bg-gray-800 p-3 rounded-full transition-all hover:scale-110 shadow-lg"
-                aria-label="TikTok"
-              >
-                <FaTiktok size={24} />
               </a>
             </div>
           </div>
