@@ -59,7 +59,7 @@ const HomePage = () => {
         <div className="absolute inset-0 bg-black/30"></div>
 
         {/* Contenido Hero */}
-        <div className="content relative w-1/3 left-0 bottom-0 gap-4 flex flex-col items-start p-8">
+        <div className="content relative w-1/3 left-0 bottom-27 gap-4 flex flex-col items-start p-8">
           <h2 className="leading-tight text-white text-4xl font-bold">
             Cuidamos a tus Mascotas
           </h2>
