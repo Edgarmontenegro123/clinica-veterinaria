@@ -69,13 +69,13 @@ const PetsContainer = ({ pets, setPets }) => {
       {/* Grid responsive: 1 columna en móvil, 2 en tablet, 3-4 en desktop */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 place-items-center">
         {pets.map((pet) => (
-          <div key={pet.id} className="w-full max-w-[280px] flex flex-col items-center gap-2">
+          <div key={pet.id} className="w-full max-w-[200px] flex flex-col items-center gap-2">
             {/* Tarjeta de mascota */}
             <div className="relative rounded-2xl h-[200px] w-full border-2 border-gray-300 overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-shadow">
               <img
                 src={pet.image || './no-image.png'}
                 alt={pet.name}
-                className={`w-full h-full object-cover transition-opacity ${!pet.is_active ? 'opacity-40 grayscale' : ''}`}
+                className={`w-full h-full object-contain transition-opacity ${!pet.is_active ? 'opacity-40 grayscale' : ''}`}
                 onClick={() => handleImageClick(pet)}
               />
 
@@ -102,7 +102,7 @@ const PetsContainer = ({ pets, setPets }) => {
             {/* Información de la mascota */}
             <div className="w-full flex flex-col items-center">
               <h5 className="font-bold text-xl text-yellow-200 truncate w-full text-center">{pet.name}</h5>
-              <p className="text-lg text-yellow-100">{pet.age} años</p>
+              <p className="text-lg text-yellow-100">{pet.calculatedAge ?? pet.age} años</p>
 
               {/* Información del dueño (solo admin) */}
               {isAdmin && pet.users && (
@@ -198,7 +198,7 @@ const PetsContainer = ({ pets, setPets }) => {
 
                 <div className="bg-white p-3 rounded-lg shadow-sm">
                   <p className="text-sm font-semibold text-blue-600">Edad</p>
-                  <p className="text-lg text-gray-800">{selectedPet.age} años</p>
+                  <p className="text-lg text-gray-800">{selectedPet.calculatedAge ?? selectedPet.age} años</p>
                 </div>
 
                 <div className="bg-white p-3 rounded-lg shadow-sm">

@@ -1,5 +1,6 @@
 import axios from './axios.js';
-import { supabase } from './supabase.js'
+import { supabase } from './supabase.js';
+import { calculateAgesForPets } from '../utils/calculateAge.js';
 
 // export const getPets = async () => {
 //     try {
@@ -57,7 +58,9 @@ export const getPets = async () => {
             throw error;
         }
 
-        return data || [];
+        // Calcular edades automáticamente
+        const petsWithCalculatedAge = calculateAgesForPets(data || []);
+        return petsWithCalculatedAge;
     } catch (error) {
         console.error('Error fetching pets by owner:', error);
         throw error;
@@ -124,10 +127,10 @@ export const createPet = async (petData) => {
         name: petData.name,
         species: petData.species,
         age: petData.age,
-        birth_date: petData.birth_date || new Date().toISOString().split('T')[0],
-        vaccines: petData.vaccines || [],
-        history: petData.history || '',
-        image: petData.image || '',
+        birth_date: petData.birth_date || null, // Permitir null si no se proporciona
+        vaccines: petData.vaccines && petData.vaccines.length > 0 ? petData.vaccines : null, // Permitir null
+        history: petData.history || null, // Permitir null
+        image: petData.image || null, // Permitir null
         sex: petData.sex,
         breed: petData.breed,
         is_active: true,
@@ -158,10 +161,10 @@ export const updatePet = async (id, petData) => {
                 name: petData.name,
                 species: petData.species,
                 age: petData.age,
-                birth_date: petData.birth_date,
-                vaccines: petData.vaccines || [],
-                history: petData.history || '',
-                image: petData.image || '',
+                birth_date: petData.birth_date || null, // Permitir null
+                vaccines: petData.vaccines && petData.vaccines.length > 0 ? petData.vaccines : null, // Permitir null
+                history: petData.history || null, // Permitir null
+                image: petData.image || null, // Permitir null
                 sex: petData.sex,
                 breed: petData.breed,
                 has_owner: petData.has_owner

@@ -409,7 +409,8 @@ nav a.active-link {
 .petsBackgroundImage {
   position: relative;
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .petBackground {
