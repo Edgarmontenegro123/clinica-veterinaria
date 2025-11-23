@@ -4,19 +4,61 @@ import { useAuthStore } from '../../store/authStore';
 import { supabase } from '../../services/supabase';
 import Swal from 'sweetalert2';
 
-const MyAppointments = () => {
+const MyAppointments = ({ onNavigateToNew }) => {
     const { user } = useAuthStore();
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         loadAppointments();
+
+        // Suscribirse a cambios en tiempo real en la tabla appoinment
+        console.log('🔵 Iniciando suscripción a Realtime...');
+        const channel = supabase
+            .channel('appointments-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*', // Escuchar todos los eventos (INSERT, UPDATE, DELETE)
+                    schema: 'public',
+                    table: 'appoinment'
+                },
+                (payload) => {
+                    console.log('✅ Cambio detectado en turnos:', payload);
+                    console.log('📊 Detalles del evento:', {
+                        tipo: payload.eventType,
+                        registro_nuevo: payload.new,
+                        registro_anterior: payload.old
+                    });
+                    // Recargar los turnos cuando hay cambios
+                    loadAppointments();
+                }
+            )
+            .subscribe((status, err) => {
+                if (status === 'SUBSCRIBED') {
+                    console.log('✅ Suscripción a Realtime EXITOSA');
+                } else if (status === 'CHANNEL_ERROR') {
+                    console.error('❌ Error en el canal de Realtime:', err);
+                } else if (status === 'TIMED_OUT') {
+                    console.error('⏰ Timeout en la suscripción a Realtime');
+                } else if (status === 'CLOSED') {
+                    console.log('🔴 Canal de Realtime cerrado');
+                } else {
+                    console.log('📡 Estado de suscripción:', status);
+                }
+            });
+
+        // Cleanup: desuscribirse cuando el componente se desmonte
+        return () => {
+            console.log('🔴 Cerrando suscripción a Realtime...');
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     const loadAppointments = async () => {
         try {
             setLoading(true);
-            // Obtener turnos del usuario a través de sus mascotas
+            // Obtener turnos del usuario a través de sus mascotas (incluyendo cancelados)
             const { data: userAppointments, error } = await supabase
                 .from('appoinment')
                 .select(`
@@ -74,12 +116,16 @@ const MyAppointments = () => {
                     }
                 });
 
-                // Cancelar el turno
-                await cancelAppointment(appointmentId);
+                // Cancelar el turno (como usuario, no admin)
+                await cancelAppointment(appointmentId, false);
 
-                // Actualizar el estado local inmediatamente (optimistic update)
+                // Actualizar el estado local para marcarlo como cancelado
                 setAppointments(prevAppointments =>
-                    prevAppointments.filter(apt => apt.id !== appointmentId)
+                    prevAppointments.map(apt =>
+                        apt.id === appointmentId
+                            ? { ...apt, status: 'cancelled', cancelled_by: 'user', cancelled_at: new Date().toISOString() }
+                            : apt
+                    )
                 );
 
                 // Mostrar mensaje de éxito
@@ -123,9 +169,10 @@ const MyAppointments = () => {
         return new Date(datetime) > new Date();
     };
 
-    // Separar turnos próximos y pasados
-    const upcomingAppointments = appointments.filter(apt => isUpcoming(apt.datetime));
-    const pastAppointments = appointments.filter(apt => !isUpcoming(apt.datetime));
+    // Separar turnos próximos, pasados y cancelados
+    const upcomingAppointments = appointments.filter(apt => isUpcoming(apt.datetime) && apt.status !== 'cancelled');
+    const pastAppointments = appointments.filter(apt => !isUpcoming(apt.datetime) && apt.status !== 'cancelled');
+    const cancelledAppointments = appointments.filter(apt => apt.status === 'cancelled');
 
     if (loading) {
         return (
@@ -204,6 +251,81 @@ const MyAppointments = () => {
                     </div>
                 )}
             </div>
+
+            {/* Turnos cancelados */}
+            {cancelledAppointments.length > 0 && (
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Turnos Cancelados</h2>
+
+                    <div className="grid gap-4">
+                        {cancelledAppointments.map(appointment => {
+                            const { date, time } = formatDateTime(appointment.datetime);
+                            const wasCancelledByAdmin = appointment.cancelled_by === 'admin';
+                            return (
+                                <div
+                                    key={appointment.id}
+                                    className="bg-red-50 border-2 border-red-300 rounded-lg p-6"
+                                >
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <span className="bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                                            ❌ Cancelado
+                                        </span>
+                                        {wasCancelledByAdmin && (
+                                            <span className="bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                                                Por la clínica
+                                            </span>
+                                        )}
+                                        <span className="text-gray-600 font-semibold">
+                                            {time}
+                                        </span>
+                                    </div>
+
+                                    <h3 className="text-lg font-bold text-gray-700 mb-2 capitalize">
+                                        {date}
+                                    </h3>
+
+                                    {appointment.pet && (
+                                        <div className="mb-3">
+                                            <p className="text-gray-700">
+                                                <span className="font-semibold">Mascota:</span> {appointment.pet.name}
+                                            </p>
+                                            <p className="text-gray-600 text-sm">
+                                                {appointment.pet.species} - {appointment.pet.breed}
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {appointment.reason && (
+                                        <div className="mt-3 p-3 bg-white rounded">
+                                            <p className="text-gray-700 text-sm">
+                                                <span className="font-semibold">Motivo:</span> {appointment.reason}
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {wasCancelledByAdmin && (
+                                        <div className="mt-4 p-4 bg-orange-100 border border-orange-300 rounded-lg">
+                                            <p className="text-gray-800 font-semibold mb-2">
+                                                💬 Mensaje de la clínica
+                                            </p>
+                                            <p className="text-gray-700 text-sm mb-2">
+                                                Lamentamos informarte que este turno fue cancelado por motivos administrativos.
+                                                Te pedimos disculpas por las molestias ocasionadas.
+                                            </p>
+                                            <button
+                                                onClick={onNavigateToNew}
+                                                className="text-blue-600 hover:text-blue-800 font-semibold text-sm hover:underline cursor-pointer transition-colors"
+                                            >
+                                                📅 Te invitamos a agendar un nuevo turno en la sección "Nuevo Turno" →
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
 
             {/* Turnos pasados */}
             {pastAppointments.length > 0 && (

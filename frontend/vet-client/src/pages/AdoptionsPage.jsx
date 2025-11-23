@@ -46,7 +46,7 @@ const AdoptionsPage = () => {
               className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow"
             >
               <img
-                src={`http://localhost:3000${pet.image}`}
+                src={pet.image || '/placeholder-pet.jpg'}
                 alt={pet.name}
                 className="w-full h-64 object-cover"
               />

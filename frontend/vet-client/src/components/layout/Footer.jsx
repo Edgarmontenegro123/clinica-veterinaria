@@ -58,7 +58,7 @@ const Footer = () => {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition-all hover:scale-110 shadow-lg"
+                className="bg-blue-600 hover:bg-blue-500 p-3 rounded-full transition-all duration-300 hover:scale-110 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(59,130,246,0.8)] shadow-lg"
                 aria-label="Facebook"
               >
                 <FaFacebook size={24} />
@@ -67,7 +67,7 @@ const Footer = () => {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 hover:from-purple-700 hover:via-pink-700 hover:to-orange-600 p-3 rounded-full transition-all hover:scale-110 shadow-lg"
+                className="bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 hover:from-purple-500 hover:via-pink-500 hover:to-orange-400 p-3 rounded-full transition-all duration-300 hover:scale-110 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(219,39,119,0.8)] shadow-lg"
                 aria-label="Instagram"
               >
                 <FaInstagram size={24} />
@@ -76,7 +76,7 @@ const Footer = () => {
                 href="https://wa.me/541112345678"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-green-600 hover:bg-green-700 p-3 rounded-full transition-all hover:scale-110 shadow-lg"
+                className="bg-green-600 hover:bg-green-500 p-3 rounded-full transition-all duration-300 hover:scale-110 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(34,197,94,0.8)] shadow-lg"
                 aria-label="WhatsApp"
               >
                 <FaWhatsapp size={24} />
@@ -85,7 +85,7 @@ const Footer = () => {
                 href="https://t.me/ramvet"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-blue-500 hover:bg-blue-600 p-3 rounded-full transition-all hover:scale-110 shadow-lg"
+                className="bg-blue-500 hover:bg-blue-400 p-3 rounded-full transition-all duration-300 hover:scale-110 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(59,130,246,0.8)] shadow-lg"
                 aria-label="Telegram"
               >
                 <FaTelegram size={24} />
@@ -94,7 +94,7 @@ const Footer = () => {
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-black hover:bg-gray-800 p-3 rounded-full transition-all hover:scale-110 shadow-lg"
+                className="bg-black hover:bg-gray-700 p-3 rounded-full transition-all duration-300 hover:scale-110 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(255,255,255,0.6)] shadow-lg"
                 aria-label="X (Twitter)"
               >
                 <FaXTwitter size={24} />
@@ -103,7 +103,7 @@ const Footer = () => {
                 href="https://youtube.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-red-600 hover:bg-red-700 p-3 rounded-full transition-all hover:scale-110 shadow-lg"
+                className="bg-red-600 hover:bg-red-500 p-3 rounded-full transition-all duration-300 hover:scale-110 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] shadow-lg"
                 aria-label="YouTube"
               >
                 <FaYoutube size={24} />

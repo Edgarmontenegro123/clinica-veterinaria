@@ -1,4 +1,3 @@
-import axios from './axios.js';
 import { supabase } from './supabase.js';
 import { calculateAgesForPets } from '../utils/calculateAge.js';
 
@@ -276,14 +275,51 @@ export const getPetById = async (id) => {
 
 export const createPetForAdoption = async (petData) => {
     try {
-        const petResponse = await axios.post('/pets/adoptions', petData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-        return petResponse.data;
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            throw new Error('Usuario no autenticado');
+        }
+
+        // Verificar que el usuario sea admin
+        const { data: userData } = await supabase
+            .from('users')
+            .select('role')
+            .eq('auth_id', user.id)
+            .single();
+
+        if (userData?.role !== 'admin') {
+            throw new Error('Solo los administradores pueden crear mascotas para adopción');
+        }
+
+        // Crear mascota para adopción (sin dueño)
+        const { data, error } = await supabase
+            .from('pet')
+            .insert([{
+                name: petData.name,
+                species: petData.species,
+                age: petData.age,
+                birth_date: petData.birth_date || null,
+                vaccines: petData.vaccines && petData.vaccines.length > 0 ? petData.vaccines : null,
+                history: petData.history || null,
+                image: petData.image || null,
+                sex: petData.sex,
+                breed: petData.breed,
+                is_active: true,
+                has_owner: false, // Mascota sin dueño (para adopción)
+                user_id: null // No tiene usuario asignado
+            }])
+            .select();
+
+        if (error) {
+            console.error('Error al crear mascota para adopción:', error);
+            throw error;
+        }
+
+        console.log('Mascota para adopción creada exitosamente:', data);
+        return data;
     } catch (error) {
-        console.error('Error creating pet:', error);
+        console.error('Error creating pet for adoption:', error);
         throw error;
     }
 };

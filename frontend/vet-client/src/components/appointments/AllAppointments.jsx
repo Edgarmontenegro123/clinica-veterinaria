@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAllAppointments, cancelAppointment } from '../../services/appointments.service';
+import { getAllAppointments, cancelAppointment, deleteAppointment, deleteOldAppointments } from '../../services/appointments.service';
 import Swal from 'sweetalert2';
 
 const AllAppointments = () => {
@@ -31,7 +31,10 @@ const AllAppointments = () => {
     const handleCancel = async (appointmentId) => {
         const result = await Swal.fire({
             title: '¿Cancelar turno?',
-            text: 'Esta acción no se puede deshacer',
+            html: `
+                <p>Esta acción marcará el turno como cancelado.</p>
+                <p class="text-sm text-gray-600 mt-2">Se enviará una notificación al usuario por email.</p>
+            `,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#EF4444',
@@ -43,23 +46,33 @@ const AllAppointments = () => {
         if (result.isConfirmed) {
             try {
                 Swal.fire({
-                    title: 'Cancelando turno...',
+                    title: 'Cancelando turno y notificando al usuario...',
                     allowOutsideClick: false,
                     didOpen: () => {
                         Swal.showLoading();
                     }
                 });
 
-                await cancelAppointment(appointmentId);
+                // Cancelar como admin (envía notificación)
+                await cancelAppointment(appointmentId, true);
+
+                // Actualizar el estado local para marcar como cancelado
                 setAppointments(prevAppointments =>
-                    prevAppointments.filter(apt => apt.id !== appointmentId)
+                    prevAppointments.map(apt =>
+                        apt.id === appointmentId
+                            ? { ...apt, status: 'cancelled', cancelled_by: 'admin', cancelled_at: new Date().toISOString() }
+                            : apt
+                    )
                 );
 
                 Swal.fire({
                     icon: 'success',
                     title: 'Turno cancelado',
-                    text: 'El turno ha sido cancelado exitosamente',
-                    timer: 2000,
+                    html: `
+                        <p>El turno ha sido cancelado exitosamente.</p>
+                        <p class="text-sm text-green-600 mt-2">Se ha enviado una notificación al usuario.</p>
+                    `,
+                    timer: 3000,
                 });
 
             } catch (error) {
@@ -70,6 +83,142 @@ const AllAppointments = () => {
                     title: 'Error',
                     text: error.message || 'No se pudo cancelar el turno',
                 });
+            }
+        }
+    };
+
+    const handleDelete = async (appointmentId) => {
+        const result = await Swal.fire({
+            title: '⚠️ ¿Eliminar turno permanentemente?',
+            html: `
+                <p class="text-red-600 font-semibold">Esta acción es IRREVERSIBLE</p>
+                <p class="text-sm text-gray-600 mt-2">El turno será eliminado permanentemente de la base de datos.</p>
+                <p class="text-sm text-gray-600">No se podrá recuperar esta información.</p>
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#DC2626',
+            cancelButtonColor: '#6B7280',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+        });
+
+        if (result.isConfirmed) {
+            try {
+                Swal.fire({
+                    title: 'Eliminando turno...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                await deleteAppointment(appointmentId);
+
+                // Actualizar el estado local eliminando el turno
+                setAppointments(prevAppointments =>
+                    prevAppointments.filter(apt => apt.id !== appointmentId)
+                );
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Turno eliminado',
+                    text: 'El turno ha sido eliminado permanentemente.',
+                    timer: 2000,
+                });
+
+            } catch (error) {
+                console.error('Error deleting appointment:', error);
+                await loadAppointments();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'No se pudo eliminar el turno',
+                });
+            }
+        }
+    };
+
+    const handleBulkDelete = async () => {
+        const { value: deleteType } = await Swal.fire({
+            title: '🗑️ Limpiar historial de turnos',
+            html: `
+                <p class="text-gray-700 mb-4">Selecciona qué turnos deseas eliminar:</p>
+            `,
+            icon: 'question',
+            input: 'select',
+            inputOptions: {
+                'cancelled': 'Solo turnos cancelados',
+                'past': 'Solo turnos pasados (completados)',
+                'all_old': 'Todos los turnos viejos (cancelados + pasados)'
+            },
+            inputPlaceholder: 'Selecciona una opción',
+            showCancelButton: true,
+            confirmButtonColor: '#DC2626',
+            cancelButtonColor: '#6B7280',
+            confirmButtonText: 'Continuar',
+            cancelButtonText: 'Cancelar',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debes seleccionar una opción';
+                }
+            }
+        });
+
+        if (deleteType) {
+            const confirmResult = await Swal.fire({
+                title: '⚠️ CONFIRMACIÓN FINAL',
+                html: `
+                    <p class="text-red-600 font-bold text-lg mb-3">ESTA ACCIÓN ES IRREVERSIBLE</p>
+                    <p class="text-gray-700 mb-2">Los datos eliminados NO se podrán recuperar.</p>
+                    <p class="text-gray-700 font-semibold mb-3">¿Estás completamente seguro?</p>
+                    <p class="text-sm text-gray-600">Escribe "ELIMINAR" para confirmar:</p>
+                `,
+                icon: 'warning',
+                input: 'text',
+                inputPlaceholder: 'Escribe ELIMINAR',
+                showCancelButton: true,
+                confirmButtonColor: '#DC2626',
+                cancelButtonColor: '#6B7280',
+                confirmButtonText: 'Sí, eliminar todo',
+                cancelButtonText: 'Cancelar',
+                inputValidator: (value) => {
+                    if (value !== 'ELIMINAR') {
+                        return 'Debes escribir "ELIMINAR" para confirmar';
+                    }
+                }
+            });
+
+            if (confirmResult.isConfirmed) {
+                try {
+                    Swal.fire({
+                        title: 'Eliminando turnos...',
+                        html: '<p>Por favor espera, esto puede tomar unos momentos...</p>',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    await deleteOldAppointments(deleteType);
+                    await loadAppointments();
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Historial limpiado',
+                        text: 'Los turnos han sido eliminados exitosamente.',
+                        timer: 3000,
+                    });
+
+                } catch (error) {
+                    console.error('Error deleting appointments:', error);
+                    await loadAppointments();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message || 'No se pudieron eliminar los turnos',
+                    });
+                }
             }
         }
     };
@@ -114,10 +263,10 @@ const AllAppointments = () => {
                     Todos los Turnos - Panel de Administración
                 </h2>
                 <button
-                    onClick={loadAppointments}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    onClick={handleBulkDelete}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium shadow-md hover:shadow-lg"
                 >
-                    🔄 Recargar
+                    🗑️ Limpiar historial
                 </button>
             </div>
 
@@ -166,10 +315,12 @@ const AllAppointments = () => {
                         const { date, time } = formatDateTime(appointment.datetime);
                         const isPast = new Date(appointment.datetime) < new Date();
 
+                        const isCancelled = appointment.status === 'cancelled';
                         return (
                             <div
                                 key={appointment.id}
                                 className={`border rounded-lg p-6 transition-all hover:shadow-lg ${
+                                    isCancelled ? 'bg-red-50 border-red-300 opacity-75' :
                                     isPast ? 'bg-gray-50 opacity-75' : 'bg-white'
                                 }`}
                             >
@@ -230,7 +381,26 @@ const AllAppointments = () => {
                                             </div>
                                         )}
 
-                                        {!isPast && (
+                                        {isCancelled && (
+                                            <div className="space-y-2">
+                                                <div className="text-center">
+                                                    <span className="inline-block px-3 py-1 bg-red-500 text-white rounded-full text-sm font-medium">
+                                                        ❌ Cancelado
+                                                    </span>
+                                                    <p className="text-xs text-gray-600 mt-2">
+                                                        {appointment.cancelled_by === 'admin' ? 'Por la clínica' : 'Por el usuario'}
+                                                    </p>
+                                                </div>
+                                                <button
+                                                    onClick={() => handleDelete(appointment.id)}
+                                                    className="w-full px-3 py-1.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium text-sm"
+                                                >
+                                                    🗑️ Eliminar
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        {!isPast && !isCancelled && (
                                             <button
                                                 onClick={() => handleCancel(appointment.id)}
                                                 className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
@@ -239,11 +409,19 @@ const AllAppointments = () => {
                                             </button>
                                         )}
 
-                                        {isPast && (
-                                            <div className="text-center">
-                                                <span className="inline-block px-3 py-1 bg-gray-300 text-gray-700 rounded-full text-sm font-medium">
-                                                    ✓ Completado
-                                                </span>
+                                        {isPast && !isCancelled && (
+                                            <div className="space-y-2">
+                                                <div className="text-center">
+                                                    <span className="inline-block px-3 py-1 bg-gray-300 text-gray-700 rounded-full text-sm font-medium">
+                                                        ✓ Completado
+                                                    </span>
+                                                </div>
+                                                <button
+                                                    onClick={() => handleDelete(appointment.id)}
+                                                    className="w-full px-3 py-1.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium text-sm"
+                                                >
+                                                    🗑️ Eliminar
+                                                </button>
                                             </div>
                                         )}
                                     </div>

@@ -11,6 +11,7 @@ import AdoptionsPage from "./pages/AdoptionsPage.jsx";
 import AppointmentsPage from "./pages/AppointmentsPage.jsx";
 import AdminPetManagement from "./pages/AdminPetManagement.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
+import EmailConfirmedPage from "./pages/EmailConfirmedPage.jsx";
 import { useAuthStore } from "./store/authStore.js";
 
 export default function App() {
@@ -23,13 +24,17 @@ export default function App() {
   }, [checkSession]);
 
   // Ocultar footer en páginas de login, registro, mis mascotas, registrar mascotas y gestión admin
-  const hideFooter = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/mypets' || location.pathname === '/petregister' || location.pathname.startsWith('/admin/pets/');
+  const hideFooter = location.pathname === '/login' ||
+                     location.pathname === '/register' ||
+                     location.pathname === '/mypets' ||
+                     location.pathname === '/petregister' ||
+                     location.pathname.startsWith('/admin/pets/');
 
   return (
     <div className="flex flex-col min-h-screen">
       {/* NAVBAR */}
       <Navbar />
-      <main className="flex flex-1 px-2 pt-[6rem]">
+      <main className="flex flex-col flex-1 px-2 pt-[6rem]">
         <Routes>
           <Route path="/" element={<HomePage />} />
           {/* <Route path="/profile" element={<HomePage />} /> */}
@@ -41,6 +46,7 @@ export default function App() {
           <Route path="/turnos" element={<AppointmentsPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/admin/pets/:id" element={<AdminPetManagement />} />
+          <Route path="/auth/confirm" element={<EmailConfirmedPage />} />
           <Route
             path="/*"
             element={

@@ -497,3 +497,48 @@ nav a.active-link {
   box-shadow: 0 2px 4px rgba(107, 114, 128, 0.3) !important;
 }
 
+/* === ESTILOS PARA SWEETALERT2 COMPACTO === */
+.swal-compact {
+  font-size: 14px !important;
+  max-width: 500px !important;
+}
+
+.swal-title-small {
+  font-size: 20px !important;
+  padding: 10px 0 !important;
+}
+
+/* Responsive para SweetAlert en móviles */
+@media (max-width: 640px) {
+  .swal-compact {
+    width: 95vw !important;
+    font-size: 13px !important;
+    padding: 15px !important;
+  }
+
+  .swal-title-small {
+    font-size: 18px !important;
+  }
+
+  .swal2-html-container {
+    font-size: 13px !important;
+  }
+
+  .swal2-confirm {
+    font-size: 14px !important;
+    padding: 8px 20px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .swal-compact {
+    width: 98vw !important;
+    font-size: 12px !important;
+    padding: 12px !important;
+  }
+
+  .swal-title-small {
+    font-size: 16px !important;
+  }
+}
+
