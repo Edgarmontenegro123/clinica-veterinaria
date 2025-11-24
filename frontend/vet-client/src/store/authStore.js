@@ -12,7 +12,11 @@ export const useAuthStore = create(
       setAuth: async (sessionData) => {
         const { user, session } = sessionData;
 
-        // Verificar si el usuario es administrador
+        // Primero actualizamos el estado con el usuario y sesión
+        // Esto permite que la UI reaccione inmediatamente
+        set({ user, session, isAdmin: false });
+
+        // Luego verificamos el rol de admin en background
         try {
           const { data, error } = await supabase
             .from('users')
@@ -21,10 +25,11 @@ export const useAuthStore = create(
             .single();
 
           const isAdmin = data?.role === 'admin';
-          set({ user, session, isAdmin });
+          // Actualizamos solo el rol de admin
+          set({ isAdmin });
         } catch (error) {
           console.error('Error checking admin role:', error);
-          set({ user, session, isAdmin: false });
+          // El isAdmin ya está en false por defecto
         }
       },
 
