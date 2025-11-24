@@ -1,10 +1,12 @@
 /* ./components/LoginForm.jsx */
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useAuthStore } from '../store/authStore.js';
 import { login, resetPassword } from '../services/auth.service.js';
 
 export default function LoginForm({ onToggleRegister, onClose }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -65,7 +67,7 @@ export default function LoginForm({ onToggleRegister, onClose }) {
       if (!user) throw new Error('No se encontró el usuario');
 
       // Guardamos la sesión en Zustand
-      setAuth({ user, session });
+      await setAuth({ user, session });
 
       console.log('Usuario autenticado:', user.email);
 
@@ -78,6 +80,9 @@ export default function LoginForm({ onToggleRegister, onClose }) {
       });
 
       if (onClose) onClose();
+
+      // Redirigir al home después del login exitoso
+      navigate('/', { replace: true });
 
     } catch (error) {
       console.error('Login failed:', error);
