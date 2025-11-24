@@ -5,10 +5,9 @@ import CatSpinner from "../components/CatSpinner.jsx";
 import { getAdoptionPets } from "../services/adoption.service.js";
 
 const AdoptionPage = () => {
-  const { user, isAdmin } = useAuthStore();
+  const { isAdmin } = useAuthStore();
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   // Detectar cambios en el tamaño de la pantalla
@@ -38,11 +37,6 @@ const AdoptionPage = () => {
     };
     fetchAdoptionPets();
   }, []);
-
-  // Filtrar mascotas por nombre (solo admin)
-  const filteredPets = isAdmin
-    ? pets.filter(pet => pet.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    : pets;
 
   return (
     <div className="flex-1 petsBackgroundImage overflow-y-auto">
@@ -105,69 +99,7 @@ const AdoptionPage = () => {
               </p>
             </div>
 
-            {/* Barra de búsqueda - Solo para admin */}
-            {isAdmin && (
-              <div className="px-4 mb-6">
-                <div className="relative max-w-md mx-auto">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg
-                      className="h-5 w-5 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Buscar mascota por nombre..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-300 bg-white/90 backdrop-blur-sm
-                      focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200
-                      text-gray-800 placeholder-gray-500 shadow-lg transition-all"
-                  />
-                  {searchTerm && (
-                    <button
-                      onClick={() => setSearchTerm("")}
-                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600"
-                    >
-                      <svg
-                        className="h-5 w-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  )}
-                </div>
-                {searchTerm && (
-                  <p className="text-center mt-3 text-yellow-100 text-sm">
-                    {filteredPets.length === 0
-                      ? "No se encontraron mascotas con ese nombre"
-                      : `Se ${filteredPets.length === 1 ? 'encontró' : 'encontraron'} ${filteredPets.length} ${filteredPets.length === 1 ? 'mascota' : 'mascotas'}`
-                    }
-                  </p>
-                )}
-              </div>
-            )}
-
-            <AdoptionContainer pets={filteredPets} setPets={setPets} />
+            <AdoptionContainer pets={pets} setPets={setPets} />
           </div>
         )}
       </div>
