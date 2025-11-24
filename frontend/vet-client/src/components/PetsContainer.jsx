@@ -48,14 +48,9 @@ const PetsContainer = ({ pets, setPets }) => {
   };
 
   const handleImageClick = (pet) => {
-    if (!pet.image || pet.image === './no-image.png') {
-      // Si no hay imagen, redirigir a la página de detalles
-      navigate(`/pets/${pet.id}`);
-    } else {
-      // Si hay imagen, mostrar modal
-      setSelectedPet(pet);
-      setShowModal(true);
-    }
+    // Siempre mostrar el modal con la información de la mascota
+    setSelectedPet(pet);
+    setShowModal(true);
   };
 
   const closeModal = () => {
