@@ -25,13 +25,13 @@ export default function App() {
   }, [checkSession]);
 
   // Ocultar footer en páginas de login, registro, mis mascotas, registrar mascotas, adopciones y gestión admin
-  const hideFooter = location.pathname === '/login' ||
-                     location.pathname === '/register' ||
-                     location.pathname === '/mypets' ||
-                     location.pathname === '/petregister' ||
-                     location.pathname === '/adoptions' ||
-                     location.pathname.startsWith('/admin/pets/') ||
-                     location.pathname.startsWith('/admin/adoption/');
+  const hideFooter = location.pathname.toLowerCase() === '/login' ||
+                     location.pathname.toLowerCase() === '/register' ||
+                     location.pathname.toLowerCase() === '/mypets' ||
+                     location.pathname.toLowerCase() === '/petregister' ||
+                     location.pathname.toLowerCase() === '/adoptions' ||
+                     location.pathname.toLowerCase().startsWith('/admin/pets/') ||
+                     location.pathname.toLowerCase().startsWith('/admin/adoption/');
 
   return (
     <div className="flex flex-col min-h-screen">

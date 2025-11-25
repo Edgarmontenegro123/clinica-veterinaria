@@ -11,7 +11,18 @@ const AdoptionPetFormPage = () => {
   const navigate = useNavigate();
   const [petData, setPetData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const mode = id ? "edit" : "create";
+
+  // Detectar cambios en el tamaño de la pantalla
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     // Verificar que el usuario sea admin
@@ -55,8 +66,15 @@ const AdoptionPetFormPage = () => {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto bg-gradient-to-br from-green-50 to-emerald-100 py-8 px-4">
-      <AdoptionPetForm petData={petData} mode={mode} />
+    <div className="flex-1 petsBackgroundImage overflow-y-auto">
+      <img
+        src={isMobile ? "/adopCelu.jpg" : "/fondoAdopForm.jpg"}
+        alt="Fondo imagen"
+        className="petBackground"
+      />
+      <div className="relative z-10 w-full py-8 px-4">
+        <AdoptionPetForm petData={petData} mode={mode} />
+      </div>
     </div>
   );
 };

@@ -164,15 +164,15 @@ export default function AdoptionPetForm({ petData = null, mode = "create" }) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-2xl">
-      <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-        {mode === "create" ? "➕ Agregar Mascota para Adopción" : "✏️ Editar Mascota"}
+    <div className="max-w-2xl mx-auto p-8 bg-black/50 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20">
+      <h2 className="text-3xl font-bold text-white mb-6 text-center">
+        {mode === "create" ? "Registrar Nueva Mascota" : "Editar Mascota"}
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Imagen */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-200 mb-2">
             Foto de la mascota
           </label>
           <div className="flex flex-col items-center gap-4">
@@ -187,40 +187,40 @@ export default function AdoptionPetForm({ petData = null, mode = "create" }) {
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="block w-full text-sm text-gray-500
+              className="block w-full text-sm text-gray-300
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-full file:border-0
                 file:text-sm file:font-semibold
-                file:bg-green-50 file:text-green-700
-                hover:file:bg-green-100"
+                file:bg-green-600 file:text-white
+                hover:file:bg-green-700 cursor-pointer"
             />
           </div>
         </div>
 
         {/* Nombre */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-200 mb-1">
             Nombre *
           </label>
           <input
             type="text"
             {...register("name", { required: "El nombre es obligatorio" })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-gray-800/30 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:bg-gray-800/50 backdrop-blur-sm"
           />
           {errors.name && (
-            <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.name.message}</p>
           )}
         </div>
 
         {/* Especie */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-200 mb-1">
             Especie *
           </label>
           <select
             value={selectedSpecies}
             onChange={handleSpeciesChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-gray-800/30 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:bg-gray-800/50 backdrop-blur-sm"
           >
             <option value="">Seleccionar...</option>
             <option value="Perro">Perro</option>
@@ -236,7 +236,7 @@ export default function AdoptionPetForm({ petData = null, mode = "create" }) {
                 value={customSpecies}
                 onChange={(e) => setCustomSpecies(e.target.value)}
                 placeholder="Ingresa la especie"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                className="flex-1 px-4 py-2 bg-gray-800/30 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:bg-gray-800/50 backdrop-blur-sm"
               />
               <button
                 type="button"
@@ -251,88 +251,88 @@ export default function AdoptionPetForm({ petData = null, mode = "create" }) {
 
         {/* Raza */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-200 mb-1">
             Raza *
           </label>
           <input
             type="text"
             {...register("breed", { required: "La raza es obligatoria" })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-gray-800/30 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:bg-gray-800/50 backdrop-blur-sm"
           />
           {errors.breed && (
-            <p className="text-red-500 text-sm mt-1">{errors.breed.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.breed.message}</p>
           )}
         </div>
 
         {/* Sexo */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-200 mb-1">
             Sexo *
           </label>
           <select
             {...register("sex", { required: "El sexo es obligatorio" })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-gray-800/30 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:bg-gray-800/50 backdrop-blur-sm"
           >
             <option value="">Seleccionar...</option>
             <option value="Macho">Macho</option>
             <option value="Hembra">Hembra</option>
           </select>
           {errors.sex && (
-            <p className="text-red-500 text-sm mt-1">{errors.sex.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.sex.message}</p>
           )}
         </div>
 
         {/* Edad */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-200 mb-1">
             Edad (años) *
           </label>
           <input
             type="number"
             step="0.1"
             {...register("age", { required: "La edad es obligatoria", min: 0 })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-gray-800/30 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:bg-gray-800/50 backdrop-blur-sm"
           />
           {errors.age && (
-            <p className="text-red-500 text-sm mt-1">{errors.age.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.age.message}</p>
           )}
         </div>
 
         {/* Fecha de nacimiento */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-200 mb-1">
             Fecha de Nacimiento
           </label>
           <input
             type="date"
             {...register("birth_date")}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-gray-800/30 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:bg-gray-800/50 backdrop-blur-sm"
           />
         </div>
 
         {/* Vacunas */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-200 mb-1">
             Vacunas (separadas por comas)
           </label>
           <input
             type="text"
             {...register("vaccines")}
             placeholder="Ej: Rabia, Parvovirus, Moquillo"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-gray-800/30 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:bg-gray-800/50 backdrop-blur-sm"
           />
         </div>
 
         {/* Historia */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-200 mb-1">
             Historia / Descripción
           </label>
           <textarea
             {...register("history")}
             rows="4"
             placeholder="Cuéntanos sobre esta mascota..."
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-gray-800/30 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:bg-gray-800/50 backdrop-blur-sm"
           />
         </div>
 
@@ -341,14 +341,14 @@ export default function AdoptionPetForm({ petData = null, mode = "create" }) {
           <button
             type="button"
             onClick={() => navigate("/adoptions")}
-            className="flex-1 px-6 py-3 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition-colors"
+            className="flex-1 px-6 py-3 bg-gray-700 text-white font-semibold rounded-lg hover:bg-gray-600 transition-colors border border-gray-600"
           >
             Cancelar
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400"
+            className="flex-1 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed"
           >
             {isSubmitting
               ? "Guardando..."
