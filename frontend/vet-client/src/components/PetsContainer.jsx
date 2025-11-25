@@ -37,7 +37,6 @@ const PetsContainer = ({ pets, setPets }) => {
         setPets(prev => prev.filter(pet => pet.id !== petId));
       }
     } catch (error) {
-      console.error("Pet deletion failed", error);
       await Swal.fire({
         icon: "error",
         title: "Error",

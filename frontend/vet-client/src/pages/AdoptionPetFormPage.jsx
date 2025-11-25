@@ -50,7 +50,6 @@ const AdoptionPetFormPage = () => {
       if (error) throw error;
       setPetData(data);
     } catch (error) {
-      console.error("Error fetching pet:", error);
       navigate("/adoptions");
     } finally {
       setLoading(false);

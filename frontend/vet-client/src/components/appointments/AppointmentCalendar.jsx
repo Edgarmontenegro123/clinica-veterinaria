@@ -33,7 +33,6 @@ const AppointmentCalendar = () => {
             const pets = await getUserPets(user.id);
             setUserPets(pets);
         } catch (error) {
-            console.error('Error loading pets:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -48,7 +47,6 @@ const AppointmentCalendar = () => {
             const slots = await getAvailableTimeSlots(selectedDate);
             setAvailableSlots(slots);
         } catch (error) {
-            console.error('Error loading slots:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -179,7 +177,6 @@ const AppointmentCalendar = () => {
             setAvailableSlots([]);
 
         } catch (error) {
-            console.error('Error creating appointment:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',

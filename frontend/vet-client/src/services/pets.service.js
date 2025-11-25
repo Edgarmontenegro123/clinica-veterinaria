@@ -1,16 +1,6 @@
 import { supabase } from './supabase.js';
 import { calculateAgesForPets } from '../utils/calculateAge.js';
 
-// export const getPets = async () => {
-//     try {
-//         const response = await axios.get(`/pets`);
-//         return response.data;
-//     } catch (error) {
-//         console.error('Error fetching pets by owner:', error);
-//         throw error;
-//     }
-// }
-
 export const getPets = async () => {
     try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -56,7 +46,6 @@ export const getPets = async () => {
         const { data, error } = await query;
 
         if (error) {
-            console.error('Error fetching pets:', error);
             throw error;
         }
 
@@ -64,7 +53,6 @@ export const getPets = async () => {
         const petsWithCalculatedAge = calculateAgesForPets(data || []);
         return petsWithCalculatedAge;
     } catch (error) {
-        console.error('Error fetching pets by owner:', error);
         throw error;
     }
 }
@@ -79,34 +67,9 @@ export const getPetsForAdoptions = async () => {
             .eq('has_owner', false);
         return response.data;
     } catch (error) {
-        console.error('Error fetching pets by owner:', error);
         throw error;
     }
 }
-
-// export const getPetsForAdoptions = async () => {
-//     try {
-//         const response = await axios.get(`/pets/adoptions`);
-//         return response.data;
-//     } catch (error) {
-//         console.error('Error fetching pets adoptions', error);
-//         throw error;
-//     }
-// }
-
-// export const createPet = async (petData) => {
-//     try {
-//         const petResponse = await axios.post('/pets', petData, {
-//             headers: {
-//                 'Content-Type': 'multipart/form-data',
-//             },
-//         });
-//         return petResponse.data;
-//     } catch (error) {
-//         console.error('Error creating pet:', error);
-//         throw error;
-//     }
-// };
 
 export const createPet = async (petData) => {
   try {
@@ -118,11 +81,7 @@ export const createPet = async (petData) => {
       throw new Error('Usuario no autenticado');
     }
 
-    console.log('Auth user:', user);
-    console.log('Inserting pet with user_id (auth_id):', user.id);
 
-    // user_id en la tabla pet referencia a users(auth_id), no users(id)
-    // Por lo tanto, usamos directamente user.id del usuario autenticado
     const { data, error } = await supabase
       .from('pet')
       .insert([{
@@ -142,14 +101,11 @@ export const createPet = async (petData) => {
       .select();
 
     if (error) {
-      console.log('Insert error:', error);
       throw error;
     }
 
-    console.log('Pet created successfully:', data);
     return data;
   } catch (error) {
-    console.error('createPet error:', error);
     throw error;
   }
 };
@@ -177,7 +133,6 @@ export const updatePet = async (id, petData) => {
         if (error) throw error;
         return data;
     } catch (error) {
-        console.error('Error updating pet:', error);
         throw error;
     }
 };
@@ -192,10 +147,8 @@ export const deletePet = async (id) => {
             .select();
 
         if (error) throw error;
-        console.log(data);
         return data;
     } catch (error) {
-        console.error('Error deleting pet:', error);
         throw error;
     }
 };
@@ -209,10 +162,8 @@ export const deletePetPermanently = async (id) => {
             .eq('id', id);
 
         if (error) throw error;
-        console.log('Pet permanently deleted:', data);
         return data;
     } catch (error) {
-        console.error('Error permanently deleting pet:', error);
         throw error;
     }
 };
@@ -261,20 +212,9 @@ export const getPetById = async (id) => {
         if (error) throw error;
         return data;
     } catch (error) {
-        console.error('Error fetching pet:', error);
         throw error;
     }
 };
-
-// export const deletePet = async (petId) => {
-//     try {
-//         const response = await axios.delete(`/pets/${petId}`);
-//         return response.data;
-//     } catch (error) {
-//         console.error('Error deleting pet:', error);
-//         throw error;
-//     }
-// }
 
 export const createPetForAdoption = async (petData) => {
     try {
@@ -315,14 +255,11 @@ export const createPetForAdoption = async (petData) => {
             .select();
 
         if (error) {
-            console.error('Error al crear mascota para adopción:', error);
             throw error;
         }
 
-        console.log('Mascota para adopción creada exitosamente:', data);
         return data;
     } catch (error) {
-        console.error('Error creating pet for adoption:', error);
         throw error;
     }
 };

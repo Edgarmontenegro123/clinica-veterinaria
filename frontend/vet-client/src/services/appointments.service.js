@@ -57,13 +57,11 @@ export const getAppointmentsByDate = async (date) => {
             .or('status.is.null,status.neq.cancelled'); // Excluir turnos cancelados
 
         if (error) {
-            console.error('Error fetching appointments:', error);
             throw error;
         }
 
         return data || [];
     } catch (error) {
-        console.error('Error in getAppointmentsByDate:', error);
         throw error;
     }
 };
@@ -112,7 +110,6 @@ export const getAvailableTimeSlots = async (date) => {
 
         return availableSlots;
     } catch (error) {
-        console.error('Error getting available time slots:', error);
         throw error;
     }
 };
@@ -141,13 +138,11 @@ export const createAppointment = async (appointmentData) => {
             .select('*, pet(*)');
 
         if (error) {
-            console.error('Error creating appointment:', error);
             throw error;
         }
 
         return data[0];
     } catch (error) {
-        console.error('Error in createAppointment:', error);
         throw error;
     }
 };
@@ -194,13 +189,11 @@ export const getUserAppointments = async (userId, includeCancelled = true) => {
         const { data, error } = await query;
 
         if (error) {
-            console.error('Error fetching user appointments:', error);
             throw error;
         }
 
         return data || [];
     } catch (error) {
-        console.error('Error in getUserAppointments:', error);
         throw error;
     }
 };
@@ -244,13 +237,11 @@ export const getAllAppointments = async (includeCancelled = true) => {
         const { data, error } = await query;
 
         if (error) {
-            console.error('Error fetching all appointments:', error);
             throw error;
         }
 
         return data || [];
     } catch (error) {
-        console.error('Error in getAllAppointments:', error);
         throw error;
     }
 };
@@ -278,7 +269,6 @@ export const cancelAppointment = async (appointmentId, isAdminCancellation = fal
             .single();
 
         if (fetchError) {
-            console.error('Error al buscar el turno:', fetchError);
             throw new Error('No se pudo encontrar el turno');
         }
 
@@ -297,7 +287,6 @@ export const cancelAppointment = async (appointmentId, isAdminCancellation = fal
             .eq('id', appointmentId);
 
         if (updateError) {
-            console.error('Error canceling appointment:', updateError);
             throw updateError;
         }
 
@@ -308,7 +297,6 @@ export const cancelAppointment = async (appointmentId, isAdminCancellation = fal
 
         return true;
     } catch (error) {
-        console.error('Error in cancelAppointment:', error);
         throw error;
     }
 };
@@ -341,13 +329,11 @@ export const deleteAppointment = async (appointmentId) => {
             .eq('id', appointmentId);
 
         if (error) {
-            console.error('Error deleting appointment:', error);
             throw error;
         }
 
         return true;
     } catch (error) {
-        console.error('Error in deleteAppointment:', error);
         throw error;
     }
 };
@@ -394,13 +380,11 @@ export const deleteOldAppointments = async (deleteType = 'cancelled') => {
         const { error, count } = await query;
 
         if (error) {
-            console.error('Error deleting old appointments:', error);
             throw error;
         }
 
         return count;
     } catch (error) {
-        console.error('Error in deleteOldAppointments:', error);
         throw error;
     }
 };
@@ -474,13 +458,11 @@ export const getUserPets = async (authId) => {
             .eq('is_active', true);
 
         if (error) {
-            console.error('Error fetching user pets:', error);
             throw error;
         }
 
         return data || [];
     } catch (error) {
-        console.error('Error in getUserPets:', error);
         return [];
     }
 };

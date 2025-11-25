@@ -13,7 +13,6 @@ export const useAuthStore = create(
         const { user, session } = sessionData;
 
         // Primero actualizamos el estado con el usuario y sesión
-        // Esto permite que la UI reaccione inmediatamente
         set({ user, session, isAdmin: false });
 
         // Luego verificamos el rol de admin en background
@@ -28,7 +27,7 @@ export const useAuthStore = create(
           // Actualizamos solo el rol de admin
           set({ isAdmin });
         } catch (error) {
-          console.error('Error checking admin role:', error);
+          throw error;
           // El isAdmin ya está en false por defecto
         }
       },
@@ -53,7 +52,6 @@ export const useAuthStore = create(
             const isAdmin = userData?.role === 'admin';
             set({ user: data.session.user, session: data.session, isAdmin });
           } catch (error) {
-            console.error('Error checking admin role:', error);
             set({ user: data.session.user, session: data.session, isAdmin: false });
           }
         } else {

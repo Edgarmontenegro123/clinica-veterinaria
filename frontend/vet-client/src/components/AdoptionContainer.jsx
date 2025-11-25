@@ -37,7 +37,6 @@ const AdoptionContainer = ({ pets, setPets }) => {
         setPets(prev => prev.filter(pet => pet.id !== petId));
       }
     } catch (error) {
-      console.error("Pet deletion failed", error);
       await Swal.fire({
         icon: "error",
         title: "Error",
@@ -97,7 +96,6 @@ const AdoptionContainer = ({ pets, setPets }) => {
         closeModal();
       }
     } catch (error) {
-      console.error("Adoption failed", error);
       await Swal.fire({
         icon: "error",
         title: "Error",

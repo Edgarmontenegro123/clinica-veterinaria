@@ -107,7 +107,6 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
 
     // Validar que se haya seleccionado o ingresado una especie
     if (!selectedSpecies || selectedSpecies === "Otro") {
@@ -180,7 +179,6 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
           .upload(filePath, imageFile);
 
         if (uploadError) {
-          console.error("Error uploading image:", uploadError);
           throw new Error("No se pudo subir la imagen");
         }
 
@@ -218,15 +216,12 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
         });
       }
 
-      console.log(response);
-
       if (onSuccess) {
         onSuccess();
       } else {
         navigate("/mypets");
       }
     } catch (error) {
-      console.error("Pet operation failed", error);
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -270,7 +265,6 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
           navigate("/mypets");
         }
       } catch (error) {
-        console.error("Delete failed", error);
         Swal.fire({
           icon: "error",
           title: "Error",

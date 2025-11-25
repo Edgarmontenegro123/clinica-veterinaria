@@ -104,7 +104,6 @@ export default function RegisterForm({ onToggleLogin, onClose }) {
       }
 
     } catch (error) {
-      console.error('Registration failed:', error);
       Swal.fire({
         icon: 'error',
         title: 'Error de registro',

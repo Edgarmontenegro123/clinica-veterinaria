@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 const AppointmentsPage = () => {
     const { user, isAdmin } = useAuthStore();
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState('new'); // 'new', 'my-appointments' o 'all-appointments'
+    const [activeTab, setActiveTab] = useState('new'); 
     const [refreshKey, setRefreshKey] = useState(0);
 
     useEffect(() => {
@@ -28,7 +28,6 @@ const AppointmentsPage = () => {
     const handleTabChange = (tab) => {
         setActiveTab(tab);
         if (tab === 'my-appointments') {
-            // Incrementar el key para forzar recarga del componente
             setRefreshKey(prev => prev + 1);
         }
     };

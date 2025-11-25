@@ -66,9 +66,6 @@ export default function LoginForm({ onToggleRegister, onClose }) {
 
       // Guardamos la sesión en Zustand (no esperar, dejar que se ejecute en background)
       setAuth({ user, session });
-
-      console.log('Usuario autenticado:', user.email);
-
       Swal.fire({
         icon: 'success',
         title: '¡Bienvenido!',
@@ -80,7 +77,6 @@ export default function LoginForm({ onToggleRegister, onClose }) {
       if (onClose) onClose();
 
     } catch (error) {
-      console.error('Login failed:', error);
 
       Swal.fire({
         icon: 'error',
@@ -127,7 +123,6 @@ export default function LoginForm({ onToggleRegister, onClose }) {
         confirmButtonText: 'Entendido'
       });
     } catch (error) {
-      console.error('Password reset failed:', error);
 
       Swal.fire({
         icon: 'error',
