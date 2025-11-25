@@ -34,12 +34,14 @@ export const getPets = async () => {
 
         if (isAdmin) {
             // Admin ve todas las mascotas (activas e inactivas) con información del dueño
+            // EXCEPTO las mascotas en adopción (has_owner = false)
             query = supabase
                 .from('pet')
                 .select(`
                     *,
                     users!user_id(name, email, phone)
                 `)
+                .eq('has_owner', true) // Solo mascotas con dueño
                 .order('is_active', { ascending: false }); // Mostrar activas primero
         } else {
             // Usuarios normales solo ven sus mascotas activas
@@ -47,6 +49,7 @@ export const getPets = async () => {
                 .from('pet')
                 .select('*')
                 .eq('is_active', true)
+                .eq('has_owner', true) // Solo mascotas con dueño
                 .eq('user_id', user.id);
         }
 

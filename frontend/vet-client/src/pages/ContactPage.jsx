@@ -80,9 +80,9 @@ const ContactPage = () => {
       setIsSubmitting(true);
 
       // Aquí irá la integración con Formspree
-      const formspreeUrl = 'YOUR_FORMSPREE_URL'; // Reemplazar con el URL de Formspree
+      const formspreeUrl = 'https://formspree.io/f/meowgrvo'; // Reemplazar con el URL de Formspree
 
-      const response = await fetch(formspreeUrl, {
+      const response = await fetch(formspreeUrl, {  
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

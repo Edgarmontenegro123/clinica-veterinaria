@@ -36,6 +36,7 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
   const [showCustomSpecies, setShowCustomSpecies] = useState(false);
   const [customSpecies, setCustomSpecies] = useState(isCustomSpecies ? petData.species : "");
   const [selectedSpecies, setSelectedSpecies] = useState(petData?.species || "");
+  const [ageInconsistency, setAgeInconsistency] = useState(false);
 
   useEffect(() => {
     if (petData && mode === "edit") {
@@ -86,6 +87,25 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
     }
   };
 
+  const validateAgeAndBirthDate = (age, birthDate) => {
+    if (!birthDate || !age) {
+      return true; // Si falta alguno, no validamos (los campos requeridos lo manejan)
+    }
+
+    const today = new Date();
+    const birth = new Date(birthDate);
+    const ageFromBirthDate = (today - birth) / (1000 * 60 * 60 * 24 * 365.25); // Edad calculada en años
+
+    const ageDifference = Math.abs(parseFloat(age) - ageFromBirthDate);
+
+    // Si la diferencia es mayor a 1 año, hay inconsistencia
+    if (ageDifference > 1) {
+      return false;
+    }
+
+    return true;
+  };
+
   const onSubmit = async (data) => {
     console.log(data);
 
@@ -99,6 +119,21 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
       });
       return;
     }
+
+    // Validar consistencia entre edad y fecha de nacimiento
+    if (!validateAgeAndBirthDate(data.age, data.birth_date)) {
+      setAgeInconsistency(true);
+      Swal.fire({
+        icon: "warning",
+        title: "Inconsistencia detectada",
+        text: "La edad ingresada no coincide con la fecha de nacimiento. Por favor, revisa ambos campos antes de continuar.",
+        confirmButtonColor: "#f59e0b",
+      });
+      return;
+    }
+
+    // Si pasa la validación, quitar el indicador de inconsistencia
+    setAgeInconsistency(false);
 
     if (data.birth_date) {
       const selectedDate = new Date(data.birth_date + 'T00:00:00');
@@ -401,9 +436,9 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
               </div>
 
               <div className="flex flex-col">
-                <label className="font-semibold text-white mb-1 text-sm sm:text-base" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Edad (años) *</label>
+                <label className={`font-semibold mb-1 text-sm sm:text-base ${ageInconsistency ? 'text-red-400' : 'text-white'}`} style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Edad (años) *</label>
                 <input
-                  className="bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md border border-white/30 focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-md"
+                  className={`bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-md ${ageInconsistency ? 'border-2 border-red-400' : 'border border-white/30'}`}
                   placeholder="Ej: 3"
                   type="number"
                   min="0"
@@ -413,12 +448,16 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
                     min: { value: 0, message: "La edad debe ser positiva" },
                     valueAsNumber: true
                   })}
+                  onChange={(e) => {
+                    setAgeInconsistency(false);
+                    register("age").onChange(e);
+                  }}
                 />
                 {errors.age && <span className="text-red-300 text-xs sm:text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.age.message}</span>}
               </div>
 
               <div className="flex flex-col">
-                <label className="font-semibold text-white mb-1 text-sm sm:text-base" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+                <label className={`font-semibold mb-1 text-sm sm:text-base ${ageInconsistency ? 'text-red-400' : 'text-white'}`} style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
                   Fecha de Nacimiento <span className="text-white/60 text-xs sm:text-sm font-normal">(opcional)</span>
                 </label>
                 <input
@@ -432,7 +471,7 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
                     minDate.setFullYear(minDate.getFullYear() - 200);
                     return minDate.toISOString().split('T')[0];
                   })()}
-                  className="bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md border border-white/30 focus:border-blue-400 focus:outline-none backdrop-blur-md"
+                  className={`bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md focus:border-blue-400 focus:outline-none backdrop-blur-md ${ageInconsistency ? 'border-2 border-red-400' : 'border border-white/30'}`}
                   {...register("birth_date", {
                     validate: {
                       notFuture: value => {
@@ -452,6 +491,10 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
                       }
                     }
                   })}
+                  onChange={(e) => {
+                    setAgeInconsistency(false);
+                    register("birth_date").onChange(e);
+                  }}
                 />
                 {errors.birth_date && <span className="text-red-300 text-xs sm:text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.birth_date.message}</span>}
               </div>

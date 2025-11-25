@@ -7,7 +7,8 @@ import HomePage from "./pages/HomePage.jsx";
 import Navbar from "./components/layout/Navbar.jsx";
 import Footer from "./components/layout/Footer.jsx";
 import PetsPage from "./pages/PetsPage.jsx";
-import AdoptionsPage from "./pages/AdoptionsPage.jsx";
+import AdoptionPage from "./pages/AdoptionPage.jsx";
+import AdoptionPetFormPage from "./pages/AdoptionPetFormPage.jsx";
 import AppointmentsPage from "./pages/AppointmentsPage.jsx";
 import AdminPetManagement from "./pages/AdminPetManagement.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
@@ -23,12 +24,14 @@ export default function App() {
     checkSession();
   }, [checkSession]);
 
-  // Ocultar footer en páginas de login, registro, mis mascotas, registrar mascotas y gestión admin
-  const hideFooter = location.pathname === '/login' ||
-                     location.pathname === '/register' ||
-                     location.pathname === '/mypets' ||
-                     location.pathname === '/petregister' ||
-                     location.pathname.startsWith('/admin/pets/');
+  // Ocultar footer en páginas de login, registro, mis mascotas, registrar mascotas, adopciones y gestión admin
+  const hideFooter = location.pathname.toLowerCase() === '/login' ||
+                     location.pathname.toLowerCase() === '/register' ||
+                     location.pathname.toLowerCase() === '/mypets' ||
+                     location.pathname.toLowerCase() === '/petregister' ||
+                     location.pathname.toLowerCase() === '/adoptions' ||
+                     location.pathname.toLowerCase().startsWith('/admin/pets/') ||
+                     location.pathname.toLowerCase().startsWith('/admin/adoption/');
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -42,7 +45,9 @@ export default function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/petregister" element={<PetRegisterPage />} />
           <Route path="/mypets" element={<PetsPage />} />
-          <Route path="/adoptions" element={<AdoptionsPage />} />
+          <Route path="/adoptions" element={<AdoptionPage />} />
+          <Route path="/admin/adoption/new" element={<AdoptionPetFormPage />} />
+          <Route path="/admin/adoption/:id/edit" element={<AdoptionPetFormPage />} />
           <Route path="/turnos" element={<AppointmentsPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/admin/pets/:id" element={<AdminPetManagement />} />

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/authStore.js";
 import PetsContainer from "../components/PetsContainer.jsx";
+import CatSpinner from "../components/CatSpinner.jsx";
 import { getPets } from "../services/pets.service.js";
 
 const PetsPage = () => {
@@ -8,6 +9,17 @@ const PetsPage = () => {
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Detectar cambios en el tamaño de la pantalla
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -42,8 +54,12 @@ const PetsPage = () => {
 
   return (
     <div className="flex-1 petsBackgroundImage overflow-y-auto">
-      <img src="/fondo2.jpg" alt="Fondo imagen" className="petBackground" />
-      <div className={`relative z-10 w-full py-6 flex justify-center ${pets.length === 0 || !user ? 'min-h-full items-center' : 'items-start'}`}>
+      <img
+        src={isMobile ? "/fondocelu.png" : "/fondo2.jpg"}
+        alt="Fondo imagen"
+        className="petBackground"
+      />
+      <div className={`relative z-10 w-full py-6 flex justify-center ${pets.length === 0 || !user || loading ? 'min-h-full items-center' : 'items-start'}`}>
         {!user ? (
           <div className="w-[500px] p-8 rounded-2xl bg-white shadow-2xl text-center flex flex-col justify-center items-center"
         >
@@ -84,6 +100,8 @@ const PetsPage = () => {
             </a>
           </div>
         </div>
+        ) : loading ? (
+          <CatSpinner />
         ) : pets.length === 0 ? (
           <div className="w-[500px] p-8 rounded-2xl bg-white shadow-2xl text-center flex flex-col justify-center items-center">
               <div className="mb-6">
