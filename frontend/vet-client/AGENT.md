@@ -1,4 +1,5 @@
-RamVet – Agente del Proyecto
+RAM Veterinaria
+
 1. Descripción del Problema
 
 Las clínicas veterinarias suelen gestionar turnos, pacientes y consultas de manera manual o con sistemas no integrados. Esto genera:
@@ -56,4 +57,4 @@ Consultas sin registro
 
 Sección de adopciones
 
-RamVet se construyó priorizando usabilidad, accesibilidad y eficiencia.
+RAM Veterinaria se construyó priorizando usabilidad, accesibilidad y eficiencia.
