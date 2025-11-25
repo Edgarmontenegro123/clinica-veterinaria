@@ -79,8 +79,7 @@ const ContactPage = () => {
     try {
       setIsSubmitting(true);
 
-      // Aquí irá la integración con Formspree
-      const formspreeUrl = 'https://formspree.io/f/meowgrvo'; // Reemplazar con el URL de Formspree
+      const formspreeUrl = 'https://formspree.io/f/meowgrvo'; 
 
       const response = await fetch(formspreeUrl, {  
         method: 'POST',
@@ -118,7 +117,6 @@ const ContactPage = () => {
         throw new Error('Error al enviar el formulario');
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
       Swal.fire({
         icon: 'error',
         title: 'Error',

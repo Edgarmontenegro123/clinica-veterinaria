@@ -34,7 +34,7 @@ const HomePage = () => {
         .addTo(map)
         .bindPopup('<strong>Clínica Veterinaria</strong><br>Av. Cabildo 4082, CABA');
     } catch (error) {
-      console.error('Error al inicializar el mapa:', error);
+      throw error;
     }
   };
 

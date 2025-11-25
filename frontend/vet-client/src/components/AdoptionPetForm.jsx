@@ -186,7 +186,6 @@ export default function AdoptionPetForm({ petData = null, mode = "create" }) {
 
       navigate("/adoptions");
     } catch (error) {
-      console.error("Error saving adoption pet:", error);
       await Swal.fire({
         icon: "error",
         title: "Error",

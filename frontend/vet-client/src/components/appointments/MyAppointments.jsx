@@ -12,45 +12,23 @@ const MyAppointments = ({ onNavigateToNew }) => {
     useEffect(() => {
         loadAppointments();
 
-        // Suscribirse a cambios en tiempo real en la tabla appoinment
-        console.log('🔵 Iniciando suscripción a Realtime...');
         const channel = supabase
             .channel('appointments-changes')
             .on(
                 'postgres_changes',
                 {
-                    event: '*', // Escuchar todos los eventos (INSERT, UPDATE, DELETE)
+                    event: '*', 
                     schema: 'public',
                     table: 'appoinment'
                 },
                 (payload) => {
-                    console.log('✅ Cambio detectado en turnos:', payload);
-                    console.log('📊 Detalles del evento:', {
-                        tipo: payload.eventType,
-                        registro_nuevo: payload.new,
-                        registro_anterior: payload.old
-                    });
-                    // Recargar los turnos cuando hay cambios
                     loadAppointments();
                 }
             )
-            .subscribe((status, err) => {
-                if (status === 'SUBSCRIBED') {
-                    console.log('✅ Suscripción a Realtime EXITOSA');
-                } else if (status === 'CHANNEL_ERROR') {
-                    console.error('❌ Error en el canal de Realtime:', err);
-                } else if (status === 'TIMED_OUT') {
-                    console.error('⏰ Timeout en la suscripción a Realtime');
-                } else if (status === 'CLOSED') {
-                    console.log('🔴 Canal de Realtime cerrado');
-                } else {
-                    console.log('📡 Estado de suscripción:', status);
-                }
-            });
+            .subscribe();
 
         // Cleanup: desuscribirse cuando el componente se desmonte
         return () => {
-            console.log('🔴 Cerrando suscripción a Realtime...');
             supabase.removeChannel(channel);
         };
     }, []);
@@ -82,7 +60,6 @@ const MyAppointments = ({ onNavigateToNew }) => {
 
             setAppointments(filteredAppointments);
         } catch (error) {
-            console.error('Error loading appointments:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -137,7 +114,6 @@ const MyAppointments = ({ onNavigateToNew }) => {
                 });
 
             } catch (error) {
-                console.error('Error canceling appointment:', error);
                 // Si hay error, recargar para asegurar consistencia
                 await loadAppointments();
                 Swal.fire({

@@ -1,4 +1,3 @@
-/*./scr/pages/LoginPage.jsx*/
 import { useEffect, useState } from "react";
 import LoginForm from "../components/LoginForm.jsx";
 import RegisterForm from "../components/RegisterForm.jsx";

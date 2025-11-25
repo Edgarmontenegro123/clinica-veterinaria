@@ -24,12 +24,9 @@ const AdoptionPage = () => {
     const fetchAdoptionPets = async () => {
       try {
         setLoading(true);
-        console.log("AdoptionPage - Fetching adoption pets...");
         const adoptionPets = await getAdoptionPets();
-        console.log("AdoptionPage - Adoption pets fetched:", adoptionPets);
         setPets(adoptionPets || []);
       } catch (error) {
-        console.error("Failed to fetch adoption pets", error);
         setPets([]);
       } finally {
         setLoading(false);

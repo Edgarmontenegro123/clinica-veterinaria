@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 const AllAppointments = () => {
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState('all'); // 'all', 'upcoming', 'past'
+    const [filter, setFilter] = useState('all'); 
 
     useEffect(() => {
         loadAppointments();
@@ -17,7 +17,6 @@ const AllAppointments = () => {
             const data = await getAllAppointments();
             setAppointments(data);
         } catch (error) {
-            console.error('Error loading appointments:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -76,7 +75,6 @@ const AllAppointments = () => {
                 });
 
             } catch (error) {
-                console.error('Error canceling appointment:', error);
                 await loadAppointments();
                 Swal.fire({
                     icon: 'error',
@@ -128,7 +126,6 @@ const AllAppointments = () => {
                 });
 
             } catch (error) {
-                console.error('Error deleting appointment:', error);
                 await loadAppointments();
                 Swal.fire({
                     icon: 'error',
@@ -211,7 +208,6 @@ const AllAppointments = () => {
                     });
 
                 } catch (error) {
-                    console.error('Error deleting appointments:', error);
                     await loadAppointments();
                     Swal.fire({
                         icon: 'error',

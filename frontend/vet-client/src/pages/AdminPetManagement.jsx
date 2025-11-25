@@ -55,7 +55,6 @@ const AdminPetManagement = () => {
             });
             setImagePreview(data.image || null);
         } catch (error) {
-            console.error('Error loading pet:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -145,7 +144,6 @@ const AdminPetManagement = () => {
             setEditing(false);
             loadPet();
         } catch (error) {
-            console.error('Error updating pet:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -187,7 +185,6 @@ const AdminPetManagement = () => {
 
                 navigate('/mypets');
             } catch (error) {
-                console.error('Error deleting pet:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',

@@ -12,7 +12,6 @@ export const getAdoptionPets = async () => {
             .order('created_at', { ascending: false });
 
         if (error) {
-            console.error('Error fetching adoption pets:', error);
             throw error;
         }
 
@@ -20,7 +19,6 @@ export const getAdoptionPets = async () => {
         const petsWithCalculatedAge = calculateAgesForPets(data || []);
         return petsWithCalculatedAge;
     } catch (error) {
-        console.error('Error fetching adoption pets:', error);
         throw error;
     }
 };
@@ -46,7 +44,6 @@ export const adoptPet = async (petId) => {
             .select();
 
         if (error) {
-            console.error('Error adopting pet:', error);
             throw error;
         }
 
@@ -54,10 +51,8 @@ export const adoptPet = async (petId) => {
             throw new Error('La mascota ya no está disponible para adopción');
         }
 
-        console.log('Pet adopted successfully:', data);
         return data[0];
     } catch (error) {
-        console.error('Error adopting pet:', error);
         throw error;
     }
 };
@@ -102,14 +97,11 @@ export const createAdoptionPet = async (petData) => {
             .select();
 
         if (error) {
-            console.error('Error creating adoption pet:', error);
             throw error;
         }
 
-        console.log('Adoption pet created successfully:', data);
         return data[0];
     } catch (error) {
-        console.error('Error creating adoption pet:', error);
         throw error;
     }
 };
@@ -152,14 +144,11 @@ export const updateAdoptionPet = async (petId, petData) => {
             .select();
 
         if (error) {
-            console.error('Error updating adoption pet:', error);
             throw error;
         }
 
-        console.log('Adoption pet updated successfully:', data);
         return data[0];
     } catch (error) {
-        console.error('Error updating adoption pet:', error);
         throw error;
     }
 };
@@ -191,14 +180,11 @@ export const deleteAdoptionPet = async (petId) => {
             .eq('has_owner', false); // Solo permitir eliminar mascotas sin dueño
 
         if (error) {
-            console.error('Error deleting adoption pet:', error);
             throw error;
         }
 
-        console.log('Adoption pet deleted successfully');
         return data;
     } catch (error) {
-        console.error('Error deleting adoption pet:', error);
         throw error;
     }
 };

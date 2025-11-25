@@ -23,22 +23,17 @@ const PetsPage = () => {
 
   useEffect(() => {
     const fetchPets = async () => {
-      console.log("PetsPage - User:", user);
 
       if (!user) {
-        console.log("PetsPage - No user found");
         setLoading(false);
         return;
       }
 
       try {
         setLoading(true);
-        console.log("PetsPage - Fetching pets...");
         const petsDB = await getPets();
-        console.log("PetsPage - Pets fetched:", petsDB);
         setPets(petsDB || []);
       } catch (error) {
-        console.error("Failed to fetch pets", error);
         setPets([]);
       } finally {
         setLoading(false);
