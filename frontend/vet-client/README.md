@@ -1,73 +1,97 @@
-# React + TypeScript + Vite
+🐾 RamVet – Clínica Veterinaria Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+refugio • amor • mascotas
 
-Currently, two official plugins are available:
+🐶 ¿Qué es RamVet?
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+RamVet es una aplicación web creada para digitalizar la gestión diaria de una clínica veterinaria: usuarios, mascotas, turnos y adopciones.
+Descubrí una experiencia simple, moderna y pensada para cuidar con amor.
 
-## React Compiler
+🚀 Características Principales
+🧑‍⚕️ Registro e inicio de sesión
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Crear cuenta en segundos.
 
-## Expanding the ESLint configuration
+Autenticación segura con Supabase.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Redirección automática al área principal.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+🐾 Gestión de mascotas
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Agregar mascotas con sus datos básicos.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Visualizar, editar y eliminar información.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Vista limpia y accesible.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+📅 Turnos veterinarios
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Selección de fecha y horario.
+
+Validación automática para evitar duplicados.
+
+Historial de turnos disponible.
+
+Cancelación con un clic.
+
+✉️ Consultas sin registro
+
+Consultá sin crear una cuenta.
+
+Ideal para dudas rápidas y urgencias.
+
+🏡 Adopciones
+
+Sección dedicada a mascotas que buscan familia.
+
+Fichas claras, fotos, información y estado.
+
+🧱 Tecnologías utilizadas
+
+Frontend: React + Vite
+
+Estado global: Zustand
+
+Backend-as-a-Service: Supabase
+
+Estilos: CSS personalizado
+
+Alertas: SweetAlert2
+
+📁 Estructura del Proyecto
+
+/components      → Componentes reutilizables
+
+/pages           → Vistas principales
+
+/services        → Conexión a Supabase
+
+/store           → Zustand (sesión)
+
+/assets          → Imágenes y recursos
+
+🎯 Objetivo del MVP
+
+Ofrecer una plataforma simple y accesible para:
+
+Registrar usuarios y mascotas
+
+Gestionar turnos
+
+Enviar consultas
+
+Consultar adopciones
+
+Sienta las bases para futuras mejoras como historias clínicas, recordatorios automáticos, perfiles avanzados, etc.
+
+👨‍💻 Equipo de Desarrollo
+
+Equipo 1
+
+Leonardo Daniel Lipiejko
+
+Edgar Montenegro
+
+Alexis López
+
+❤️ RamVet — Tecnología que cuida con amor
