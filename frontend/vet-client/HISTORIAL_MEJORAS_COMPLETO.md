@@ -1429,7 +1429,6 @@ Ya puedes acceder a todos nuestros servicios:
 
 ---
 
-**Documento generado:** 23 de Noviembre, 2025
 **Proyecto:** Clínica Veterinaria Ramvet
 **Tecnología:** React + Vite + Supabase
-**Autor:** Claude Code Assistant
+**Autores:** López Alexis, Edgar Montenegro, Leonardo Lipiejko

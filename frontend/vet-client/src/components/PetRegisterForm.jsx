@@ -5,6 +5,11 @@ import Swal from "sweetalert2";
 import { createPet, updatePet, deletePet } from "../services/pets.service.js";
 import { useAuthStore } from "../store/authStore.js";
 import { supabase } from "../services/supabase.js";
+import {
+  validateAgeAndBirthDate,
+  getSuggestedAge,
+  getInconsistencyMessage
+} from "../utils/petValidation.js";
 
 export default function PetRegisterForm({ petData = null, mode = "create", onSuccess }) {
   const {
@@ -37,6 +42,9 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
   const [customSpecies, setCustomSpecies] = useState(isCustomSpecies ? petData.species : "");
   const [selectedSpecies, setSelectedSpecies] = useState(petData?.species || "");
   const [ageInconsistency, setAgeInconsistency] = useState(false);
+  const [validationMessage, setValidationMessage] = useState("");
+  const [currentAge, setCurrentAge] = useState(petData?.age || "");
+  const [currentBirthDate, setCurrentBirthDate] = useState(petData?.birth_date || "");
 
   useEffect(() => {
     if (petData && mode === "edit") {
@@ -87,23 +95,57 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
     }
   };
 
-  const validateAgeAndBirthDate = (age, birthDate) => {
-    if (!birthDate || !age) {
-      return true; // Si falta alguno, no validamos (los campos requeridos lo manejan)
+  // Validación en tiempo real
+  useEffect(() => {
+    if (currentAge && currentBirthDate) {
+      const validation = validateAgeAndBirthDate(currentAge, currentBirthDate);
+      if (!validation.isValid) {
+        setAgeInconsistency(true);
+        setValidationMessage(
+          `La edad debería ser aproximadamente ${validation.suggestedAge} años según la fecha de nacimiento`
+        );
+      } else {
+        setAgeInconsistency(false);
+        setValidationMessage("");
+      }
+    } else {
+      setAgeInconsistency(false);
+      setValidationMessage("");
+    }
+  }, [currentAge, currentBirthDate]);
+
+  // Función para auto-calcular edad desde fecha de nacimiento
+  const handleCalculateAge = () => {
+    if (!currentBirthDate) {
+      Swal.fire({
+        icon: "info",
+        title: "Fecha requerida",
+        text: "Primero debes ingresar la fecha de nacimiento para calcular la edad.",
+        confirmButtonColor: "#3085d6",
+      });
+      return;
     }
 
-    const today = new Date();
-    const birth = new Date(birthDate);
-    const ageFromBirthDate = (today - birth) / (1000 * 60 * 60 * 24 * 365.25); // Edad calculada en años
+    const suggestedAge = getSuggestedAge(currentBirthDate);
+    if (suggestedAge !== null) {
+      setCurrentAge(suggestedAge);
+      // Actualizar el valor en el formulario
+      reset({
+        ...petData,
+        age: suggestedAge,
+        birth_date: currentBirthDate
+      });
+      setAgeInconsistency(false);
+      setValidationMessage("");
 
-    const ageDifference = Math.abs(parseFloat(age) - ageFromBirthDate);
-
-    // Si la diferencia es mayor a 1 año, hay inconsistencia
-    if (ageDifference > 1) {
-      return false;
+      Swal.fire({
+        icon: "success",
+        title: "Edad calculada",
+        text: `La edad de la mascota es ${suggestedAge} año${suggestedAge !== 1 ? 's' : ''}.`,
+        confirmButtonColor: "#3085d6",
+        timer: 2000
+      });
     }
-
-    return true;
   };
 
   const onSubmit = async (data) => {
@@ -120,19 +162,39 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
     }
 
     // Validar consistencia entre edad y fecha de nacimiento
-    if (!validateAgeAndBirthDate(data.age, data.birth_date)) {
+    const validation = validateAgeAndBirthDate(data.age, data.birth_date);
+    if (!validation.isValid) {
       setAgeInconsistency(true);
-      Swal.fire({
+
+      const result = await Swal.fire({
         icon: "warning",
         title: "Inconsistencia detectada",
-        text: "La edad ingresada no coincide con la fecha de nacimiento. Por favor, revisa ambos campos antes de continuar.",
-        confirmButtonColor: "#f59e0b",
+        html: getInconsistencyMessage(data.age, validation.suggestedAge),
+        showCancelButton: true,
+        confirmButtonText: `Auto-corregir a ${validation.suggestedAge} años`,
+        cancelButtonText: "Revisar manualmente",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#f59e0b",
       });
-      return;
-    }
 
-    // Si pasa la validación, quitar el indicador de inconsistencia
-    setAgeInconsistency(false);
+      // Si el usuario elige auto-corregir
+      if (result.isConfirmed) {
+        setCurrentAge(validation.suggestedAge);
+        reset({
+          ...data,
+          age: validation.suggestedAge,
+          birth_date: data.birth_date
+        });
+        setAgeInconsistency(false);
+        setValidationMessage("");
+        // Continuar con el submit automáticamente
+      } else {
+        return; // Cancelar submit para que el usuario revise
+      }
+    } else {
+      setAgeInconsistency(false);
+      setValidationMessage("");
+    }
 
     if (data.birth_date) {
       const selectedDate = new Date(data.birth_date + 'T00:00:00');
@@ -430,24 +492,42 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
               </div>
 
               <div className="flex flex-col">
-                <label className={`font-semibold mb-1 text-sm sm:text-base ${ageInconsistency ? 'text-red-400' : 'text-white'}`} style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>Edad (años) *</label>
-                <input
-                  className={`bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-md ${ageInconsistency ? 'border-2 border-red-400' : 'border border-white/30'}`}
-                  placeholder="Ej: 3"
-                  type="number"
-                  min="0"
-                  step="1"
-                  {...register("age", {
-                    required: "La edad es requerida",
-                    min: { value: 0, message: "La edad debe ser positiva" },
-                    valueAsNumber: true
-                  })}
-                  onChange={(e) => {
-                    setAgeInconsistency(false);
-                    register("age").onChange(e);
-                  }}
-                />
+                <label className={`font-semibold mb-1 text-sm sm:text-base ${ageInconsistency ? 'text-red-400' : 'text-white'}`} style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+                  Edad (años) *
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    className={`flex-1 bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-md ${ageInconsistency ? 'border-2 border-red-400' : 'border border-white/30'}`}
+                    placeholder="Ej: 3"
+                    type="number"
+                    min="0"
+                    step="1"
+                    {...register("age", {
+                      required: "La edad es requerida",
+                      min: { value: 0, message: "La edad debe ser positiva" },
+                      valueAsNumber: true
+                    })}
+                    onChange={(e) => {
+                      setCurrentAge(e.target.value);
+                      register("age").onChange(e);
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleCalculateAge}
+                    disabled={!currentBirthDate}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 text-xs sm:text-sm rounded-md font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed whitespace-nowrap"
+                    title="Calcular edad desde fecha de nacimiento"
+                  >
+                    📅 Calcular
+                  </button>
+                </div>
                 {errors.age && <span className="text-red-300 text-xs sm:text-sm mt-1 font-semibold" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>{errors.age.message}</span>}
+                {ageInconsistency && validationMessage && (
+                  <span className="text-yellow-300 text-xs sm:text-sm mt-1 font-semibold flex items-center gap-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>
+                    ⚠️ {validationMessage}
+                  </span>
+                )}
               </div>
 
               <div className="flex flex-col">
@@ -486,7 +566,7 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
                     }
                   })}
                   onChange={(e) => {
-                    setAgeInconsistency(false);
+                    setCurrentBirthDate(e.target.value);
                     register("birth_date").onChange(e);
                   }}
                 />
