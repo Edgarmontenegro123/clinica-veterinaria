@@ -272,6 +272,24 @@ nav a.active-link {
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
 
+/* Media query para pantallas altas (evitar desbordamiento del background) */
+@media (min-height: 800px) and (min-width: 769px) {
+  .imageBackground {
+    max-height: 100vh !important;
+    height: 100vh !important;
+  }
+
+  .imageBackground img {
+    height: 100vh !important;
+    width: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+  }
+}
+
 /* Estilos responsivos para HOME PAGE */
 @media (max-width: 1024px) {
   .content h2 {
