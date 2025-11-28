@@ -632,3 +632,10 @@ button[title="Gestionar mascota"]:hover {
   box-shadow: 0 0 15px rgba(99, 102, 241, 0.8) !important;
 }
 
+/* ESTILOS PARA TARJETAS DE IMÁGENES DE MASCOTAS */
+/* Selector general para todas las tarjetas de mascotas */
+.rounded-2xl.h-\[280px\].cursor-pointer:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.6) !important;
+  transform: translateY(-8px) scale(1.05) !important;
+}
+

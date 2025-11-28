@@ -127,7 +127,7 @@ const AdoptionContainer = ({ pets, setPets }) => {
           {pets.map((pet) => (
             <div key={pet.id} className="w-full max-w-[280px] flex flex-col items-center gap-2">
               {/* Tarjeta de mascota */}
-              <div className="relative rounded-2xl h-[280px] w-full border-2 border-gray-300 overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all hover:scale-105">
+              <div className="relative rounded-2xl h-[280px] w-full border-2 border-gray-300 overflow-hidden cursor-pointer shadow-lg hover:shadow-[0_0_20px_rgba(34,197,94,0.6)] transition-all hover:scale-105 hover:-translate-y-2 duration-300">
                 <img
                   src={pet.image || './no-image.png'}
                   alt={pet.name}
