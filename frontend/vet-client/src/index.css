@@ -605,7 +605,8 @@ button[title="Eliminar"]:hover {
 }
 
 /* Botón + para agregar mascotas (verde) */
-a[href="/admin/adoption/new"]:hover {
+a[href="/admin/adoption/new"]:hover,
+a[href="/petregister"]:hover {
   transform: translateY(-8px) scale(1.05) !important;
   box-shadow: 0 0 20px rgba(22, 163, 74, 0.8) !important;
 }
@@ -622,5 +623,12 @@ input[placeholder="Buscar mascota por nombre..."]:hover {
 button[title="Limpiar búsqueda"]:hover {
   color: rgb(220, 38, 38) !important;
   transform: scale(1.1) !important;
+}
+
+/* Botón Gestionar (índigo) */
+button[title="Gestionar mascota"]:hover {
+  background-color: rgb(67, 56, 202) !important;
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.8) !important;
 }
 

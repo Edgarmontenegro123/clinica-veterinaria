@@ -110,7 +110,8 @@ const PetsContainer = ({ pets, setPets }) => {
                   )}
                   <button
                     onClick={() => navigate(`/admin/pets/${pet.id}`)}
-                    className="mt-3 w-full px-3 py-2 bg-indigo-600 text-white text-xs font-semibold rounded-lg hover:bg-indigo-700 transition-colors shadow-sm"
+                    className="mt-3 w-full px-3 py-2 bg-indigo-600 text-white text-xs font-semibold rounded-lg hover:bg-indigo-700 hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(99,102,241,0.8)] transition-all duration-300 shadow-md cursor-pointer"
+                    title="Gestionar mascota"
                   >
                     🔧 Gestionar
                   </button>
@@ -124,7 +125,7 @@ const PetsContainer = ({ pets, setPets }) => {
         <div className="w-full max-w-[280px] h-[200px] flex items-center justify-center">
           <a
             href="/petregister"
-            className="relative bg-green-600 w-20 h-20 rounded-xl flex items-center justify-center group border-2 border-white shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+            className="relative bg-green-600 w-20 h-20 rounded-xl flex items-center justify-center group border-2 border-white shadow-lg hover:scale-105 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(22,163,74,0.8)] transition-all cursor-pointer"
           >
             <span className="absolute w-10 h-2 bg-white rounded-full group-hover:scale-125 transition-transform"></span>
             <span className="absolute w-2 h-10 bg-white rounded-full group-hover:scale-125 transition-transform"></span>
