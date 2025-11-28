@@ -85,8 +85,9 @@ const PetsContainer = ({ pets, setPets }) => {
               {/* Botón de eliminar - Solo para admin */}
               {isAdmin && (
                 <button
-                  className="absolute bottom-2 right-2 text-red-700 bg-white/70 rounded-full p-2 hover:bg-white transition-all hover:scale-110"
+                  className="absolute bottom-2 right-2 text-red-700 bg-white/90 rounded-full p-2 hover:bg-white transition-all hover:scale-110 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(220,38,38,0.8)] shadow-lg cursor-pointer"
                   onClick={() => handleDeletePet(pet.id)}
+                  title="Eliminar"
                 >
                   <FaRegTrashAlt size={18} />
                 </button>

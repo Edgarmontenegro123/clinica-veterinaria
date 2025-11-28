@@ -610,3 +610,17 @@ a[href="/admin/adoption/new"]:hover {
   box-shadow: 0 0 20px rgba(22, 163, 74, 0.8) !important;
 }
 
+/* ESTILOS PARA BARRA DE BÚSQUEDA EN MIS MASCOTAS */
+/* Input de búsqueda */
+input[placeholder="Buscar mascota por nombre..."]:hover {
+  border-color: rgb(96, 165, 250) !important;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4) !important;
+  transform: scale(1.02) !important;
+}
+
+/* Botón de limpiar búsqueda (X) */
+button[title="Limpiar búsqueda"]:hover {
+  color: rgb(220, 38, 38) !important;
+  transform: scale(1.1) !important;
+}
+

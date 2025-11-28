@@ -159,12 +159,14 @@ const PetsPage = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-300 bg-white/90 backdrop-blur-sm
                     focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200
-                    text-gray-800 placeholder-gray-500 shadow-lg transition-all"
+                    hover:border-blue-400 hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] hover:scale-[1.02]
+                    text-gray-800 placeholder-gray-500 shadow-lg transition-all duration-300 cursor-text"
                 />
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm("")}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-red-600 hover:scale-110 transition-all duration-200 cursor-pointer"
+                    title="Limpiar búsqueda"
                   >
                     <svg
                       className="h-5 w-5"
