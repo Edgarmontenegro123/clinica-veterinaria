@@ -50,16 +50,16 @@ const HomePage = () => {
   return (
     <div className="w-full min-h-screen flex flex-col">
       {/* Sección Hero con Fondo - FULLWIDTH */}
-      <div className="imageBackground relative w-full h-screen flex items-center">
+      <div className="imageBackground relative w-full h-screen max-h-screen overflow-hidden flex items-end">
         <img
           src="/fondo.jpg"
           alt="Fondo"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover object-top"
         />
         <div className="absolute inset-0 bg-black/30"></div>
 
         {/* Contenido Hero */}
-        <div className="content relative w-1/3 left-0 bottom-27 gap-4 flex flex-col items-start p-8">
+        <div className="content relative w-full md:w-1/3 gap-4 flex flex-col items-start p-8 mb-16 md:mb-24 lg:mb-32">
           <h2 className="leading-tight text-white text-4xl font-bold">
             Cuidamos a tus Mascotas
           </h2>
