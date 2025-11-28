@@ -260,7 +260,7 @@ const AllAppointments = () => {
                 </h2>
                 <button
                     onClick={handleBulkDelete}
-                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium shadow-md hover:shadow-lg"
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-300 font-medium shadow-md cursor-pointer hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(220,38,38,0.6)]"
                 >
                     🗑️ Limpiar historial
                 </button>
@@ -270,30 +270,30 @@ const AllAppointments = () => {
             <div className="flex gap-3 mb-6">
                 <button
                     onClick={() => setFilter('all')}
-                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                    className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                         filter === 'all'
                             ? 'bg-blue-600 text-white'
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(107,114,128,0.4)]'
                     }`}
                 >
                     Todos ({appointments.length})
                 </button>
                 <button
                     onClick={() => setFilter('upcoming')}
-                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                    className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                         filter === 'upcoming'
                             ? 'bg-green-600 text-white'
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(107,114,128,0.4)]'
                     }`}
                 >
                     Próximos
                 </button>
                 <button
                     onClick={() => setFilter('past')}
-                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                    className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                         filter === 'past'
                             ? 'bg-gray-600 text-white'
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(107,114,128,0.4)]'
                     }`}
                 >
                     Pasados
@@ -315,7 +315,7 @@ const AllAppointments = () => {
                         return (
                             <div
                                 key={appointment.id}
-                                className={`border rounded-lg p-6 transition-all hover:shadow-lg ${
+                                className={`border rounded-lg p-6 transition-all duration-300 hover:shadow-lg cursor-pointer hover:scale-102 hover:-translate-y-1 ${
                                     isCancelled ? 'bg-red-50 border-red-300 opacity-75' :
                                     isPast ? 'bg-gray-50 opacity-75' : 'bg-white'
                                 }`}
@@ -389,7 +389,7 @@ const AllAppointments = () => {
                                                 </div>
                                                 <button
                                                     onClick={() => handleDelete(appointment.id)}
-                                                    className="w-full px-3 py-1.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium text-sm"
+                                                    className="w-full px-3 py-1.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-all duration-300 font-medium text-sm cursor-pointer hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(107,114,128,0.4)]"
                                                 >
                                                     🗑️ Eliminar
                                                 </button>
@@ -399,7 +399,7 @@ const AllAppointments = () => {
                                         {!isPast && !isCancelled && (
                                             <button
                                                 onClick={() => handleCancel(appointment.id)}
-                                                className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+                                                className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-300 font-medium cursor-pointer hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(220,38,38,0.6)]"
                                             >
                                                 Cancelar Turno
                                             </button>
@@ -414,7 +414,7 @@ const AllAppointments = () => {
                                                 </div>
                                                 <button
                                                     onClick={() => handleDelete(appointment.id)}
-                                                    className="w-full px-3 py-1.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium text-sm"
+                                                    className="w-full px-3 py-1.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-all duration-300 font-medium text-sm cursor-pointer hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(107,114,128,0.4)]"
                                                 >
                                                     🗑️ Eliminar
                                                 </button>

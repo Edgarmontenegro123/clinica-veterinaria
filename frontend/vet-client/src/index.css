@@ -605,8 +605,13 @@ button[title="Eliminar"]:hover {
 }
 
 /* Botón + para agregar mascotas (verde) */
-a[href="/admin/adoption/new"]:hover,
-a[href="/petregister"]:hover {
+a[href="/admin/adoption/new"]:hover {
+  transform: translateY(-8px) scale(1.05) !important;
+  box-shadow: 0 0 20px rgba(22, 163, 74, 0.8) !important;
+}
+
+/* Botón + para registrar mascota (verde) - Solo el botón, no el link de texto */
+a[href="/petregister"].relative:hover {
   transform: translateY(-8px) scale(1.05) !important;
   box-shadow: 0 0 20px rgba(22, 163, 74, 0.8) !important;
 }
@@ -637,5 +642,29 @@ button[title="Gestionar mascota"]:hover {
 .rounded-2xl.h-\[280px\].cursor-pointer:hover {
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.6) !important;
   transform: translateY(-8px) scale(1.05) !important;
+}
+
+/* ESTILOS PARA SISTEMA DE TURNOS */
+/* Botones de navegación del calendario (Anterior y Siguiente) */
+.bg-blue-500.text-white.rounded-lg:hover {
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.6) !important;
+  background-color: rgb(37, 99, 235) !important;
+}
+
+/* Tabs de navegación principal en turnos */
+.flex.gap-4.mb-6 button {
+  cursor: pointer !important;
+}
+
+.flex.gap-4.mb-6 button:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4) !important;
+}
+
+/* Link "Registra una mascota" en calendario de turnos */
+a[href="/petregister"].underline:hover {
+  color: rgb(153, 27, 27) !important;
+  text-shadow: 0 0 10px rgba(220, 38, 38, 0.6) !important;
 }
 

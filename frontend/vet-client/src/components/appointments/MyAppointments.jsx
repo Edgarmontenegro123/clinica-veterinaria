@@ -177,7 +177,7 @@ const MyAppointments = ({ onNavigateToNew }) => {
                             return (
                                 <div
                                     key={appointment.id}
-                                    className="bg-white border-2 border-blue-200 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow"
+                                    className="bg-white border-2 border-blue-200 rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-102 hover:-translate-y-1 cursor-pointer"
                                 >
                                     <div className="flex justify-between items-start">
                                         <div className="flex-1">
@@ -216,7 +216,7 @@ const MyAppointments = ({ onNavigateToNew }) => {
 
                                         <button
                                             onClick={() => handleCancel(appointment.id)}
-                                            className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 hover:shadow-lg hover:scale-105 active:scale-95 hover:ring-4 hover:ring-red-300 transition-all duration-200 font-semibold"
+                                            className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 hover:scale-105 active:scale-95 hover:ring-4 hover:ring-red-300 transition-all duration-300 font-semibold cursor-pointer hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(220,38,38,0.6)]"
                                         >
                                             Cancelar
                                         </button>
@@ -290,7 +290,7 @@ const MyAppointments = ({ onNavigateToNew }) => {
                                             </p>
                                             <button
                                                 onClick={onNavigateToNew}
-                                                className="text-blue-600 hover:text-blue-800 font-semibold text-sm hover:underline cursor-pointer transition-colors"
+                                                className="text-blue-600 hover:text-blue-800 font-semibold text-sm hover:underline cursor-pointer transition-all duration-300 hover:scale-105"
                                             >
                                                 📅 Te invitamos a agendar un nuevo turno en la sección "Nuevo Turno" →
                                             </button>

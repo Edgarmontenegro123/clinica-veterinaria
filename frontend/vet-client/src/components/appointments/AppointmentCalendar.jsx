@@ -226,7 +226,7 @@ const AppointmentCalendar = () => {
                     <div className="flex items-center justify-between mb-4 gap-2">
                         <button
                             onClick={prevMonth}
-                            className="px-2 py-1 md:px-4 md:py-2 text-xs md:text-base bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 hover:shadow-xl hover:scale-105 hover:-translate-y-0.5 active:scale-95 active:translate-y-0 transition-all duration-200 font-semibold transform hover:ring-2 hover:ring-blue-300 flex-shrink-0"
+                            className="px-2 py-1 md:px-4 md:py-2 text-xs md:text-base bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 hover:scale-105 hover:-translate-y-1 active:scale-95 active:translate-y-0 transition-all duration-300 font-semibold transform hover:ring-2 hover:ring-blue-300 flex-shrink-0 cursor-pointer hover:shadow-[0_0_15px_rgba(59,130,246,0.6)]"
                         >
                             ← Anterior
                         </button>
@@ -235,7 +235,7 @@ const AppointmentCalendar = () => {
                         </h3>
                         <button
                             onClick={nextMonth}
-                            className="px-2 py-1 md:px-4 md:py-2 text-xs md:text-base bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 hover:shadow-xl hover:scale-105 hover:-translate-y-0.5 active:scale-95 active:translate-y-0 transition-all duration-200 font-semibold transform hover:ring-2 hover:ring-blue-300 flex-shrink-0"
+                            className="px-2 py-1 md:px-4 md:py-2 text-xs md:text-base bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 hover:scale-105 hover:-translate-y-1 active:scale-95 active:translate-y-0 transition-all duration-300 font-semibold transform hover:ring-2 hover:ring-blue-300 flex-shrink-0 cursor-pointer hover:shadow-[0_0_15px_rgba(59,130,246,0.6)]"
                         >
                             Siguiente →
                         </button>
@@ -284,14 +284,14 @@ const AppointmentCalendar = () => {
                                     onClick={() => handleDateClick(day)}
                                     disabled={isDisabled}
                                     className={`
-                                        aspect-square rounded-md font-semibold transition-all duration-200 text-sm
+                                        aspect-square rounded-md font-semibold transition-all duration-300 text-sm
                                         ${isDisabled
                                             ? isSunday
                                                 ? 'bg-red-50 text-red-300 cursor-not-allowed line-through text-xs'
                                                 : 'bg-gray-100 text-gray-400 cursor-not-allowed text-xs'
                                             : isSelected
                                                 ? 'bg-blue-600 text-white shadow-lg scale-105 ring-2 ring-blue-300'
-                                                : 'bg-gray-50 text-gray-700 hover:bg-blue-100 hover:scale-110 hover:shadow-md active:scale-95'
+                                                : 'bg-gray-50 text-gray-700 hover:bg-blue-100 hover:scale-110 active:scale-95 cursor-pointer hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(59,130,246,0.6)]'
                                         }
                                     `}
                                 >
@@ -321,10 +321,10 @@ const AppointmentCalendar = () => {
                                         key={slot}
                                         onClick={() => handleTimeClick(slot)}
                                         className={`
-                                            py-2 px-3 rounded-md font-semibold transition-all duration-200 text-sm
+                                            py-2 px-3 rounded-md font-semibold transition-all duration-300 text-sm
                                             ${selectedTime === slot
                                                 ? 'bg-green-600 text-white shadow-lg scale-105 ring-2 ring-green-300'
-                                                : 'bg-gray-100 text-gray-700 hover:bg-green-100 hover:scale-110 hover:shadow-md active:scale-95 hover:ring-2 hover:ring-green-200'
+                                                : 'bg-gray-100 text-gray-700 hover:bg-green-100 hover:scale-105 active:scale-95 hover:ring-2 hover:ring-green-200 cursor-pointer hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(34,197,94,0.6)]'
                                             }
                                         `}
                                     >
@@ -354,7 +354,7 @@ const AppointmentCalendar = () => {
                         <select
                             value={selectedPet}
                             onChange={(e) => setSelectedPet(e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer hover:border-blue-400 transition-all duration-300"
                             required
                         >
                             <option value="">Selecciona una mascota</option>
@@ -366,7 +366,7 @@ const AppointmentCalendar = () => {
                         </select>
                         {userPets.length === 0 && (
                             <p className="mt-2 text-sm text-red-600">
-                                No tienes mascotas registradas. <a href="/petregister" className="underline">Registra una mascota</a>
+                                No tienes mascotas registradas. <a href="/petregister" className="underline cursor-pointer hover:text-red-800 transition-all duration-300">Registra una mascota</a>
                             </p>
                         )}
                     </div>
@@ -407,7 +407,7 @@ const AppointmentCalendar = () => {
                             onChange={(e) => setReason(e.target.value)}
                             rows="4"
                             placeholder="Describe el motivo de la consulta..."
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none cursor-pointer hover:border-blue-400 transition-all duration-300"
                             required
                         />
                     </div>
@@ -420,7 +420,7 @@ const AppointmentCalendar = () => {
                             w-full py-4 rounded-lg font-bold text-white transition-all duration-300 transform
                             ${loading || !selectedDate || !selectedTime || !selectedPet
                                 ? 'bg-gray-400 cursor-not-allowed shadow-md'
-                                : 'bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-2xl hover:scale-105 hover:-translate-y-1 active:scale-95 active:translate-y-0 hover:ring-4 hover:ring-blue-300'
+                                : 'bg-blue-600 hover:bg-blue-700 shadow-lg hover:scale-105 hover:-translate-y-1 active:scale-95 active:translate-y-0 hover:ring-4 hover:ring-blue-300 cursor-pointer hover:shadow-[0_0_15px_rgba(59,130,246,0.6)]'
                             }
                         `}
                     >
