@@ -20,9 +20,9 @@ const HomePage = () => {
         return;
       }
 
-      // Coordenadas de Av. Cabildo 4082, Buenos Aires
-      const lat = -34.56583;
-      const lng = -58.47052;
+      // Coordenadas exactas de Av. Cabildo 4082, Buenos Aires (Belgrano)
+      const lat = -34.5462;
+      const lng = -58.4705;
       const map = window.L.map('map').setView([lat, lng], 16);
 
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
