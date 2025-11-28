@@ -1,15 +1,51 @@
 import { useAuthStore } from "../../store/authStore.js";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const Navbar = () => {
   const { user, logout  } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
+  const navRef = useRef(null);
 
   const isActive = (path) => {
     return location.pathname === path ? "active-link" : "";
+  };
+
+  // Actualizar posición de la barra cuando cambia la ruta
+  useEffect(() => {
+    if (navRef.current) {
+      const activeLink = navRef.current.querySelector('.active-link');
+      if (activeLink) {
+        updateUnderline(activeLink);
+      }
+    }
+  }, [location.pathname]);
+
+  const updateUnderline = (element) => {
+    if (element && navRef.current) {
+      const navRect = navRef.current.getBoundingClientRect();
+      const linkRect = element.getBoundingClientRect();
+      setUnderlineStyle({
+        left: linkRect.left - navRect.left,
+        width: linkRect.width
+      });
+    }
+  };
+
+  const handleMouseEnter = (e) => {
+    updateUnderline(e.target);
+  };
+
+  const handleMouseLeave = () => {
+    if (navRef.current) {
+      const activeLink = navRef.current.querySelector('.active-link');
+      if (activeLink) {
+        updateUnderline(activeLink);
+      }
+    }
   };
 
   const handleLoginClick = () => {
@@ -51,30 +87,93 @@ const Navbar = () => {
       </button>
 
       <nav className={`navbar-collapse ${isOpen ? 'show' : ''}`}>
-        <ul>
+        <ul ref={navRef} style={{ position: 'relative' }}>
           <li>
-            <a href="/" className={isActive("/")} onClick={handleLinkClick}>Home</a>
+            <a
+              href="/"
+              className={isActive("/")}
+              onClick={handleLinkClick}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              Home
+            </a>
           </li>
 
           <li>
-            <a href="" onClick={handleLinkClick}>¿Quienes Somos?</a>
+            <a
+              href=""
+              onClick={handleLinkClick}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              ¿Quienes Somos?
+            </a>
           </li>
 
           <li>
-            <a href="/adoptions" className={isActive("/adoptions")} onClick={handleLinkClick}>Adopciones</a>
+            <a
+              href="/adoptions"
+              className={isActive("/adoptions")}
+              onClick={handleLinkClick}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              Adopciones
+            </a>
           </li>
 
           <li>
-            <a href="/contact" className={isActive("/contact")} onClick={handleLinkClick}>Consultas</a>
+            <a
+              href="/contact"
+              className={isActive("/contact")}
+              onClick={handleLinkClick}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              Consultas
+            </a>
           </li>
 
           <li>
-            <a href="/turnos" className={isActive("/turnos")} onClick={handleLinkClick}>Turnos</a>
+            <a
+              href="/turnos"
+              className={isActive("/turnos")}
+              onClick={handleLinkClick}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              Turnos
+            </a>
           </li>
 
           <li>
-            <a href="/mypets" className={isActive("/mypets")} onClick={handleLinkClick}>Mis Mascotas</a>
+            <a
+              href="/mypets"
+              className={isActive("/mypets")}
+              onClick={handleLinkClick}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              Mis Mascotas
+            </a>
           </li>
+
+          {/* Barra de subrayado animada */}
+          <span
+            className="nav-underline"
+            style={{
+              position: 'absolute',
+              bottom: '6px',
+              left: `${underlineStyle.left}px`,
+              width: `${underlineStyle.width}px`,
+              height: '4px',
+              backgroundColor: 'black',
+              transition: 'left 0.3s ease, width 0.3s ease',
+              pointerEvents: 'none'
+            }}
+          />
+
           {user ? (
             <button className="nav-auth-button nav-logout-button" onClick={handleLogout}>
               Cerrar Sesión

@@ -81,10 +81,13 @@ nav ul {
 
 nav a {
   text-decoration: none;
+  position: relative;
+  transition: color 0.3s ease;
 }
 
+/* Eliminar el subrayado por defecto del link activo */
 nav a.active-link {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 /* Estilos responsivos para móviles */
@@ -652,6 +655,13 @@ button[title="Gestionar mascota"]:hover {
   background-color: rgb(37, 99, 235) !important;
 }
 
+/* Botón "Reservar Turno" */
+button.bg-blue-600:hover:not(:disabled) {
+  background-color: rgb(29, 78, 216) !important;
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.6) !important;
+}
+
 /* Tabs de navegación principal en turnos */
 .flex.gap-4.mb-6 button {
   cursor: pointer !important;
@@ -716,5 +726,50 @@ button.text-blue-600:hover {
   color: rgb(29, 78, 216) !important;
   transform: scale(1.05) !important;
   text-shadow: 0 0 10px rgba(59, 130, 246, 0.6) !important;
+}
+
+/* ESTILOS PARA FORMULARIO DE REGISTRO DE MASCOTA */
+/* Botón "Calcular" edad */
+button.bg-blue-500:hover:not(:disabled) {
+  background-color: rgb(37, 99, 235) !important;
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.6) !important;
+}
+
+/* Botón "Examinar..." del input file */
+input[type="file"]::file-selector-button:hover {
+  background-color: rgb(29, 78, 216) !important;
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.6) !important;
+  cursor: pointer !important;
+}
+
+/* Compatibilidad con navegadores webkit (Safari, Chrome) */
+input[type="file"]::-webkit-file-upload-button:hover {
+  background-color: rgb(29, 78, 216) !important;
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.6) !important;
+  cursor: pointer !important;
+}
+
+/* Botones "Confirmar" y "Cancelar" de especie personalizada */
+button.bg-gray-500:hover {
+  background-color: rgb(75, 85, 99) !important;
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: 0 0 15px rgba(107, 114, 128, 0.6) !important;
+}
+
+/* Media query para pantallas pequeñas (menos de 390px) */
+@media (max-width: 390px) {
+  /* Ajustar el campo de edad para que el botón Calcular no se salga */
+  input[placeholder="Ej: 3"] {
+    max-width: 120px !important;
+  }
+
+  button[title="Calcular edad desde fecha de nacimiento"] {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    font-size: 0.75rem !important;
+  }
 }
 

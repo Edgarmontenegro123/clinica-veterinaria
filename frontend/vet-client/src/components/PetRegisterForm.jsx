@@ -35,6 +35,7 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(petData?.image || null);
+  const [vaccinesWarning, setVaccinesWarning] = useState("");
   const predefinedSpecies = ["Perro", "Gato", "Ave"];
   const isCustomSpecies = petData?.species && !predefinedSpecies.includes(petData.species);
 
@@ -145,6 +146,25 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
         confirmButtonColor: "#3085d6",
         timer: 2000
       });
+    }
+  };
+
+  const handleVaccinesChange = (e) => {
+    const value = e.target.value;
+
+    // Detectar si el usuario está escribiendo múltiples palabras sin comas
+    if (value.trim()) {
+      // Si hay múltiples palabras consecutivas (2+ espacios seguidos o palabras sin comas)
+      const words = value.split(/\s+/).filter(w => w.length > 0);
+      const hasCommas = value.includes(',');
+
+      if (words.length > 1 && !hasCommas) {
+        setVaccinesWarning("💡 Recuerda separar las vacunas con comas (,)");
+      } else {
+        setVaccinesWarning("");
+      }
+    } else {
+      setVaccinesWarning("");
     }
   };
 
@@ -580,10 +600,21 @@ export default function PetRegisterForm({ petData = null, mode = "create", onSuc
                 <span className="text-xs sm:text-sm font-normal text-white/70 ml-2">(separadas por comas)</span>
               </label>
               <input
-                className="bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md border border-white/30 focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-md"
+                className={`bg-white/20 text-white px-3 py-2 text-sm sm:text-base rounded-md border focus:border-blue-400 focus:outline-none placeholder-white/60 backdrop-blur-md transition-colors ${
+                  vaccinesWarning ? 'border-yellow-400 border-2' : 'border-white/30'
+                }`}
                 placeholder="Ej: Rabia, Parvovirus, Moquillo"
                 {...register("vaccines")}
+                onChange={(e) => {
+                  register("vaccines").onChange(e);
+                  handleVaccinesChange(e);
+                }}
               />
+              {vaccinesWarning && (
+                <span className="text-yellow-300 text-xs sm:text-sm mt-1 font-semibold flex items-center gap-1" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.7)" }}>
+                  {vaccinesWarning}
+                </span>
+              )}
             </div>
 
             {isAdmin && (
