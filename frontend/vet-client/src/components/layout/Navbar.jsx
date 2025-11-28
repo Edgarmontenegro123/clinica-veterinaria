@@ -33,10 +33,10 @@ const Navbar = () => {
 
   return (
     <header className="">
-      <div className="logo">
+      <a href="/" className="logo cursor-pointer" onClick={handleLinkClick}>
         <img src="/logo.png" alt="Logo Veterinaria" />
         <h1>Clínica Ramvet</h1>
-      </div>
+      </a>
 
       {/* Botón hamburguesa para móviles */}
       <button
