@@ -144,14 +144,14 @@ const AdoptionContainer = ({ pets, setPets }) => {
                 {isAdmin && (
                   <div className="absolute bottom-2 right-2 flex gap-2">
                     <button
-                      className="text-blue-700 bg-white/90 rounded-full p-2 hover:bg-white transition-all hover:scale-110 shadow-lg"
+                      className="text-blue-700 bg-white/90 rounded-full p-2 hover:bg-white transition-all hover:scale-110 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(29,78,216,0.8)] shadow-lg cursor-pointer"
                       onClick={() => handleEditPet(pet.id)}
                       title="Editar"
                     >
                       <FaEdit size={18} />
                     </button>
                     <button
-                      className="text-red-700 bg-white/90 rounded-full p-2 hover:bg-white transition-all hover:scale-110 shadow-lg"
+                      className="text-red-700 bg-white/90 rounded-full p-2 hover:bg-white transition-all hover:scale-110 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(220,38,38,0.8)] shadow-lg cursor-pointer"
                       onClick={() => handleDeletePet(pet.id)}
                       title="Eliminar"
                     >
@@ -186,7 +186,7 @@ const AdoptionContainer = ({ pets, setPets }) => {
             <div className="w-full max-w-[280px] h-[280px] flex items-center justify-center">
               <a
                 href="/admin/adoption/new"
-                className="relative bg-green-600 w-20 h-20 rounded-xl flex items-center justify-center group border-2 border-white shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+                className="relative bg-green-600 w-20 h-20 rounded-xl flex items-center justify-center group border-2 border-white shadow-lg hover:scale-105 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(22,163,74,0.8)] transition-all cursor-pointer"
               >
                 <span className="absolute w-10 h-2 bg-white rounded-full group-hover:scale-125 transition-transform"></span>
                 <span className="absolute w-2 h-10 bg-white rounded-full group-hover:scale-125 transition-transform"></span>

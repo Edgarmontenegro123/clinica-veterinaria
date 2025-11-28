@@ -591,3 +591,22 @@ footer a[aria-label="YouTube"]:hover {
   box-shadow: 0 0 20px rgba(239, 68, 68, 0.8) !important;
 }
 
+/* ESTILOS PARA BOTONES DE ADMIN EN PÁGINA DE ADOPCIONES */
+/* Botón de editar (azul) */
+button[title="Editar"]:hover {
+  transform: translateY(-4px) scale(1.1) !important;
+  box-shadow: 0 0 15px rgba(29, 78, 216, 0.8) !important;
+}
+
+/* Botón de eliminar (rojo) */
+button[title="Eliminar"]:hover {
+  transform: translateY(-4px) scale(1.1) !important;
+  box-shadow: 0 0 15px rgba(220, 38, 38, 0.8) !important;
+}
+
+/* Botón + para agregar mascotas (verde) */
+a[href="/admin/adoption/new"]:hover {
+  transform: translateY(-8px) scale(1.05) !important;
+  box-shadow: 0 0 20px rgba(22, 163, 74, 0.8) !important;
+}
+
