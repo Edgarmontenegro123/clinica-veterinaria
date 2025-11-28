@@ -542,3 +542,34 @@ nav a.active-link {
   }
 }
 
+/* ESTILOS PARA ICONOS DE REDES SOCIALES EN EL FOOTER */
+footer a[aria-label="Facebook"]:hover {
+  transform: translateY(-8px) scale(1.1) !important;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.8) !important;
+}
+
+footer a[aria-label="Instagram"]:hover {
+  transform: translateY(-8px) scale(1.1) !important;
+  box-shadow: 0 0 20px rgba(219, 39, 119, 0.8) !important;
+}
+
+footer a[aria-label="WhatsApp"]:hover {
+  transform: translateY(-8px) scale(1.1) !important;
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.8) !important;
+}
+
+footer a[aria-label="Telegram"]:hover {
+  transform: translateY(-8px) scale(1.1) !important;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.8) !important;
+}
+
+footer a[aria-label="X (Twitter)"]:hover {
+  transform: translateY(-8px) scale(1.1) !important;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6) !important;
+}
+
+footer a[aria-label="YouTube"]:hover {
+  transform: translateY(-8px) scale(1.1) !important;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.8) !important;
+}
+
