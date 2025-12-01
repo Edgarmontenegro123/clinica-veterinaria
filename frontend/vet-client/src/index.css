@@ -83,11 +83,14 @@ nav a {
   text-decoration: none;
   position: relative;
   transition: color 0.3s ease;
+  color: inherit;
 }
 
-/* Eliminar el subrayado por defecto del link activo */
+/* Link activo con color diferente */
 nav a.active-link {
   text-decoration: none;
+  color: blue;
+  font-weight: 600;
 }
 
 /* Estilos responsivos para móviles */

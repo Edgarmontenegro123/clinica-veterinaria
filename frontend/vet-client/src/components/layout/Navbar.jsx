@@ -8,6 +8,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
+  const [underlineOpacity, setUnderlineOpacity] = useState(1);
   const navRef = useRef(null);
 
   const isActive = (path) => {
@@ -20,6 +21,7 @@ const Navbar = () => {
       const activeLink = navRef.current.querySelector('.active-link');
       if (activeLink) {
         updateUnderline(activeLink);
+        setUnderlineOpacity(1);
       }
     }
   }, [location.pathname]);
@@ -36,16 +38,30 @@ const Navbar = () => {
   };
 
   const handleMouseEnter = (e) => {
-    updateUnderline(e.target);
+    // Desvanecer la barra en su posición actual
+    setUnderlineOpacity(0);
+
+    // Después de que se desvanezca, moverla al nuevo link y mostrarla
+    setTimeout(() => {
+      updateUnderline(e.target);
+      setTimeout(() => setUnderlineOpacity(1), 50);
+    }, 300); // Esperar a que termine la transición de opacidad
   };
 
   const handleMouseLeave = () => {
-    if (navRef.current) {
-      const activeLink = navRef.current.querySelector('.active-link');
-      if (activeLink) {
-        updateUnderline(activeLink);
+    // Desvanecer la barra en su posición actual
+    setUnderlineOpacity(0);
+
+    // Después de que se desvanezca, moverla de vuelta al link activo y mostrarla
+    setTimeout(() => {
+      if (navRef.current) {
+        const activeLink = navRef.current.querySelector('.active-link');
+        if (activeLink) {
+          updateUnderline(activeLink);
+          setTimeout(() => setUnderlineOpacity(1), 50);
+        }
       }
-    }
+    }, 300); // Esperar a que termine la transición de opacidad
   };
 
   const handleLoginClick = () => {
@@ -169,7 +185,8 @@ const Navbar = () => {
               width: `${underlineStyle.width}px`,
               height: '4px',
               backgroundColor: 'black',
-              transition: 'left 0.3s ease, width 0.3s ease',
+              opacity: underlineOpacity,
+              transition: 'opacity 0.3s ease',
               pointerEvents: 'none'
             }}
           />

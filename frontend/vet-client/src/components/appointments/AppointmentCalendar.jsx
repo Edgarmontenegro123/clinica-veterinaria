@@ -187,13 +187,17 @@ const AppointmentCalendar = () => {
         }
     };
 
-    const nextMonth = () => {
+    const nextMonth = (e) => {
+        e?.preventDefault();
+        e?.stopPropagation();
         setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
         setSelectedDate(null);
         setSelectedTime(null);
     };
 
-    const prevMonth = () => {
+    const prevMonth = (e) => {
+        e?.preventDefault();
+        e?.stopPropagation();
         setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
         setSelectedDate(null);
         setSelectedTime(null);
@@ -226,6 +230,7 @@ const AppointmentCalendar = () => {
                     <div className="flex items-center justify-between mb-4 gap-2">
                         <button
                             onClick={prevMonth}
+                            onTouchEnd={prevMonth}
                             className="px-2 py-1 md:px-4 md:py-2 text-xs md:text-base bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 hover:scale-105 hover:-translate-y-1 active:scale-95 active:translate-y-0 transition-all duration-300 font-semibold transform hover:ring-2 hover:ring-blue-300 flex-shrink-0 cursor-pointer hover:shadow-[0_0_15px_rgba(59,130,246,0.6)]"
                         >
                             ← Anterior
@@ -235,6 +240,7 @@ const AppointmentCalendar = () => {
                         </h3>
                         <button
                             onClick={nextMonth}
+                            onTouchEnd={nextMonth}
                             className="px-2 py-1 md:px-4 md:py-2 text-xs md:text-base bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 hover:scale-105 hover:-translate-y-1 active:scale-95 active:translate-y-0 transition-all duration-300 font-semibold transform hover:ring-2 hover:ring-blue-300 flex-shrink-0 cursor-pointer hover:shadow-[0_0_15px_rgba(59,130,246,0.6)]"
                         >
                             Siguiente →
