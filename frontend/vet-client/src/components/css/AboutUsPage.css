@@ -1,0 +1,419 @@
+.about-us-page {
+    width: 100%;
+    min-height: 100vh;
+    background: #180909;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2rem;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 0 1rem;
+}
+
+.about-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+    margin: 0 0 0.5rem 0;
+}
+
+.about-subtitle {
+    font-size: 1.2rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    margin: 0;
+    opacity: 0.9;
+}
+
+.cards-container {
+    width: 100%;
+    min-height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    /* add 3d representation to the container div element */
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+    padding: 2rem;
+}
+
+.cards-container .item {
+    width: 10rem;
+    height: 20rem;
+    /* add brightness animation effect */
+    transition: 0.5s;
+    filter: brightness(1);
+    cursor: pointer;
+    perspective: 1000px;
+    position: relative;
+}
+
+.cards-container .item .card-front::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+.cards-container .item:nth-child(1) .card-front::before {
+    background-image: url('/images/1.png');
+}
+
+.cards-container .item:nth-child(2) .card-front::before {
+    background-image: url('/images/2.png');
+}
+
+.cards-container .item:nth-child(3) .card-front::before {
+    background-image: url('/images/3.png');
+}
+
+.cards-container .item:hover .card-front::before {
+    opacity: 0;
+}
+
+/* Cuando la tarjeta está volteada, ocultar el ::before permanentemente */
+.cards-container .item.flipped .card-front::before {
+    opacity: 0;
+}
+
+.cards-container .item .card-front img {
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.cards-container .item:hover .card-front img {
+    opacity: 1;
+}
+
+/* Cuando la tarjeta está volteada, mostrar la imagen real */
+.cards-container .item.flipped .card-front img {
+    opacity: 1;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.item.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    background: linear-gradient(135deg, #000000 0%, #4a4a4a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem;
+}
+
+.card-content {
+    text-align: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    width: 100%;
+}
+
+.profile-image {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 0.5rem auto;
+    border: 3px solid white;
+    flex-shrink: 0;
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.card-content h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+    font-weight: bold;
+    opacity: 0.9;
+}
+
+.card-content p {
+    font-size: 0.85rem;
+    line-height: 1.3;
+}
+
+.cards-container .item:hover {
+    filter: brightness(1);
+    transform: translateZ(200px);
+}
+
+/* add hover animation to the right item */
+.cards-container .item:hover + * {
+    filter: brightness(0.6);
+    transform: translateZ(150px) rotateY(40deg);
+}
+
+.cards-container .item:hover + * + * {
+    filter: brightness(0.4);
+    transform: translateZ(70px) rotateY(20deg);
+}
+
+/* for left of the hover */
+/* +* represent the right element but for left we don't have any thing like this */
+
+.cards-container .item:has(+ *:hover) {
+    filter: brightness(0.6);
+    transform: translateZ(150px) rotateY(-40deg);
+}
+
+.cards-container .item:has(+ * + *:hover) {
+    filter: brightness(0.4);
+    transform: translateZ(70px) rotateY(-20deg);
+}
+
+.item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Clase para revelar imagen en móvil (simula hover) */
+.item.revealed .card-front::before {
+    opacity: 0;
+}
+
+.item.revealed .card-front img {
+    opacity: 1;
+}
+
+/* Responsive para tablets y notebooks */
+@media screen and (min-width: 481px) and (max-width: 1024px) {
+    .about-title {
+        font-size: 2.5rem;
+    }
+
+    /* Desactivar hover para revelar imagen en tablets */
+    .cards-container .item:hover .card-front::before {
+        opacity: 1;
+    }
+
+    .cards-container .item:hover .card-front img {
+        opacity: 0;
+    }
+
+    /* Solo revelar imagen al hacer click (clase revealed) */
+    .cards-container .item.revealed .card-front::before {
+        opacity: 0;
+    }
+
+    .cards-container .item.revealed .card-front img {
+        opacity: 1;
+    }
+
+    .cards-container {
+        gap: 1.5rem;
+    }
+
+    .cards-container .item {
+        width: 8rem;
+        height: 18rem;
+    }
+
+    /* Textos más pequeños en tablets */
+    .profile-image {
+        width: 70px;
+        height: 70px;
+    }
+
+    .card-content h2 {
+        font-size: 1.2rem;
+    }
+
+    .card-content h3 {
+        font-size: 0.95rem;
+    }
+
+    .card-content p {
+        font-size: 0.8rem;
+        line-height: 1.3;
+    }
+}
+
+/* Responsive para pantallas móviles */
+@media screen and (max-width: 480px) {
+    .about-title {
+        font-size: 2rem;
+    }
+
+    /* Imágenes específicas para móvil */
+    .cards-container .item:nth-child(1) .card-front::before {
+        background-image: url('/images/img2.png');
+    }
+
+    .cards-container .item:nth-child(2) .card-front::before {
+        background-image: url('/images/img3.png');
+    }
+
+    .cards-container .item:nth-child(3) .card-front::before {
+        background-image: url('/images/img4.png');
+    }
+
+    .cards-container {
+        flex-direction: column;
+        height: auto;
+        padding: 2rem 1rem;
+        gap: 2rem;
+    }
+
+    .cards-container .item {
+        width: 90%;
+        max-width: 300px;
+        height: 450px;
+    }
+
+    /* En móvil, las tarjetas siempre tienen brightness completo */
+    .cards-container .item {
+        filter: brightness(1);
+    }
+
+    /* Desactivar efectos 3D en móvil */
+    .cards-container .item:hover,
+    .cards-container .item:hover + *,
+    .cards-container .item:hover + * + *,
+    .cards-container .item:has(+ *:hover),
+    .cards-container .item:has(+ * + *:hover) {
+        transform: none;
+        filter: brightness(1);
+    }
+
+    /* Desactivar hover para revelar imagen en móvil */
+    .cards-container .item:hover .card-front::before {
+        opacity: 1;
+    }
+
+    .cards-container .item:hover .card-front img {
+        opacity: 0;
+    }
+
+    /* Hacer el contenedor de perfil un poco más grande en móvil */
+    .profile-image {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 1rem;
+    }
+
+    .card-content h2 {
+        font-size: 1.6rem;
+        margin-top: 0.5rem;
+    }
+
+    .card-content h3 {
+        font-size: 1rem;
+    }
+
+    .card-content p {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+}
+
+/* Responsive para celulares en orientación horizontal */
+@media screen and (max-width: 915px) and (orientation: landscape) {
+    .about-title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .cards-container {
+        flex-direction: row;
+        height: 100vh;
+        padding: 1rem;
+        gap: 1rem;
+        overflow-x: auto;
+        align-items: center;
+    }
+
+    .cards-container .item {
+        width: 30%;
+        min-width: 200px;
+        max-width: 250px;
+        height: 85vh;
+    }
+
+    .card-back {
+        padding: 1rem 0.5rem !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+    }
+
+    .card-content {
+        text-align: center;
+        width: 100%;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    /* Textos más pequeños en horizontal */
+    .profile-image {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 0.5rem auto !important;
+    }
+
+    .card-content h2 {
+        font-size: 1rem;
+        margin-bottom: 0.2rem;
+        margin-top: 0 !important;
+    }
+
+    .card-content h3 {
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+        margin-top: 0 !important;
+    }
+
+    .card-content p {
+        font-size: 0.75rem;
+        line-height: 1.2;
+        margin-top: 0 !important;
+    }
+}
