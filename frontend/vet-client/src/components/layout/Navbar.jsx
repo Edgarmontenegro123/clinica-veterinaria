@@ -118,12 +118,13 @@ const Navbar = () => {
 
           <li>
             <a
-              href=""
+              href="/about"
+              className={isActive("/about")}
               onClick={handleLinkClick}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              ¿Quienes Somos?
+              ¿Quiénes Somos?
             </a>
           </li>
 

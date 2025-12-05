@@ -13,6 +13,7 @@ import AppointmentsPage from "./pages/AppointmentsPage.jsx";
 import AdminPetManagement from "./pages/AdminPetManagement.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
 import EmailConfirmedPage from "./pages/EmailConfirmedPage.jsx";
+import AboutUsPage from "./pages/AboutUsPage.jsx";
 import { useAuthStore } from "./store/authStore.js";
 
 export default function App() {
@@ -50,6 +51,7 @@ export default function App() {
           <Route path="/admin/adoption/:id/edit" element={<AdoptionPetFormPage />} />
           <Route path="/turnos" element={<AppointmentsPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/about" element={<AboutUsPage />} />
           <Route path="/admin/pets/:id" element={<AdminPetManagement />} />
           <Route path="/auth/confirm" element={<EmailConfirmedPage />} />
           <Route
