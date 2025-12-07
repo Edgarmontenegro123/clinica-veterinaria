@@ -6,6 +6,10 @@ export default function OspanPage() {
       color: "bg-sky-400",
       borderColor: "border-sky-400",
       textColor: "text-white",
+      petExample: {
+        name: "Luna",
+        image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200&h=200&fit=crop"
+      },
       services: {
         "Atención clínica (horario diurno)": [
           { name: "Consultas y controles clínica general", coverage: "50%" },
@@ -68,6 +72,10 @@ export default function OspanPage() {
       color: "bg-blue-900",
       borderColor: "border-blue-900",
       textColor: "text-white",
+      petExample: {
+        name: "Max",
+        image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=200&h=200&fit=crop"
+      },
       services: {
         "Atención clínica (horario diurno)": [
           { name: "Consultas y controles clínica general", coverage: "100%" },
@@ -130,6 +138,10 @@ export default function OspanPage() {
       color: "bg-amber-700",
       borderColor: "border-amber-700",
       textColor: "text-white",
+      petExample: {
+        name: "Coco",
+        image: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=200&h=200&fit=crop"
+      },
       services: {
         "Atención clínica (horario diurno)": [
           { name: "Consultas y controles clínica general", coverage: "100%" },
@@ -192,6 +204,10 @@ export default function OspanPage() {
       color: "bg-gray-900",
       borderColor: "border-gray-900",
       textColor: "text-white",
+      petExample: {
+        name: "Rocky",
+        image: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=200&h=200&fit=crop"
+      },
       services: {
         "Atención clínica (horario diurno)": [
           { name: "Consultas y controles clínica general", coverage: "100%" },
@@ -264,12 +280,45 @@ export default function OspanPage() {
         </div>
 
         {/* Plans Grid - All cards visible */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        {/* Grid modificado */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-32 lg:gap-y-4 mb-8 mt-32 overflow-visible">
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className={`rounded-lg shadow-xl overflow-hidden border-4 ${plan.borderColor}`}
+              className={`rounded-lg shadow-xl border-4 ${plan.borderColor} relative overflow-visible`}
             >
+              {/* Pet Card - OSPAN Carnet */}
+              <div className={`absolute -top-27 left-20 right-0 translate-x-4 shadow-xxl ${plan.color} rounded-xl shadow-2xl p-3 z-10 border-2 ${plan.borderColor}`}>
+                <div className="flex gap-3">
+                  {/* Left side - OSPAN Info */}
+                  <div className="flex-1 flex flex-col justify-between">
+                    <div>
+                      <h3 className={`text-xs font-bold ${plan.textColor} mb-0.5`}>OSPAN</h3>
+                      <p className={`text-[9px] ${plan.textColor} opacity-90 leading-tight`}>Obra Social para Animales</p>
+                      <p className={`text-sm font-bold ${plan.textColor} mt-1`}>{plan.petExample.name}</p>
+                    </div>
+                    <div className={`text-[8px] ${plan.textColor} opacity-80 leading-tight`}>
+                      <p>Av. Veterinaria 1234</p>
+                      <p>Tel: 0800-OSPAN</p>
+                    </div>
+                  </div>
+
+                  {/* Right side - Pet Photo with Plan Badge */}
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="text-[8px] font-bold bg-white text-gray-900 px-2 py-0.5 rounded mb-1">
+                      {plan.name}
+                    </div>
+                    <div className={`w-16 h-16 rounded-full overflow-hidden border-2 border-white`}>
+                      <img
+                        src={plan.petExample.image}
+                        alt={plan.petExample.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Plan Header */}
               <div className={`${plan.color} ${plan.textColor} p-4 border-b-2 border-white/20`}>
                 <h2 className="text-2xl font-bold text-center">{plan.name}</h2>

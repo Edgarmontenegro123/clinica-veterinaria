@@ -1,7 +1,7 @@
 .about-us-page {
     width: 100%;
     min-height: 100vh;
-    background: #180909;
+    background: linear-gradient(to bottom right, #4a4a4a, #1a1a1a);
     display: flex;
     flex-direction: column;
     align-items: center;
