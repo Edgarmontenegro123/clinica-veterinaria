@@ -118,13 +118,13 @@ const Navbar = () => {
 
           <li>
             <a
-              href="/about"
-              className={isActive("/about")}
+              href="/mypets"
+              className={isActive("/mypets")}
               onClick={handleLinkClick}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              ¿Quiénes Somos?
+              Mis Mascotas
             </a>
           </li>
 
@@ -142,18 +142,6 @@ const Navbar = () => {
 
           <li>
             <a
-              href="/contact"
-              className={isActive("/contact")}
-              onClick={handleLinkClick}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              Consultas
-            </a>
-          </li>
-
-          <li>
-            <a
               href="/turnos"
               className={isActive("/turnos")}
               onClick={handleLinkClick}
@@ -166,13 +154,37 @@ const Navbar = () => {
 
           <li>
             <a
-              href="/mypets"
-              className={isActive("/mypets")}
+              href="/contact"
+              className={isActive("/contact")}
               onClick={handleLinkClick}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              Mis Mascotas
+              Consultas
+            </a>
+          </li>
+
+          <li>
+            <a
+              href="/ospan"
+              className={isActive("/ospan")}
+              onClick={handleLinkClick}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              OSPAN
+            </a>
+          </li>
+
+          <li>
+            <a
+              href="/about"
+              className={isActive("/about")}
+              onClick={handleLinkClick}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              ¿Quiénes Somos?
             </a>
           </li>
 
