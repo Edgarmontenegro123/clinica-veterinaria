@@ -26,6 +26,23 @@ const Navbar = () => {
     }
   }, [location.pathname]);
 
+  // Cerrar sesión cuando el usuario abandona la página
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (user) {
+        logout();
+      }
+    };
+
+    // Agregar listener para cuando se cierra la pestaña/ventana o se navega fuera
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [user, logout]);
+
   const updateUnderline = (element) => {
     if (element && navRef.current) {
       const navRect = navRef.current.getBoundingClientRect();
@@ -116,15 +133,27 @@ const Navbar = () => {
             </a>
           </li>
 
-          <li>
+             <li>
             <a
-              href="/about"
-              className={isActive("/about")}
+              href="/turnos"
+              className={isActive("/turnos")}
               onClick={handleLinkClick}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              ¿Quiénes Somos?
+              Turnos
+            </a>
+          </li>
+
+          <li>
+            <a
+              href="/mypets"
+              className={isActive("/mypets")}
+              onClick={handleLinkClick}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              Mis Mascotas
             </a>
           </li>
 
@@ -152,27 +181,15 @@ const Navbar = () => {
             </a>
           </li>
 
-          <li>
+             <li>
             <a
-              href="/turnos"
-              className={isActive("/turnos")}
+              href="/about"
+              className={isActive("/about")}
               onClick={handleLinkClick}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              Turnos
-            </a>
-          </li>
-
-          <li>
-            <a
-              href="/mypets"
-              className={isActive("/mypets")}
-              onClick={handleLinkClick}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              Mis Mascotas
+              ¿Quiénes Somos?
             </a>
           </li>
 
