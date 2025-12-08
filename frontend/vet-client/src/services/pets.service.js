@@ -137,12 +137,19 @@ export const updatePet = async (id, petData) => {
     }
 };
 
-// Marcar mascota como fallecida (is_active = false)
-export const deletePet = async (id) => {
+// Marcar mascota como inactiva (is_active = false) con motivo
+export const deletePet = async (id, reason = null) => {
     try {
+        const updateData = { is_active: false };
+
+        // Si se proporciona un motivo, agregarlo
+        if (reason) {
+            updateData.deactivation_reason = reason;
+        }
+
         const { data, error } = await supabase
             .from('pet')
-            .update({ is_active: false })
+            .update(updateData)
             .eq('id', id)
             .select();
 
@@ -153,17 +160,54 @@ export const deletePet = async (id) => {
     }
 };
 
-// Eliminar mascota permanentemente de la base de datos
+// Eliminar mascota permanentemente de la base de datos (solo admins)
 export const deletePetPermanently = async (id) => {
     try {
+        // Verificar que el usuario esté autenticado
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            throw new Error('Usuario no autenticado');
+        }
+
+        // Verificar que el usuario sea admin
+        const { data: userData, error: userError } = await supabase
+            .from('users')
+            .select('role')
+            .eq('auth_id', user.id)
+            .single();
+
+        if (userError) throw userError;
+
+        if (userData?.role !== 'admin') {
+            throw new Error('Solo los administradores pueden eliminar mascotas permanentemente');
+        }
+
+        // Primero, eliminar todas las citas (appointments) relacionadas
+        const { error: appointmentsError } = await supabase
+            .from('appoinment')
+            .delete()
+            .eq('pet_id', id);
+
+        if (appointmentsError) {
+            console.error('Error al eliminar citas relacionadas:', appointmentsError);
+            throw new Error('No se pudieron eliminar las citas relacionadas con la mascota');
+        }
+
+        // Luego, eliminar la mascota
         const { data, error } = await supabase
             .from('pet')
             .delete()
             .eq('id', id);
 
-        if (error) throw error;
+        if (error) {
+            console.error('Error al eliminar mascota:', error);
+            throw error;
+        }
+
         return data;
     } catch (error) {
+        console.error('Error en deletePetPermanently:', error);
         throw error;
     }
 };

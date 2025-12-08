@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { deletePetPermanently } from "../services/pets.service";
+import { deletePetPermanently, deletePet } from "../services/pets.service";
 import { useAuthStore } from "../store/authStore";
 import Swal from "sweetalert2";
 
@@ -15,7 +15,7 @@ const PetsContainer = ({ pets, setPets }) => {
     try {
       const result = await Swal.fire({
         title: "¿Eliminar permanentemente esta mascota?",
-        html: "<strong>¡ADVERTENCIA!</strong><br/>Esta acción eliminará la mascota definitivamente de la base de datos.<br/><br/>Si solo deseas marcarla como fallecida, usa el botón 'Gestionar' → 'Marcar como Fallecida'.",
+        html: "<strong>¡ADVERTENCIA!</strong><br/>Esta acción eliminará:<br/><ul style='text-align: left; margin: 10px 0;'><li>La mascota de la base de datos</li><li>Todas las citas relacionadas</li></ul><br/>Si solo deseas marcarla como fallecida, usa el botón 'Gestionar' → 'Marcar como Fallecida'.",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#dc2626",
@@ -37,10 +37,78 @@ const PetsContainer = ({ pets, setPets }) => {
         setPets(prev => prev.filter(pet => pet.id !== petId));
       }
     } catch (error) {
+      console.error("Error al eliminar mascota:", error);
+      await Swal.fire({
+        icon: "error",
+        title: "Error al eliminar",
+        html: `No se pudo eliminar la mascota.<br/><br/><small>${error.message || "Error desconocido"}</small>`,
+        confirmButtonColor: "#d33",
+      });
+    }
+  };
+
+  const handleDeactivatePet = async (petId) => {
+    try {
+      // Primero, preguntar el motivo
+      const { value: reason } = await Swal.fire({
+        title: "¿Por qué deseas desactivar esta mascota?",
+        input: "select",
+        inputOptions: {
+          "fallecimiento": "💔 Fallecimiento",
+          "extravio": "🔍 Extravío",
+          "adopcion": "🏡 Fue adoptada por otra persona",
+          "otro": "📝 Otro motivo"
+        },
+        inputPlaceholder: "Selecciona un motivo",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Continuar",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#6b7280",
+        inputValidator: (value) => {
+          if (!value) {
+            return "Debes seleccionar un motivo";
+          }
+        }
+      });
+
+      if (!reason) {
+        return; // Usuario canceló
+      }
+
+      // Confirmar la desactivación
+      const result = await Swal.fire({
+        title: reason === "fallecimiento" ? "Lamentamos tu pérdida" : "¿Confirmar desactivación?",
+        html: reason === "fallecimiento"
+          ? "Sentimos mucho la pérdida de tu mascota. 💔<br/><br/>Esta acción ocultará la mascota de tu lista.<br/>Los administradores aún podrán verla marcada como fallecida."
+          : `Esta acción ocultará la mascota de tu lista.<br/>Motivo: <strong>${reason === "extravio" ? "Extravío" : reason === "adopcion" ? "Adopción" : "Otro"}</strong>`,
+        icon: reason === "fallecimiento" ? "info" : "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#dc2626",
+        cancelButtonColor: "#6b7280",
+        confirmButtonText: "Sí, desactivar",
+        cancelButtonText: "Cancelar",
+        focusCancel: true,
+      });
+
+      if (result.isConfirmed) {
+        await deletePet(petId, reason);
+        await Swal.fire({
+          icon: "success",
+          title: "¡Mascota desactivada!",
+          text: reason === "fallecimiento"
+            ? "Lamentamos tu pérdida. La mascota ha sido marcada apropiadamente."
+            : "La mascota ha sido ocultada de tu lista.",
+          confirmButtonColor: "#3085d6",
+        });
+
+        setPets(prev => prev.filter(pet => pet.id !== petId));
+      }
+    } catch (error) {
       await Swal.fire({
         icon: "error",
         title: "Error",
-        text: "No se pudo eliminar la mascota. Intente nuevamente.",
+        text: "No se pudo desactivar la mascota. Intente nuevamente.",
         confirmButtonColor: "#d33",
       });
     }
@@ -73,21 +141,32 @@ const PetsContainer = ({ pets, setPets }) => {
                 onClick={() => handleImageClick(pet)}
               />
 
-              {/* Indicador de mascota fallecida */}
+              {/* Indicador de mascota inactiva */}
               {!pet.is_active && (
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/70 px-6 py-3 rounded-lg border-2 border-red-600 pointer-events-none">
-                  <p className="text-red-500 font-bold text-lg text-center whitespace-nowrap">
-                    FALLECIDA
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/70 px-4 py-2 rounded-lg border-2 border-red-600 pointer-events-none">
+                  <p className="text-red-500 font-bold text-base text-center">
+                    {pet.deactivation_reason === "fallecimiento" && "💔 FALLECIDA"}
+                    {pet.deactivation_reason === "extravio" && "🔍 EXTRAVIADA"}
+                    {pet.deactivation_reason === "adopcion" && "🏡 ADOPTADA"}
+                    {(!pet.deactivation_reason || pet.deactivation_reason === "otro") && "⚠️ INACTIVA"}
                   </p>
                 </div>
               )}
 
-              {/* Botón de eliminar - Solo para admin */}
-              {isAdmin && (
+              {/* Botón de eliminar/desactivar */}
+              {isAdmin ? (
                 <button
                   className="absolute bottom-2 right-2 text-red-700 bg-white/90 rounded-full p-2 hover:bg-white transition-all hover:scale-110 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(220,38,38,0.8)] shadow-lg cursor-pointer"
                   onClick={() => handleDeletePet(pet.id)}
-                  title="Eliminar"
+                  title="Eliminar permanentemente"
+                >
+                  <FaRegTrashAlt size={18} />
+                </button>
+              ) : (
+                <button
+                  className="absolute bottom-2 right-2 text-red-700 bg-white/90 rounded-full p-2 hover:bg-white transition-all hover:scale-110 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(220,38,38,0.8)] shadow-lg cursor-pointer"
+                  onClick={() => handleDeactivatePet(pet.id)}
+                  title="Desactivar mascota"
                 >
                   <FaRegTrashAlt size={18} />
                 </button>
@@ -224,12 +303,23 @@ const PetsContainer = ({ pets, setPets }) => {
                   </div>
                 )}
 
-                {/* Indicador si está fallecida */}
+                {/* Indicador si está inactiva con motivo */}
                 {!selectedPet.is_active && (
                   <div className="bg-red-100 border-2 border-red-600 p-3 rounded-lg shadow-sm">
-                    <p className="text-red-600 font-bold text-center text-lg">
-                      ⚰️ FALLECIDA
+                    <p className="text-red-600 font-bold text-center text-base mb-1">
+                      {selectedPet.deactivation_reason === "fallecimiento" && "💔 FALLECIDA"}
+                      {selectedPet.deactivation_reason === "extravio" && "🔍 EXTRAVIADA"}
+                      {selectedPet.deactivation_reason === "adopcion" && "🏡 ADOPTADA"}
+                      {(!selectedPet.deactivation_reason || selectedPet.deactivation_reason === "otro") && "⚠️ INACTIVA"}
                     </p>
+                    {selectedPet.deactivation_reason && (
+                      <p className="text-gray-600 text-xs text-center">
+                        Motivo: {selectedPet.deactivation_reason === "fallecimiento" ? "Fallecimiento" :
+                                 selectedPet.deactivation_reason === "extravio" ? "Extravío" :
+                                 selectedPet.deactivation_reason === "adopcion" ? "Adopción" :
+                                 "Otro"}
+                      </p>
+                    )}
                   </div>
                 )}
 
