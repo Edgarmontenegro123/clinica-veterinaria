@@ -50,7 +50,7 @@ const HomePage = () => {
   return (
     <div className="w-full min-h-screen flex flex-col">
       {/* Sección Hero con Fondo - FULLWIDTH */}
-      <div className="imageBackground relative w-full h-screen max-h-screen overflow-hidden flex items-end">
+      <div className="imageBackground relative w-full h-[calc(100vh-6rem)] max-h-[calc(100vh-6rem)] landscape:h-screen landscape:max-h-screen overflow-hidden flex items-end">
         <img
           src="/fondo.jpg"
           alt="Fondo"
@@ -59,17 +59,17 @@ const HomePage = () => {
         <div className="absolute inset-0 bg-black/30"></div>
 
         {/* Contenido Hero */}
-        <div className="content relative w-full md:w-1/3 gap-4 flex flex-col items-start p-8 mb-16 md:mb-24 lg:mb-32">
-          <h2 className="leading-tight text-white text-4xl font-bold">
+        <div className="content relative w-full md:w-1/3 gap-4 flex flex-col items-start p-8 mb-8 md:mb-16 lg:mb-24 xl:mb-32">
+          <h2 className="leading-tight text-white text-4xl md:text-5xl lg:text-6xl font-bold">
             Cuidamos a tus Mascotas
           </h2>
-          <h3 className="text-white text-lg leading-relaxed">
+          <h3 className="text-white text-lg md:text-xl lg:text-2xl leading-relaxed">
             Somos una clínica veterinaria integral, pioneros en la atención
             especializada para tus mascotas. Agendá ahora tu consulta
           </h3>
           <button
             onClick={handleAgendarTurno}
-            className="rounded-4xl px-6 py-3 border-2 border-white cursor-pointer bg-transparent text-white font-semibold hover:bg-white hover:text-black hover:scale-105 active:opacity-70 transition-all duration-300"
+            className="rounded-4xl px-6 py-3 border-2 border-white cursor-pointer bg-transparent text-white font-semibold hover:bg-white hover:text-black hover:scale-105 active:opacity-70 transition-all duration-300 text-base md:text-lg"
           >
             Agendar turno
           </button>

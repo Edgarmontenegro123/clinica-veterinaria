@@ -19,6 +19,14 @@ header {
   width: 100%;
 }
 
+/* Ocultar navbar en orientación horizontal en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+  header {
+    position: absolute;
+    transform: translateY(-100%);
+  }
+}
+
 h1 {
   text-decoration: none;
 }
@@ -93,8 +101,8 @@ nav a.active-link {
   font-weight: 600;
 }
 
-/* Estilos responsivos para móviles */
-@media (max-width: 768px) {
+/* Estilos responsivos para móviles (incluye orientación horizontal) */
+@media (max-width: 768px), (max-height: 500px) and (orientation: landscape) {
   header {
     justify-content: space-between;
     padding: 8px 15px;
