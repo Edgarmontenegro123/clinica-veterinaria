@@ -79,11 +79,18 @@ const HomePage = () => {
 
       {/* HERO SECTION */}
       <div className="hero-section relative w-full h-screen overflow-hidden flex items-center">
-        {/* Imagen de fondo */}
+        {/* Imagen de fondo - Desktop */}
         <img
           src="/fondo.jpg"
           alt="Fondo"
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 w-full h-full object-cover object-center hidden min-[769px]:block"
+        />
+
+        {/* Imagen de fondo - Mobile */}
+        <img
+          src="/homeCelu.png"
+          alt="Fondo móvil"
+          className="absolute inset-0 w-full h-full object-cover object-top block min-[769px]:hidden"
         />
 
         {/* Overlay oscuro */}
@@ -91,7 +98,9 @@ const HomePage = () => {
 
         {/* Contenido del Hero */}
         <div className="relative z-10 w-full px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20 landscape:px-8 landscape:pt-20">
-          <div className="max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-5xl landscape:max-w-sm">
+          {/* Contenedor con blur solo en móviles */}
+          <div className="max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-5xl landscape:max-w-sm
+            max-[768px]:bg-black/30 max-[768px]:backdrop-blur-md max-[768px]:p-6 max-[768px]:rounded-2xl max-[768px]:border max-[768px]:border-white/20">
 
             <h1 className="text-white font-bold leading-tight mb-6
               text-4xl sm:text-5xl md:text-6xl lg:text-[5rem] xl:text-[7rem] 2xl:text-[9rem]
