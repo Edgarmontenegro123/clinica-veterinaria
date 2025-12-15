@@ -131,7 +131,7 @@ const PetsPage = () => {
               </div>
             </div>
         ) : (
-          <div className="w-full max-w-7xl">
+          <div className="w-full max-w-7xl pets-content-container">
             {/* Barra de búsqueda - Solo para admin */}
             {isAdmin && (
               <div className="px-4 mb-6">

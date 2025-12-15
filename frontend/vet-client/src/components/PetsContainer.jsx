@@ -143,13 +143,19 @@ const PetsContainer = ({ pets, setPets }) => {
 
               {/* Indicador de mascota inactiva */}
               {!pet.is_active && (
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/70 px-4 py-2 rounded-lg border-2 border-red-600 pointer-events-none">
-                  <p className="text-red-500 font-bold text-base text-center">
-                    {pet.deactivation_reason === "fallecimiento" && "💔 FALLECIDA"}
-                    {pet.deactivation_reason === "extravio" && "🔍 EXTRAVIADA"}
-                    {pet.deactivation_reason === "adopcion" && "🏡 ADOPTADA"}
-                    {(!pet.deactivation_reason || pet.deactivation_reason === "otro") && "⚠️ INACTIVA"}
-                  </p>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/70 px-4 py-3 rounded-lg border-2 border-red-600 pointer-events-none">
+                  {pet.deactivation_reason === "fallecimiento" ? (
+                    <div className="flex flex-col items-center gap-1">
+                      <p className="text-red-500 font-bold text-base text-center">FALLECIDA</p>
+                      <p className="text-lg">💔</p>
+                    </div>
+                  ) : (
+                    <p className="text-red-500 font-bold text-base text-center">
+                      {pet.deactivation_reason === "extravio" && "🔍 EXTRAVIADA"}
+                      {pet.deactivation_reason === "adopcion" && "🏡 ADOPTADA"}
+                      {(!pet.deactivation_reason || pet.deactivation_reason === "otro") && "⚠️ INACTIVA"}
+                    </p>
+                  )}
                 </div>
               )}
 
@@ -306,19 +312,26 @@ const PetsContainer = ({ pets, setPets }) => {
                 {/* Indicador si está inactiva con motivo */}
                 {!selectedPet.is_active && (
                   <div className="bg-red-100 border-2 border-red-600 p-3 rounded-lg shadow-sm">
-                    <p className="text-red-600 font-bold text-center text-base mb-1">
-                      {selectedPet.deactivation_reason === "fallecimiento" && "💔 FALLECIDA"}
-                      {selectedPet.deactivation_reason === "extravio" && "🔍 EXTRAVIADA"}
-                      {selectedPet.deactivation_reason === "adopcion" && "🏡 ADOPTADA"}
-                      {(!selectedPet.deactivation_reason || selectedPet.deactivation_reason === "otro") && "⚠️ INACTIVA"}
-                    </p>
-                    {selectedPet.deactivation_reason && (
-                      <p className="text-gray-600 text-xs text-center">
-                        Motivo: {selectedPet.deactivation_reason === "fallecimiento" ? "Fallecimiento" :
-                                 selectedPet.deactivation_reason === "extravio" ? "Extravío" :
-                                 selectedPet.deactivation_reason === "adopcion" ? "Adopción" :
-                                 "Otro"}
-                      </p>
+                    {selectedPet.deactivation_reason === "fallecimiento" ? (
+                      <div className="flex flex-col items-center gap-2">
+                        <p className="text-red-600 font-bold text-center text-base">FALLECIDA</p>
+                        <p className="text-xl">💔</p>
+                      </div>
+                    ) : (
+                      <>
+                        <p className="text-red-600 font-bold text-center text-base mb-1">
+                          {selectedPet.deactivation_reason === "extravio" && "🔍 EXTRAVIADA"}
+                          {selectedPet.deactivation_reason === "adopcion" && "🏡 ADOPTADA"}
+                          {(!selectedPet.deactivation_reason || selectedPet.deactivation_reason === "otro") && "⚠️ INACTIVA"}
+                        </p>
+                        {selectedPet.deactivation_reason && (
+                          <p className="text-gray-600 text-xs text-center">
+                            Motivo: {selectedPet.deactivation_reason === "extravio" ? "Extravío" :
+                                     selectedPet.deactivation_reason === "adopcion" ? "Adopción" :
+                                     "Otro"}
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
                 )}

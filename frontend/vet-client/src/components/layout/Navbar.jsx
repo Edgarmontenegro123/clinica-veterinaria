@@ -26,6 +26,27 @@ const Navbar = () => {
     }
   }, [location.pathname]);
 
+  // Forzar cierre del menú en orientación horizontal
+  useEffect(() => {
+    const handleOrientationChange = () => {
+      if (window.innerHeight < 500 && window.matchMedia("(orientation: landscape)").matches) {
+        setIsOpen(false);
+      }
+    };
+
+    // Verificar al montar el componente
+    handleOrientationChange();
+
+    // Escuchar cambios de orientación y tamaño
+    window.addEventListener('resize', handleOrientationChange);
+    window.addEventListener('orientationchange', handleOrientationChange);
+
+    return () => {
+      window.removeEventListener('resize', handleOrientationChange);
+      window.removeEventListener('orientationchange', handleOrientationChange);
+    };
+  }, []);
+
   const updateUnderline = (element) => {
     if (element && navRef.current) {
       const navRect = navRef.current.getBoundingClientRect();

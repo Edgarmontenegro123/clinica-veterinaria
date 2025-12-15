@@ -186,7 +186,7 @@ export default function AboutUsPage() {
   ];
 
   return (
-    <div className="about-us-page">
+    <div className="about-us-page about-page-container">
       <div className="about-header">
         <h1 className="about-title">Acerca de Nosotros</h1>
         <p className="about-subtitle">Conoce más acerca de los creadores de esta página</p>

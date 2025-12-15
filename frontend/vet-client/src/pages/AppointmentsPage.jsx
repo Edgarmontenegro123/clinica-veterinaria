@@ -37,7 +37,7 @@ const AppointmentsPage = () => {
     }
 
     return (
-        <div className="w-full max-w-7xl mx-auto px-4 py-8">
+        <div className="turnos-page-container w-full max-w-7xl mx-auto px-4 py-8">
             <div className="mb-8">
                 <h1 className="text-4xl font-bold text-gray-800 mb-2">Sistema de Turnos</h1>
                 <p className="text-gray-600">Gestiona tus turnos veterinarios de manera fácil y rápida</p>

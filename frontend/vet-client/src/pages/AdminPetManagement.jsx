@@ -155,31 +155,31 @@ const AdminPetManagement = () => {
     const handleDelete = async () => {
         const result = await Swal.fire({
             title: '¿Marcar mascota como fallecida?',
-            text: 'Esta acción desactivará la mascota (is_active = false)',
+            html: 'Esta acción desactivará la mascota y la marcará como fallecida 💔',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#EF4444',
             cancelButtonColor: '#6B7280',
-            confirmButtonText: 'Sí, desactivar',
+            confirmButtonText: 'Sí, marcar como fallecida',
             cancelButtonText: 'Cancelar',
         });
 
         if (result.isConfirmed) {
             try {
                 Swal.fire({
-                    title: 'Desactivando mascota...',
+                    title: 'Marcando mascota como fallecida...',
                     allowOutsideClick: false,
                     didOpen: () => {
                         Swal.showLoading();
                     }
                 });
 
-                await deletePet(id);
+                await deletePet(id, 'fallecimiento');
 
                 await Swal.fire({
                     icon: 'success',
-                    title: 'Mascota desactivada',
-                    text: 'La mascota ha sido marcada como inactiva',
+                    title: 'Mascota marcada como fallecida',
+                    text: 'La mascota ha sido marcada como fallecida 💔',
                     timer: 2000,
                 });
 
@@ -188,7 +188,7 @@ const AdminPetManagement = () => {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'No se pudo desactivar la mascota',
+                    text: 'No se pudo marcar la mascota como fallecida',
                 });
             }
         }
