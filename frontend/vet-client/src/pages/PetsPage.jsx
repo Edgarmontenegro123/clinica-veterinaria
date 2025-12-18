@@ -34,6 +34,8 @@ const PetsPage = () => {
         const petsDB = await getPets();
         setPets(petsDB || []);
       } catch (error) {
+        console.error('Error al cargar mascotas:', error);
+        console.error('Detalles del error:', error.message, error.details, error.hint);
         setPets([]);
       } finally {
         setLoading(false);

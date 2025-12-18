@@ -46,13 +46,18 @@ export const getPets = async () => {
         const { data, error } = await query;
 
         if (error) {
+            console.error('Error en query de getPets:', error);
+            console.error('Detalles:', { message: error.message, details: error.details, hint: error.hint, code: error.code });
             throw error;
         }
+
+        console.log(`Mascotas obtenidas (${isAdmin ? 'ADMIN' : 'USUARIO'}):`, data?.length || 0);
 
         // Calcular edades automáticamente
         const petsWithCalculatedAge = calculateAgesForPets(data || []);
         return petsWithCalculatedAge;
     } catch (error) {
+        console.error('Error en getPets:', error);
         throw error;
     }
 }
