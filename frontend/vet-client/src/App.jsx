@@ -35,11 +35,17 @@ export default function App() {
                      location.pathname.toLowerCase().startsWith('/admin/pets/') ||
                      location.pathname.toLowerCase().startsWith('/admin/adoption/');
 
+  // Remover padding-top en páginas de registro de mascotas, mis mascotas y adopciones
+  const removePadding = location.pathname.toLowerCase() === '/petregister' ||
+                        location.pathname.toLowerCase() === '/mypets' ||
+                        location.pathname.toLowerCase() === '/adoptions' ||
+                        location.pathname.toLowerCase().startsWith('/admin/adoption/');
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* NAVBAR */}
       <Navbar />
-      <main className="flex flex-col flex-1 px-2 pt-[6rem]">
+      <main className={`flex flex-col flex-1 px-2 ${removePadding ? '' : 'pt-[6rem]'}`}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           {/* <Route path="/profile" element={<HomePage />} /> */}

@@ -36,12 +36,27 @@ const AdoptionPage = () => {
   }, []);
 
   return (
-    <div className="flex-1 petsBackgroundImage overflow-y-auto">
-      <img
-        src={isMobile ? "/fondo1celu.png" : "/fondo1.jpg"}
-        alt="Fondo imagen"
-        className="petBackground"
-      />
+    <div className="flex-1" style={{
+      position: 'relative',
+      width: '100%',
+      minHeight: '100vh',
+      backgroundImage: `url(${isMobile ? "/fondo1celu.png" : "/fondo1.jpg"})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center top',
+      backgroundAttachment: 'scroll',
+      overflow: 'auto',
+      paddingTop: '72px'
+    }}>
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        zIndex: 1,
+        pointerEvents: 'none'
+      }}></div>
       <div className={`relative z-10 w-full py-6 flex justify-center ${pets.length === 0 || loading ? 'min-h-full items-center' : 'items-start'}`}>
         {loading ? (
           <CatSpinner />
@@ -87,7 +102,7 @@ const AdoptionPage = () => {
             {/* Título de la página */}
             <div className="adoption-title-container px-4 mb-6">
               <h1 className="text-4xl font-bold text-center text-yellow-100 mb-2">
-                🐾 Adopciones
+                Adopciones
               </h1>
               <p className="text-center text-yellow-50 text-lg">
                 {isAdmin

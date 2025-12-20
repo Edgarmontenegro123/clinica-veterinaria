@@ -262,7 +262,7 @@ export default function AdoptionPetForm({ petData = null, mode = "create" }) {
   return (
     <div className="max-w-2xl mx-auto p-8 bg-black/50 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20">
       <h2 className="text-3xl font-bold text-white mb-6 text-center">
-        {mode === "create" ? "Registrar Nueva Mascota en Adopción" : "Editar Mascota en Adopción"}
+        {mode === "create" ? "Registrar Nueva Mascota Para Adopción" : "Editar Mascota en Adopción"}
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -395,7 +395,7 @@ export default function AdoptionPetForm({ petData = null, mode = "create" }) {
               type="number"
               step="0.1"
               {...register("age", { required: "La edad es obligatoria", min: 0 })}
-              className={`flex-1 px-4 py-2 bg-gray-800/30 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:bg-gray-800/50 backdrop-blur-sm ${ageInconsistency ? 'border-2 border-red-400' : 'border border-gray-600/50'}`}
+              className={`w-24 sm:flex-1 px-3 sm:px-4 py-2 bg-gray-800/30 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:bg-gray-800/50 backdrop-blur-sm ${ageInconsistency ? 'border-2 border-red-400' : 'border border-gray-600/50'}`}
               onChange={(e) => {
                 setCurrentAge(e.target.value);
                 register("age").onChange(e);

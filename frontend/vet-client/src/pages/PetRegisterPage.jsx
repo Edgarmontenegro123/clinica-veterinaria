@@ -14,14 +14,29 @@ const PetRegisterPage = () => {
   }, [user, navigate]);
 
   return (
-    <div className="flex-1 flex petsBackgroundImage overflow-y-auto">
-      <img
-        src="/mascotasjpg.webp"
-        alt="Fondo imagen"
-        className="petBackground"
-      />
-      <div className="absolute z-10 w-full min-h-full flex items-start md:items-center justify-center px-4 pb-8 pt-4 md:py-8">
-        <div className="w-full max-w-[850px] mx-auto my-4">
+    <div className="flex-1" style={{
+      position: 'relative',
+      width: '100%',
+      minHeight: '100vh',
+      backgroundImage: 'url(/mascotasjpg.webp)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center top',
+      backgroundAttachment: 'scroll',
+      overflow: 'auto',
+      paddingTop: '72px'
+    }}>
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        zIndex: 1,
+        pointerEvents: 'none'
+      }}></div>
+      <div className="relative z-10 w-full px-4 pb-20" style={{ paddingTop: '1rem' }}>
+        <div className="w-full max-w-[850px] mx-auto">
           <PetRegisterForm />
         </div>
       </div>

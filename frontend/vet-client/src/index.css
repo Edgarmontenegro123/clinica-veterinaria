@@ -354,7 +354,7 @@ nav a.active-link {
 
 /* ESTILOS TÍTULO PÁGINA ADOPCIONES */
 .adoption-title-container {
-  margin-top: 0 !important;
+  margin-top: 30px !important;
 }
 
 /* ESTILOS CONTENIDO PÁGINAS MIS MASCOTAS Y ADOPCIONES */
@@ -441,6 +441,11 @@ nav a.active-link {
   );
   z-index: 1;
   pointer-events: none;
+}
+
+/* === OVERRIDE PARA PÁGINA DE REGISTRO DE MASCOTAS === */
+.pet-register-page {
+  padding-top: 0 !important;
 }
 
 /* === ESTILOS PARA BOTONES DE FORMULARIO DE MASCOTAS === */
