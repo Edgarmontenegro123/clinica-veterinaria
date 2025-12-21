@@ -235,14 +235,30 @@ const AllAppointments = () => {
         };
     };
 
-    const filteredAppointments = appointments.filter(apt => {
-        const now = new Date();
-        const aptDate = new Date(apt.datetime);
+    const filteredAppointments = appointments
+        .filter(apt => {
+            const now = new Date();
+            const aptDate = new Date(apt.datetime);
 
-        if (filter === 'upcoming') return aptDate >= now;
-        if (filter === 'past') return aptDate < now;
-        return true;
-    });
+            if (filter === 'upcoming') return aptDate >= now;
+            if (filter === 'past') return aptDate < now;
+            return true;
+        })
+        .sort((a, b) => {
+            const now = new Date();
+            const dateA = new Date(a.datetime);
+            const dateB = new Date(b.datetime);
+
+            const isAUpcoming = dateA >= now;
+            const isBUpcoming = dateB >= now;
+
+            // Si uno es próximo y el otro pasado, el próximo va primero
+            if (isAUpcoming && !isBUpcoming) return -1;
+            if (!isAUpcoming && isBUpcoming) return 1;
+
+            // Si ambos son próximos o ambos son pasados, ordenar por fecha
+            return dateA - dateB;
+        });
 
     if (loading) {
         return (
